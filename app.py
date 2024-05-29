@@ -5,19 +5,7 @@ from pydantic import BaseModel
 import mysql.connector.pooling
 import os
 
-
-# from router import user, attraction, mrt_station, booking, order
-# from modules import pool
-
-
 app = FastAPI()
-
-# API
-# app.include_router(user.router)
-# app.include_router(attraction.router)
-# app.include_router(mrt_station.router)
-# app.include_router(booking.router)
-# app.include_router(order.router)
 
 dbconfig = {
     "database": "taipei_attractions",
@@ -59,15 +47,6 @@ cnxpool = mysql.connector.pooling.MySQLConnectionPool(
 )
 
 
-class SuccecssResponse(BaseModel):
-    data: dict
-
-
-class ErrorResponse(BaseModel):
-    error: bool = True
-    message: str = ""
-
-
 @app.get("/api/attractions")
 async def get_attractions(
     request: Request,
@@ -77,39 +56,47 @@ async def get_attractions(
         Query(
             description="用來完全比對捷運站名稱、或模糊比對景點名稱的關鍵字，沒有給定則不做篩選"
         ),
-    ] = None,
+    ] = "",
 ):
     db_pool = request.state.db_pool
     try:
-        async with db_pool.acquire() as con:
-            async with con.cursor(dictionary=True) as cursor:
+        with db_pool.get_connection() as con:
+            with con.cursor(dictionary=True) as cursor:
                 offset = 12
                 start_index = page * offset
-                query = """
-                SELECT attractions.*, images.images
-                FROM attractions
-                INNER JOIN (
-                    SELECT attractions_id, GROUP_CONCAT(images) AS images
-                    FROM attractions_images
-                    GROUP BY attractions_id
-                ) AS images
-                ON attractions.id = images.attractions_id
-                WHERE (attractions.mrt = %s OR attractions.name LIKE %s)
-                LIMIT %s OFFSET %s;
-                """
+                nextpage = None
+                if page >= 1:
+                    nextpage = page + 1
+                query = "select attractions.*,imgs.imgs from attractions join(select attractions_id,group_concat(images) as imgs from attractions_images group by attractions_id) as imgs on attractions.id=imgs.attractions_id WHERE (attractions.mrt = %s OR attractions.name LIKE %s) LIMIT %s,%s"
                 cursor.execute(
                     query, (keyword, "%" + keyword + "%", start_index, offset)
                 )
-                data = cursor.fetchall()
-                return {"data": data}
+                results = cursor.fetchall()
+                if results:
+                    attractions = []
+                    for result in results:
+                        img_url = result["imgs"].split(",") if result["imgs"] else []
+                        attraction = {
+                            "id": result["id"],
+                            "name": result["name"],
+                            "category": result["category"],
+                            "description": result["description"],
+                            "address": result["address"],
+                            "transport": result["transport"],
+                            "mrt": result["mrt"],
+                            "lat": result["lat"],
+                            "lng": result["lng"],
+                            "images": img_url,
+                        }
+                        attractions.append(attraction)
+                    return {"nextpage": nextpage, "data": attractions}
+                else:
+                    return {"error": True, "message": "No data found matching criteria"}
     except Exception as e:
         raise HTTPException(status_code=500, detail="Internal server error")
 
 
-@app.get(
-    "/api/attraction/{attractionId}",
-    response_model=Union[SuccecssResponse, ErrorResponse],
-)
+@app.get("/api/attraction/{attractionId}")
 async def get_attractions_attractionId(
     request: Request,
     attractionId: Annotated[int, Path(description="景點編號")],
@@ -131,15 +118,10 @@ async def get_attractions_attractionId(
                 """
                 cursor.execute(query, (attractionId,))
                 data = cursor.fetchall()
-                if data is not None:
+                if data:
                     return {"data": data}
                 else:
-                    responses = ErrorResponse(
-                        status_code=status.HTTP_402_PAYMENT_REQUIRED,
-                        error=True,
-                        message="No data found matching criteria",
-                    )
-                    return responses
+                    return {"error": True, "message": "No data found matching criteria"}
     except Exception as e:
         raise HTTPException(status_code=500, message="Internal server error")
 
