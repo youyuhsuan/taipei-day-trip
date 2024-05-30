@@ -150,7 +150,12 @@ async def get_attractions_mrt(
     try:
         with db_pool.get_connection() as con:
             with con.cursor(dictionary=True) as cursor:
-                query = "SELECT MRT FROM attractions GROUP BY attractions.mrt ORDER BY attractions_count DESC;"
+                query = """SELECT attractions.mrt
+                FROM attractions
+                WHERE attractions.mrt IS NOT NULL
+                GROUP BY attractions.mrt
+                ORDER BY COUNT(*) DESC;
+                """
                 cursor.execute(query)
                 data = cursor.fetchall()
                 return {"data": data}
