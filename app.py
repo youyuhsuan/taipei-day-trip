@@ -64,14 +64,30 @@ async def get_attractions(
             with con.cursor(dictionary=True) as cursor:
                 offset = 12
                 start_index = page * offset
-                nextpage = None
-                if page >= 1:
-                    nextpage = page + 1
-                query = "select attractions.*,imgs.imgs from attractions join(select attractions_id,group_concat(images) as imgs from attractions_images group by attractions_id) as imgs on attractions.id=imgs.attractions_id WHERE (attractions.mrt = %s OR attractions.name LIKE %s) LIMIT %s,%s"
+                query = """SELECT attractions.*,imgs.imgs 
+                FROM attractions 
+                JOIN(SELECT attractions_id,group_concat(images) AS imgs 
+                FROM attractions_images GROUP BY attractions_id) AS imgs 
+                ON attractions.id=imgs.attractions_id 
+                WHERE (attractions.mrt = %s OR attractions.name LIKE %s) LIMIT %s,%s"""
                 cursor.execute(
                     query, (keyword, "%" + keyword + "%", start_index, offset)
                 )
                 results = cursor.fetchall()
+                results_count = len(results)
+                nextpage = page + 1
+                if results_count < 12:
+                    nextpage = None
+                else:
+                    nextpage_start_index = start_index + offset
+                    cursor.execute(
+                        query,
+                        (keyword, "%" + keyword + "%", nextpage_start_index, offset),
+                    )
+                    nextpage_results = cursor.fetchall()
+                    if len(nextpage_results) == 0:
+                        nextpage = None
+                print(results_count, start_index)
                 if results:
                     attractions = []
                     for result in results:
@@ -93,7 +109,7 @@ async def get_attractions(
                 else:
                     return {"error": True, "message": "No data found matching criteria"}
     except Exception as e:
-        raise HTTPException(status_code=500, detail="Internal server error")
+        raise HTTPException(status_code=500, message="Internal server error")
 
 
 @app.get("/api/attraction/{attractionId}")
@@ -134,7 +150,7 @@ async def get_attractions_mrt(
     try:
         with db_pool.get_connection() as con:
             with con.cursor(dictionary=True) as cursor:
-                query = "SELECT MRT,count(MRT) AS attractions_count FROM attractions GROUP BY attractions.mrt ORDER BY attractions_count DESC;"
+                query = "SELECT MRT FROM attractions GROUP BY attractions.mrt ORDER BY attractions_count DESC;"
                 cursor.execute(query)
                 data = cursor.fetchall()
                 return {"data": data}
