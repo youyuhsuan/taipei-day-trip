@@ -87,7 +87,6 @@ async def get_attractions(
                     nextpage_results = cursor.fetchall()
                     if len(nextpage_results) == 0:
                         nextpage = None
-                print(results_count, start_index)
                 if results:
                     attractions = []
                     for result in results:
@@ -105,7 +104,7 @@ async def get_attractions(
                             "images": img_url,
                         }
                         attractions.append(attraction)
-                    return {"nextpage": nextpage, "data": attractions}
+                    return {"nextPage": nextpage, "data": attractions}
                 else:
                     return {"error": True, "message": "No data found matching criteria"}
     except Exception as e:
@@ -133,8 +132,10 @@ async def get_attractions_attractionId(
                 WHERE attractions.id = %s;
                 """
                 cursor.execute(query, (attractionId,))
-                data = cursor.fetchall()
+                data = cursor.fetchone()
                 if data:
+                    img_url = data["images"].split(",") if data["images"] else []
+                    data["images"] = img_url
                     return {"data": data}
                 else:
                     return {"error": True, "message": "No data found matching criteria"}
@@ -157,7 +158,8 @@ async def get_attractions_mrt(
                 ORDER BY COUNT(*) DESC;
                 """
                 cursor.execute(query)
-                data = cursor.fetchall()
+                results = cursor.fetchall()
+                data = [result["mrt"] for result in results]
                 return {"data": data}
     except Exception as e:
         raise HTTPException(status_code=500, message="Internal server error")

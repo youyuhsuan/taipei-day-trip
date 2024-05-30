@@ -4,7 +4,10 @@ import mysql.connector
 
 
 con = mysql.connector.connect(
-    database="taipei_attractions", user="root", password="23322907", host="localhost"
+    database="taipei_attractions",
+    user="root",
+    password="MYSQL_PASSWORD",
+    host="localhost",
 )
 
 with open("../data/taipei-attractions.json", "r") as taipei_attractions:
