@@ -322,6 +322,9 @@ hr {
 .navigation-brand {
   color: #448899;
   text-decoration: none;
+  font-weight: 700;
+  font-size: 1.875rem;
+  line-height: 2.125rem;
 }
 @media (max-width: 576px) {
   .navigation-brand {
@@ -352,7 +355,7 @@ footer {
 .signin-dialog {
   width: 21.25rem;
   height: 17.188rem;
-  padding: 1.875rem;
+  padding: 1.563rem 0.938rem 0.938rem 0.938rem;
   text-align: center;
 }
 .signin-dialog .submit {

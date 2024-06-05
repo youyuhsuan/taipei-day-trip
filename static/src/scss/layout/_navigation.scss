@@ -32,6 +32,9 @@
 .navigation-brand {
   color: $primary-70;
   text-decoration: none;
+  font-weight: $font-weight-bold;
+  font-size: $h2-font-size;
+  line-height: $line-height-headline;
   @include breakpoint(sm) {
     margin-left: 0.625rem;
   }
