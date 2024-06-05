@@ -1,11 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Attraction</title>
-</head>
-<body>
-  
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@200&family=Noto+Sans+TC:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="src/css/reset.css" />
+    <link rel="stylesheet" href="src/css/all.css" />
+    <title>Attraction</title>
+  </head>
+  <body>
+    <nav class="navigation">
+      <div class="navigation-container">
+        <h2 class="navigation-brand">台北一日遊</h2>
+        <div class="navigation-menu">
+          <div class="navigation-collapse">
+            <button class="navigation-btn font-body">預定行程</button>
+            <button class="navigation-btn font-body open-dialog">
+              登入/註冊
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <hr />
+    <section class="profile">
+      <div class="carousel">
+        <button
+          class="carousel-button prev"
+          data-carousel-button="prev"
+        ></button>
+        <button
+          class="carousel-button next"
+          data-carousel-button="next"
+        ></button>
+        <ul>
+          <li class="slide" data-active><img src="" /></li>
+        </ul>
+      </div>
+      <div class="profile-container">
+        <h3 class="profile-name">平安鐘</h3>
+        <p class="profile-description">公共藝術 at 忠孝復興</p>
+        <form action="" method="post" class="booking-form">
+          <p>訂購導覽行程</p>
+          <p>以此景點為中心的一日行程，帶您探索城市角落故事</p>
+          <label for="date"
+            >選擇日期：<input type="datetime" name="date" id="date"
+          /></label>
+          <label for="time"
+            >選擇時間： <input type="radio" name="time" id="morning" />上半天
+            <input type="radio" name="time" id="afternoon" />下半天
+          </label>
+          <button type="submit" class="submit-button">開始預約行程</button>
+        </form>
+      </div>
+    </section>
+    <hr />
+    <main></main>
+  </body>
 </html>

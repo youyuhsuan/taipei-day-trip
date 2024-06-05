@@ -1,0 +1,50 @@
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+.list-bar {
+  display: flex;
+  align-items: center;
+  max-width: 75rem; // 1200px
+  width: 100%;
+  height: 4.375rem; // 70px
+  margin-top: 2.5rem; // 40px
+  padding-bottom: 1.25rem; // 20px
+}
+
+.list-left-container,
+.list-right-container {
+  flex: 0 0 2.938rem; //47px
+  height: 100%;
+  position: relative;
+}
+
+.list-middle-container {
+  flex: 1;
+  width: 100%;
+  padding: 0.813rem 0.625rem; // 13px 10px
+  overflow-x: clip;
+}
+
+.list-items {
+  display: flex;
+  justify-content: flex-start;
+  list-style: none;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.list-item {
+  // width: 3.875rem; // 62px
+  // height: 1.5rem; // 24px
+  padding: 0.313rem 0.938rem; // 5px 15px
+  color: $secondary-70;
+  white-space: nowrap;
+  cursor: pointer;
+  &:hover {
+    color: $black;
+  }
+}

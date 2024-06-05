@@ -1,0 +1,78 @@
+$font-family: "Noto Sans TC", sans-serif;
+
+$font-size-base: 1rem;
+$line-height-base: 1rem;
+
+// font-weight
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-bold: 700;
+
+//  line-height
+$line-height-slogan-dialog: $line-height-base * 1.5; // 24px
+$line-height-headline: $line-height-base * 2.125; // 34px
+$line-height-body: $line-height-base * 0.831; // 13px
+
+//  font-size
+$h1-font-size: $font-size-base * 1.75; // 28px
+$h2-font-size: $font-size-base * 1.875; // 30px
+$h3-font-size: $font-size-base * 1.5; // 24px
+$btn-font-size: $font-size-base * 1.188; // 19px
+$content-font-size: $font-size-base;
+$category-list-font-size: $font-size-base * 0.875; // 14px
+
+// Element Styles
+h1 {
+  font-weight: $font-weight-bold;
+  font-size: $h1-font-size;
+  line-height: $line-height-slogan-dialog;
+}
+
+h2 {
+  font-weight: $font-weight-bold;
+  font-size: $h2-font-size;
+  line-height: $line-height-headline;
+}
+
+h3 {
+  font-size: $h3-font-size;
+  line-height: $line-height-slogan-dialog;
+}
+
+// Composite Styles
+.font-btn {
+  font-size: $btn-font-size;
+  &.bold {
+    font-weight: $font-weight-bold;
+  }
+
+  &.regular {
+    font-weight: $font-weight-regular;
+  }
+}
+
+.font-content {
+  font-size: $font-size-base;
+}
+
+.font-body {
+  font-size: $font-size-base;
+  line-height: $line-height-body;
+}
+
+.font-category-list {
+  font-weight: $font-weight-medium;
+  font-size: $category-list-font-size;
+  font-weight: $font-weight-medium;
+}
+
+// Utility Classes
+.bold {
+  font-weight: $font-weight-bold;
+}
+.medium {
+  font-weight: $font-weight-medium;
+}
+.regular {
+  font-weight: $font-weight-regular;
+}
