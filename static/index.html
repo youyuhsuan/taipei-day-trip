@@ -1,11 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Index</title>
-</head>
-<body>
-  
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="/static/src/css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="/static/src/css/all.css" />
+    <title>Index</title>
+    <script src="/static/src/js/api.js" defer></script>
+    <script src="/static/src/js/diolog.js" defer></script>
+    <script src="/static/src/js/list-bar.js" defer></script>
+  </head>
+  <body>
+    <nav class="navigation">
+      <div class="navigation-container">
+        <h2 class="navigation-brand">台北一日遊</h2>
+        <div class="navigation-menu">
+          <div class="navigation-collapse">
+            <button class="navigation-btn font-button regular">預定行程</button>
+            <button class="navigation-btn font-button regular open-dialog">
+              登入/註冊
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <section class="hero">
+      <div class="hero-container">
+        <div class="slogan-container">
+          <div class="slogan-content">
+            <h1 class="slogan-title bold">輕鬆享受台北一日悠閒</h1>
+            <p class="slogan-description font-body bold">
+              探索每個角落，體驗城市的深度旅遊行程
+            </p>
+          </div>
+          <form
+            class="search-bar"
+            onsubmit="getAttractions(this.spot.value);return false; "
+          >
+            <input
+              class="search-input font-body bold"
+              type="search"
+              name="spot"
+              placeholder="輸入景點名稱查詢"
+            />
+            <button type="submit" class="search-btn">
+              <img src="/static/src/image/icon/search.png" alt="Search" />
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+    <main class="index-container">
+      <div class="list-bar">
+        <div class="list-left-container">
+          <img
+            class="arrow-btn"
+            src="/static/src/image/list-bar-btn/prev.png"
+          />
+        </div>
+        <div class="list-middle-container">
+          <ul class="list-items"></ul>
+        </div>
+        <div class="list-right-container">
+          <img
+            class="arrow-btn"
+            src="/static/src/image/list-bar-btn/next.png"
+          />
+        </div>
+      </div>
+      <div class="attractions-container"></div>
+    </main>
+    <dialog class="signin-dialog" backdrop="modal">
+      <button type="submit" class="close-dialog">
+        <img src="/static/src/image/icon/close.png" alt="Close" />
+      </button>
+      <h3 class="signin-title">登入會員帳號</h3>
+      <form method="POST" class="signin-form">
+        <label for="email">
+          <input
+            type="email"
+            name="email"
+            id="signin-email"
+            placeholder="輸入帳號"
+          />
+        </label>
+        <label for="password">
+          <input
+            type="password"
+            name="password"
+            id="signin-password"
+            placeholder="輸入密碼"
+          />
+        </label>
+        <button class="submit" type="submit">登入帳戶</button>
+        <a href="#">還沒有帳戶？點此註冊</a>
+      </form>
+    </dialog>
+    <footer class="footerr font-body bold">
+      <p>COPYRIGHT © 2021 台北一日遊</p>
+    </footer>
+  </body>
 </html>

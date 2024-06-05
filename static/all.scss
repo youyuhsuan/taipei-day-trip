@@ -1,0 +1,23 @@
+@forward "src/scss/base/reset";
+@forward "src/scss/abstracts/variables";
+
+@use "src/scss/abstracts/mixins";
+@use "src/scss/base/typography";
+@use "src/scss/base/base";
+
+// // Components
+@use "src/scss/components/button";
+@use "src/scss/components/search-bar";
+@use "src/scss/components/list-bar";
+@use "src/scss/components/attractions-card";
+@use "src/scss/components/separator";
+@use "src/scss/components/carousel";
+
+// Layout
+@use "src/scss/layout/navigation";
+@use "src/scss/layout/footer";
+@use "src/scss/layout/dialog";
+
+// Pages
+@use "src/scss/pages/index.scss";
+@use "src/scss/pages/profile.scss";

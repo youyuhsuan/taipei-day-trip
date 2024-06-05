@@ -1,0 +1,66 @@
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+.attractions-container {
+  margin: 0 auto 2.5rem; // 40px
+  padding: 0.938rem; // 15px
+  max-width: 73.125rem; // 1170px
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.875rem; // 30px
+  @include breakpoint(lg) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @include breakpoint(md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @include breakpoint(sm) {
+    grid-template-columns: repeat(1, 1fr);
+    gap: 0.938rem; // 15px
+  }
+}
+
+.attractions-card {
+  // width: 16.875rem; // 270px
+  width: 100%;
+  border: 1px solid $secondary-20;
+  border-radius: 5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-img {
+  width: 100%;
+  height: 12.313rem; // 197px
+  overflow: clip;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+  }
+}
+
+.card-name {
+  position: absolute;
+  top: 9.803rem;
+  width: 100%;
+  height: 2.5rem; // 40px
+  padding: 0.625rem;
+  background-color: $black-opacity-60;
+  color: $white;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
+}
+
+.card-content {
+  width: 100%;
+  height: 2.813rem; // 45px
+  display: inline-flex;
+  justify-content: space-around;
+  align-items: center;
+  color: $secondary-50;
+}

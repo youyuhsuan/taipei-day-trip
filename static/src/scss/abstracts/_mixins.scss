@@ -1,0 +1,8 @@
+@use "variables" as *;
+@use "sass:map";
+
+@mixin breakpoint($size) {
+  @media (max-width: map-get($grid-breakpoints,$size)) {
+    @content;
+  }
+}

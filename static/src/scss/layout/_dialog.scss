@@ -1,0 +1,56 @@
+@use "../abstracts/variables" as *;
+
+.signin-dialog {
+  width: 21.25rem; // 340px
+  height: 17.188rem; // 275px
+  padding: 1.875rem;
+  text-align: center;
+
+  .submit {
+    background-color: $primary-70;
+    color: $white;
+  }
+
+  .signin-title {
+    color: $secondary-70;
+    margin-bottom: 0.938rem; // 15px
+  }
+
+  input,
+  .submit {
+    width: 19.375rem; // 310px
+    height: 2.938rem; // 47px
+    margin-bottom: 0.625rem; // 10px
+  }
+}
+
+dialog {
+  color: canvastext;
+  inset: 0;
+  border: none;
+  box-shadow: 0 0.25rem 3.75rem #aaaa; // 0px 4px 60px
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0.625rem; // 10px
+    background: $gradient-primary;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  a {
+    text-decoration: none;
+    color: $secondary-70;
+  }
+}
+
+::backdrop {
+  background: $black-opacity-25;
+}

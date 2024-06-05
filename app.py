@@ -1,6 +1,7 @@
 from fastapi import *
 from fastapi.responses import FileResponse
 from typing import Annotated, Optional, Union, Dict
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import mysql.connector.pooling
 import os
@@ -12,6 +13,12 @@ dbconfig = {
     "user": "root",
     "password": os.environ["MYSQL_PASSWORD"],
 }
+
+cnxpool = mysql.connector.pooling.MySQLConnectionPool(
+    pool_name="mypool", pool_size=5, **dbconfig
+)
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 @app.middleware("http")
@@ -42,11 +49,6 @@ async def thankyou(request: Request):
     return FileResponse("./static/thankyou.html", media_type="text/html")
 
 
-cnxpool = mysql.connector.pooling.MySQLConnectionPool(
-    pool_name="mypool", pool_size=5, **dbconfig
-)
-
-
 @app.get("/api/attractions")
 async def get_attractions(
     request: Request,
@@ -58,12 +60,20 @@ async def get_attractions(
         ),
     ] = "",
 ):
+
     db_pool = request.state.db_pool
     try:
         with db_pool.get_connection() as con:
             with con.cursor(dictionary=True) as cursor:
                 offset = 12
                 start_index = page * offset
+                query_next_page = "SELECT id FROM attractions WHERE (mrt = %s OR name LIKE %s) LIMIT %s,13"
+                cursor.execute(
+                    query_next_page, (keyword, "%" + keyword + "%", start_index)
+                )
+                results = cursor.fetchall()
+                results_count = len(results)
+
                 query = """SELECT attractions.*,imgs.imgs 
                 FROM attractions 
                 JOIN(SELECT attractions_id,group_concat(images) AS imgs 
@@ -74,19 +84,8 @@ async def get_attractions(
                     query, (keyword, "%" + keyword + "%", start_index, offset)
                 )
                 results = cursor.fetchall()
-                results_count = len(results)
-                nextpage = page + 1
-                if results_count < 12:
-                    nextpage = None
-                else:
-                    nextpage_start_index = start_index + offset
-                    cursor.execute(
-                        query,
-                        (keyword, "%" + keyword + "%", nextpage_start_index, offset),
-                    )
-                    nextpage_results = cursor.fetchall()
-                    if len(nextpage_results) == 0:
-                        nextpage = None
+                nextpage = page + 1 if results_count == 13 else None
+
                 if results:
                     attractions = []
                     for result in results:
@@ -108,7 +107,7 @@ async def get_attractions(
                 else:
                     return {"error": True, "message": "No data found matching criteria"}
     except Exception as e:
-        raise HTTPException(status_code=500, message="Internal server error")
+        raise HTTPException(status_code=500)
 
 
 @app.get("/api/attraction/{attractionId}")
@@ -123,7 +122,7 @@ async def get_attractions_attractionId(
                 query = """
                 SELECT attractions.*, images.images
                 FROM attractions
-                INNER JOIN (
+                JOIN (
                     SELECT attractions_id, GROUP_CONCAT(images) AS images
                     FROM attractions_images
                     GROUP BY attractions_id
