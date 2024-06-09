@@ -6,6 +6,7 @@ services:
     environment:
       - MYSQL_PASSWORD=si23322907
       - DB_USER=root
+      - DB_DATABASE=taipei_attractions
       - DB_HOST=mydb
       - DB_PORT=3306
     ports:

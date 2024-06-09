@@ -9,7 +9,7 @@ app = FastAPI()
 dbconfig = {
     "host": os.environ["DB_HOST"],
     "port": os.environ["DB_PORT"],
-    "database": "taipei_attractions",
+    "database": os.environ["DB_database"],
     "user": os.environ["DB_USER"],
     "password": os.environ["MYSQL_PASSWORD"],
 }
