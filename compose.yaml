@@ -1,6 +1,9 @@
 services:
   app:
-    image: myapp:1.0
+    # image: myapp:1.0
+    build:
+      context: .
+      dockerfile: Dockerfile
     depends_on:
       - mydb
     environment:
