@@ -10,18 +10,20 @@
       rel="stylesheet"
     />
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" href="src/css/reset.css" />
-    <link rel="stylesheet" href="src/css/all.css" />
+    <link rel="stylesheet" href="/static/src/css/reset.css" />
+    <link rel="stylesheet" href="/static//src/css/all.css" />
+    <!-- <link rel="javascript/text" href="/static/src/js/api.js" defer /> -->
+    <script src="/static/src/js/attra.js" defer></script>
     <title>Attraction</title>
   </head>
   <body>
     <nav class="navigation">
       <div class="navigation-container">
-        <h2 class="navigation-brand">台北一日遊</h2>
+        <a class="navigation-brand" href="/">台北一日遊</a>
         <div class="navigation-menu">
           <div class="navigation-collapse">
-            <button class="navigation-btn font-body">預定行程</button>
-            <button class="navigation-btn font-body open-dialog">
+            <button class="navigation-btn font-button regular">預定行程</button>
+            <button class="navigation-btn font-button regular open-dialog">
               登入/註冊
             </button>
           </div>
@@ -29,38 +31,86 @@
       </div>
     </nav>
     <hr />
-    <section class="profile">
+    <section class="attraction">
       <div class="carousel">
-        <button
-          class="carousel-button prev"
-          data-carousel-button="prev"
-        ></button>
-        <button
-          class="carousel-button next"
-          data-carousel-button="next"
-        ></button>
-        <ul>
-          <li class="slide" data-active><img src="" /></li>
+        <button class="carousel-prev-button">
+          <img src="/static/src/image/carousel-btn/prev.png" />
+        </button>
+        <button class="carousel-next-button">
+          <img src="/static/src/image/carousel-btn/next.png" />
+        </button>
+        <ul class="dots">
+          <li class="dot active"></li>
+          <li class="dot"></li>
         </ul>
+        <div class="slide" data-active>
+          <img src="../static/src/image/attractions-card.png" />
+        </div>
       </div>
-      <div class="profile-container">
-        <h3 class="profile-name">平安鐘</h3>
-        <p class="profile-description">公共藝術 at 忠孝復興</p>
+      <div class="attraction-content">
+        <h3 class="attraction-name bold"></h3>
+        <p class="attraction-description font-body regular">
+          公共藝術 at 忠孝復興
+        </p>
         <form action="" method="post" class="booking-form">
-          <p>訂購導覽行程</p>
-          <p>以此景點為中心的一日行程，帶您探索城市角落故事</p>
-          <label for="date"
-            >選擇日期：<input type="datetime" name="date" id="date"
-          /></label>
-          <label for="time"
-            >選擇時間： <input type="radio" name="time" id="morning" />上半天
-            <input type="radio" name="time" id="afternoon" />下半天
+          <p class="font-body medium">訂購導覽行程</p>
+          <p class="font-body regular">
+            以此景點為中心的一日行程，帶您探索城市角落故事
+          </p>
+          <label for="date" class="font-body bold"
+            >選擇日期：
+            <input
+              type="date"
+              name="date"
+              id="date"
+              min="2024-01-01"
+              max="2025-12-31"
+              class="font-body regular"
+            />
           </label>
+          <div class="radio font-body bold">
+            選擇時間：
+            <input
+              type="radio"
+              id="morning"
+              name="time"
+              class="font-body regular"
+            />
+            <label for="morning" class="font-body regular">上半天</label>
+            <input
+              type="radio"
+              id="afternoon"
+              name="time"
+              class="font-body regular"
+            />
+            <label for="afternoon" class="font-body regular">下半天</label>
+          </div>
+          <div class="price">
+            <span class="price-label font-body bold">導覽費用：</span>
+            <span class="price-amount font-body regular">新台幣 2000 元</span>
+          </div>
           <button type="submit" class="submit-button">開始預約行程</button>
         </form>
       </div>
     </section>
     <hr />
-    <main></main>
+    <section class="info">
+      <div class="description font-content"></div>
+      <div class="address">
+        <div class="address-label font-body bold">景點地址：</div>
+        <div class="address-content font-content">臺北市 大安區忠孝東路4段</div>
+      </div>
+      <div class="transport">
+        <div class="transport-label font-body bold">交通方式：</div>
+        <div class="transport-content font-content">
+          捷運站名：忠孝復興站4號出口 1.
+          公車：204、212、212直、232、232副、262、262(區間)、278、299、521、605、605(副)、605(新台五線)、667、903、忠孝新幹線至頂好市場站
+          2. 車位：太平洋崇光百貨地下停車場或市民大道附近地下停車場
+        </div>
+      </div>
+    </section>
+    <footer class="footerr font-body bold">
+      <p>COPYRIGHT © 2021 台北一日遊</p>
+    </footer>
   </body>
 </html>

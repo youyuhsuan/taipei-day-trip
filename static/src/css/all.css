@@ -57,8 +57,6 @@ h3 {
 }
 
 body {
-  max-width: 120rem;
-  width: 100%;
   font-family: "Noto Sans TC", sans-serif;
   overflow-x: clip;
 }
@@ -114,6 +112,51 @@ button {
 .close-dialog img {
   width: 1rem;
   height: 1rem;
+}
+
+.carousel-prev-button,
+.carousel-next-button {
+  position: absolute;
+  top: 50%;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+}
+.carousel-prev-button img,
+.carousel-next-button img {
+  opacity: 0.75;
+  width: 100%;
+  height: 100%;
+}
+.carousel-prev-button:first-of-type,
+.carousel-next-button:first-of-type {
+  left: 0.625rem;
+}
+.carousel-prev-button:last-of-type,
+.carousel-next-button:last-of-type {
+  right: 0.625rem;
+}
+
+.dots {
+  position: absolute;
+  bottom: 0.625rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  opacity: 0.75;
+  gap: 0.75rem;
+}
+
+.dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background-color: #ffffff;
+}
+.dot.active {
+  background-color: #000000;
+  border: 1px solid #ffffff;
 }
 
 .search-bar {
@@ -278,15 +321,49 @@ button {
 }
 
 hr {
+  margin: 0 auto;
+  line-height: 0;
   width: 100%;
-  color: #e8e8e8;
+  border: 1px solid #e8e8e8;
+}
+hr:first-of-type {
   margin-top: 3.375rem;
-  height: 1px;
+}
+hr:nth-of-type(2) {
+  max-width: 1200px;
+  width: 100%;
 }
 
 .carousel {
-  width: 33.75rem;
+  position: relative;
+  max-width: 33.75rem;
+  min-width: 22.5rem;
+  width: 100%;
   height: 25rem;
+  border-radius: 5px;
+  overflow: hidden;
+}
+@media (max-width: 768px) {
+  .carousel {
+    max-width: none;
+  }
+}
+@media (max-width: 576px) {
+  .carousel {
+    height: 21.875rem;
+  }
+}
+
+.slide {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
 }
 
 .navigation {
@@ -353,31 +430,51 @@ footer {
   color: #ffffff;
 }
 
-.signin-dialog {
+.signin-dialog,
+.signup-dialog {
   width: 21.25rem;
-  height: 17.188rem;
   padding: 1.563rem 0.938rem 0.938rem 0.938rem;
   text-align: center;
 }
-.signin-dialog .submit {
+.signin-dialog input,
+.signup-dialog input {
+  padding: 0.938rem;
+  color: #757575;
+}
+.signin-dialog .submit,
+.signup-dialog .submit {
   background-color: #448899;
   color: #ffffff;
 }
-.signin-dialog .signin-title {
-  color: #666666;
-  margin-bottom: 0.938rem;
-}
 .signin-dialog input,
-.signin-dialog .submit {
+.signin-dialog .submit,
+.signup-dialog input,
+.signup-dialog .submit {
   width: 19.375rem;
   height: 2.938rem;
   margin-bottom: 0.625rem;
+  border: 1px solid #cccccc;
+  border-radius: 0.313rem;
+}
+
+.signin-title,
+.signup-title {
+  color: #666666;
+  margin-bottom: 0.938rem;
+}
+
+.signup-dialog {
+  height: 20.75rem;
+}
+
+.signin-dialog {
+  height: 17.188rem;
 }
 
 dialog {
-  color: canvastext;
-  inset: 0;
+  margin: 5rem auto 0;
   border: none;
+  border-radius: 0.375rem;
   box-shadow: 0 0.25rem 3.75rem rgba(170, 170, 170, 0.6666666667);
 }
 dialog::before {
@@ -418,6 +515,7 @@ dialog a {
 
 .hero {
   position: relative;
+  margin: 0 auto;
   max-width: 120rem;
   width: 100%;
   height: 23.375rem;
@@ -480,19 +578,160 @@ dialog a {
   text-shadow: 0 0 1.875rem #aabbcc;
 }
 
-.profile {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.attraction {
   color: #666666;
+  max-width: 75rem;
+  width: 100%;
+  margin: 2.5rem auto;
+  display: flex;
+  padding: 0 0.938rem;
+  gap: 1.875rem;
 }
-.profile h3 {
+.attraction .attraction-name,
+.attraction .attraction-description {
   margin-bottom: 0.938rem;
+}
+@media (max-width: 768px) {
+  .attraction {
+    flex-direction: column;
+  }
+}
+@media (max-width: 576px) {
+  .attraction {
+    padding: 0;
+    margin: 0;
+    gap: 1.25rem;
+  }
+}
+
+.attraction-content {
+  max-width: 37.5rem;
+  min-width: 20.25rem;
+  width: 100%;
+  height: 100%;
+}
+@media (max-width: 768px) {
+  .attraction-content {
+    padding: 0rem 0.625rem 2.5rem;
+    max-width: none;
+    width: 100%;
+  }
+}
+
+.attraction-name {
+  line-height: 2.063rem;
+}
+
+.attraction-description {
+  line-height: 1.375rem;
 }
 
 .booking-form {
   display: flex;
   flex-direction: column;
+  padding: 1.25rem 0.938rem 2.563rem;
+  background-color: #e8e8e8;
+  border-radius: 5px;
+  gap: 0.313rem;
+}
+.booking-form > :nth-child(1),
+.booking-form > :nth-child(5) {
+  line-height: 1.375rem;
+}
+@media (max-width: 1200px) {
+  .booking-form .font-body:nth-child(2) {
+    line-height: 1.4;
+  }
+}
+.booking-form input {
+  border: none;
+}
+.booking-form input[type=date] {
+  width: 12.063rem;
+  height: 2.188rem;
+  padding: 0.313rem 0.625rem;
+  background-color: #ffffff;
+  color: #000000;
+}
+.booking-form input[type=radio] {
+  appearance: none;
+  margin: 0 0.25rem 0 0.313rem;
+  width: 1.375rem;
+  height: 1.375rem;
+  border-radius: 50%;
+  background-color: #ffffff;
+  position: relative;
+}
+.booking-form input[type=radio]::before {
+  content: "";
+  position: absolute;
+  inset: 0.125rem;
+  display: none;
+  background-color: #448899;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+}
+.booking-form input[type=radio]:checked::before, .booking-form input[type=radio]:focus::before {
+  display: block;
+}
+.booking-form button {
+  width: 9.625rem;
+  height: 2.25rem;
+  border-radius: 5px;
+  background-color: #448899;
+  color: #ffffff;
+}
+.booking-form .submit-button {
+  margin-bottom: 0;
+}
+
+.radio {
+  display: flex;
+  align-items: center;
+}
+.radio label {
+  margin-right: 0.5rem;
+}
+
+.booking-form > * {
+  margin-bottom: 0.938rem;
+}
+
+::-webkit-calendar-picker-indicator {
+  background: url("/static/src/image/icon/calendar.png") no-repeat center;
+  background-size: 1.5rem 1.5rem;
+  object-fit: cover;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.info {
+  color: #666666;
+  max-width: 75rem;
+  width: 100%;
+  margin: 2.5rem auto 0;
+  padding: 0.625rem 0 5rem;
+  line-height: 1.448rem;
+}
+@media (max-width: 1200px) {
+  .info {
+    padding: 0 0.938rem;
+  }
+}
+@media (max-width: 576px) {
+  .info {
+    padding: 0.625rem 0 5.875rem 0.625rem;
+    margin: 0.625rem 0;
+  }
+}
+
+.info > * {
+  margin-bottom: 1.25rem;
+}
+
+.address-label,
+.transport-label {
+  line-height: 2rem;
 }
 
 /*# sourceMappingURL=all.css.map */

@@ -1,19 +1,18 @@
 @use "../abstracts/variables" as *;
 
-.signin-dialog {
+.signin-dialog,
+.signup-dialog {
   width: 21.25rem; // 340px
-  height: 17.188rem; // 275px
   padding: 1.563rem 0.938rem 0.938rem 0.938rem; // 25px 15px
   text-align: center;
+  input {
+    padding: 0.938rem; // 15px
+    color: $secondary-50;
+  }
 
   .submit {
     background-color: $primary-70;
     color: $white;
-  }
-
-  .signin-title {
-    color: $secondary-70;
-    margin-bottom: 0.938rem; // 15px
   }
 
   input,
@@ -21,13 +20,29 @@
     width: 19.375rem; // 310px
     height: 2.938rem; // 47px
     margin-bottom: 0.625rem; // 10px
+    border: 1px solid #cccccc;
+    border-radius: 0.313rem; // 5px
   }
 }
 
+.signin-title,
+.signup-title {
+  color: $secondary-70;
+  margin-bottom: 0.938rem; // 15px
+}
+
+.signup-dialog {
+  height: 20.75rem; // 332px
+}
+
+.signin-dialog {
+  height: 17.188rem; // 275px
+}
+
 dialog {
-  color: canvastext;
-  inset: 0;
+  margin: 5rem auto 0; //80px
   border: none;
+  border-radius: 0.375rem;
   box-shadow: 0 0.25rem 3.75rem #aaaa; // 0px 4px 60px
   &::before {
     content: "";

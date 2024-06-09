@@ -1,0 +1,155 @@
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+//TODO:relact
+.attraction {
+  color: $secondary-70;
+  max-width: 75rem; // 1200px
+  width: 100%;
+  margin: 2.5rem auto; // 40px
+  display: flex;
+  padding: 0 0.938rem; // 0px 15px
+  gap: 1.875rem; // 30px
+  // justify-content: space-between;
+  .attraction-name,
+  .attraction-description {
+    margin-bottom: 0.938rem; // 15px
+  }
+  @include breakpoint(md) {
+    flex-direction: column;
+  }
+  @include breakpoint(sm) {
+    padding: 0;
+    margin: 0;
+    gap: 1.25rem; // 20px
+  }
+}
+
+.attraction-content {
+  max-width: 37.5rem; // 600px
+  min-width: 20.25rem; // 324px
+  width: 100%;
+  height: 100%;
+  @include breakpoint(md) {
+    padding: 0rem 0.625rem 2.5rem; // 0px 10px 40px
+    max-width: none;
+    width: 100%;
+  }
+}
+
+.attraction-name {
+  line-height: 2.063rem; // 33px
+}
+
+.attraction-description {
+  line-height: 1.375rem; // 22px
+}
+
+.booking-form {
+  display: flex;
+  flex-direction: column;
+  // height: 18.875rem; // 302px
+  padding: 1.25rem 0.938rem 2.563rem; // 20px 15px 41px
+  background-color: $secondary-20;
+  border-radius: $border-sm-radius;
+  gap: 0.313rem; // 5px
+
+  > :nth-child(1),
+  > :nth-child(5) {
+    line-height: 1.375rem; // 22px
+  }
+
+  .font-body {
+    &:nth-child(2) {
+      @include breakpoint(xl) {
+        line-height: 1.4;
+      }
+    }
+  }
+  input {
+    border: none;
+    &[type="date"] {
+      width: 12.063rem; // 193px
+      height: 2.188rem; // 35px
+      padding: 0.313rem 0.625rem; // 5px 10px
+      background-color: $white;
+      color: $black;
+    }
+    &[type="radio"] {
+      appearance: none;
+      margin: 0 0.25rem 0 0.313rem; // 4px 5px
+      width: 1.375rem; // 22px
+      height: 1.375rem; // 22px
+      border-radius: 50%;
+      background-color: $white;
+      position: relative;
+      &::before {
+        content: "";
+        position: absolute;
+        inset: 0.125rem; // 2px
+        display: none;
+        background-color: $primary-70;
+        border-radius: 50%;
+        border: 2px solid $white;
+      }
+      &:checked::before,
+      &:focus::before {
+        display: block;
+      }
+    }
+  }
+  button {
+    width: 9.625rem; // 154px
+    height: 2.25rem; // 36px
+    border-radius: $border-sm-radius;
+    background-color: $primary-70;
+    color: $white;
+  }
+  .submit-button {
+    margin-bottom: 0;
+  }
+}
+
+.radio {
+  display: flex;
+  align-items: center;
+  label {
+    margin-right: 0.5rem; // 8px
+  }
+}
+.booking-form > * {
+  margin-bottom: 0.938rem; // 15px
+}
+
+::-webkit-calendar-picker-indicator {
+  background: url("/static/src/image/icon/calendar.png") no-repeat center;
+  background-size: 1.5rem 1.5rem; // 24px 24px
+  object-fit: cover;
+  width: 1.5rem; // 24px 24px
+  height: 1.5rem; // 24px 24px
+}
+
+.info {
+  color: $secondary-70;
+  max-width: 75rem;
+  width: 100%;
+  margin: 2.5rem auto 0; // 40px
+  padding: 0.625rem 0 5rem; // 10px 0px 80px
+  line-height: 1.448rem; // 23.17
+  @include breakpoint(xl) {
+    padding: 0 0.938rem;
+  }
+  @include breakpoint(sm) {
+    padding: 0.625rem 0 5.875rem 0.625rem; // 10px 0px 94px 10px
+    margin: 0.625rem 0; // 40px 10px
+  }
+}
+
+.info > * {
+  margin-bottom: 1.25rem; // 20px
+}
+
+.address-label,
+.transport-label {
+  line-height: 2rem;
+}
