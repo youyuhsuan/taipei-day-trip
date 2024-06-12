@@ -154,7 +154,8 @@ button {
   border-radius: 50%;
   background-color: #ffffff;
 }
-.dot.active {
+
+.current-dot {
   background-color: #000000;
   border: 1px solid #ffffff;
 }
@@ -280,7 +281,6 @@ button {
   width: 100%;
   border: 1px solid #e8e8e8;
   border-radius: 5px;
-  position: relative;
   overflow: hidden;
 }
 
@@ -288,6 +288,7 @@ button {
   width: 100%;
   height: 12.313rem;
   overflow: clip;
+  position: relative;
 }
 .card-img img {
   width: 100%;
@@ -298,7 +299,7 @@ button {
 
 .card-name {
   position: absolute;
-  top: 9.803rem;
+  bottom: 0;
   width: 100%;
   height: 2.5rem;
   padding: 0.625rem;
@@ -307,7 +308,6 @@ button {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  vertical-align: bottom;
 }
 
 .card-content {
@@ -354,16 +354,28 @@ hr:nth-of-type(2) {
   }
 }
 
-.slide {
+.slide-track {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  scroll-behavior: smooth;
   width: 100%;
   height: 100%;
-  overflow: hidden;
 }
-.slide img {
+
+.slide,
+.slide-track {
+  min-width: 100%;
+  max-width: 100%;
   width: 100%;
+  height: 100%;
+}
+.slide img,
+.slide-track img {
+  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center center;
 }
 
 .navigation {

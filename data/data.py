@@ -1,13 +1,21 @@
 import json
 import re
 import mysql.connector
+import os
 
+# con = mysql.connector.connect(
+# database="DB_DATABASE",
+# user="root",
+# password="MYSQL_PASSWORD",
+# host="3307",
+# )
 
 con = mysql.connector.connect(
-    database="taipei_attractions",
-    user="root",
-    password="MYSQL_PASSWORD",
-    host="localhost",
+    host=os.environ["DB_HOST"],
+    port=os.environ["DB_PORT"],
+    database=os.environ["DB_DATABASE"],
+    user=os.environ["DB_USER"],
+    password=os.environ["MYSQL_PASSWORD"],
 )
 
 with open("../data/taipei-attractions.json", "r") as taipei_attractions:

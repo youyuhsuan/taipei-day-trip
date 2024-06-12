@@ -7,12 +7,18 @@ import os
 app = FastAPI()
 
 dbconfig = {
-    "host": os.environ["DB_HOST"],
-    "port": os.environ["DB_PORT"],
-    "database": os.environ["DB_database"],
-    "user": os.environ["DB_USER"],
+    "database": "taipei_attractions",
+    "user": "root",
     "password": os.environ["MYSQL_PASSWORD"],
 }
+
+# dbconfig = {
+#     "host": os.environ["DB_HOST"],
+#     "port": os.environ["DB_PORT"],
+#     "database": os.environ["DB_DATABASE"],
+#     "user": os.environ["DB_USER"],
+#     "password": os.environ["MYSQL_PASSWORD"],
+# }
 
 cnxpool = mysql.connector.pooling.MySQLConnectionPool(
     pool_name="mypool", pool_size=5, **dbconfig

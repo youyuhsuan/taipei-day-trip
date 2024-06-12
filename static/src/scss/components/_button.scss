@@ -92,8 +92,9 @@ button {
   height: 0.75rem; // 12px
   border-radius: 50%;
   background-color: $white;
-  &.active {
-    background-color: $black;
-    border: 1px solid $white;
-  }
+}
+
+.current-dot {
+  background-color: $black;
+  border: 1px solid $white;
 }

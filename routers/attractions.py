@@ -95,7 +95,6 @@ async def get_attractions_attractionId(
                 if data:
                     img_url = data["images"].split(",") if data["images"] else []
                     data["images"] = img_url
-                    print(data)
                     return {"data": data}
                 else:
                     content = {
