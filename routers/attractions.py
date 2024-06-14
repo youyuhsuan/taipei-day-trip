@@ -1,6 +1,6 @@
-from fastapi import APIRouter, Request, Query, Path, status
+from fastapi import APIRouter, Request, Query, Path
 from typing import Annotated, Optional
-from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi.responses import JSONResponse
 
 router = APIRouter()
 
@@ -83,7 +83,6 @@ async def get_attractions_attractionId(
     attractionId: Annotated[int, Path(description="景點編號")],
 ):
     db_pool = request.state.db_pool
-
     try:
         with db_pool.get_connection() as con:
             with con.cursor(dictionary=True) as cursor:
@@ -106,41 +105,3 @@ async def get_attractions_attractionId(
                     )
     except Exception as e:
         return JSONResponse(status_code=500, content="Internal server error")
-
-
-# @router.get("/attraction/{id}")
-# async def attraction(request: Request, id: int):
-#     db_pool = request.state.db_pool
-#     try:
-#         with db_pool.get_connection() as con:
-#             with con.cursor(dictionary=True) as cursor:
-#                 query = """
-#                 SELECT attractions.*, images.images
-#                 FROM attractions
-#                 JOIN (
-#                     SELECT attractions_id, GROUP_CONCAT(images) AS images
-#                     FROM attractions_images
-#                     GROUP BY attractions_id
-#                 ) AS images
-#                 ON attractions.id = images.attractions_id
-#                 WHERE attractions.id = %s;
-#                 """
-#                 cursor.execute(query, (id,))
-#                 data = cursor.fetchone()
-#                 if data:
-#                     img_url = data["images"].split(",") if data["images"] else []
-#                     data["images"] = img_url
-#                     return {"data": data}
-#                 # return RedirectResponse(
-#                 #     url=f"/attraction/{id}", status_code=status.HTTP_303_SEE_OTHER
-#                 # )
-#             else:
-#                 content = {
-#                     "error": True,
-#                     "message": "No data found matching criteria",
-#                 }
-#                 return JSONResponse(
-#                     status_code=400, content=content, media_type="application/json"
-#                 )
-# except Exception as e:
-#     return JSONResponse(status_code=500, content="Internal server error")

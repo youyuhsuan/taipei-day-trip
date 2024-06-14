@@ -137,17 +137,7 @@ function carousel() {
 
   slides.forEach(setSlidePosition);
 
-  let reloaded = false;
-
-  window.addEventListener("resize", handlePageChange, updateSlidePositions);
-  window.addEventListener("DOMContentLoaded", handlePageChange);
-
-  function handlePageChange() {
-    if (!reloaded) {
-      location.reload();
-      reloaded = true;
-    }
-  }
+  window.addEventListener("resize", updateSlidePositions);
 
   const moveToSlide = (track, currentSlide, targetSlide) => {
     track.style.transform = `translateX(-${targetSlide.style.left})`;

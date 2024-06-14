@@ -1,5 +1,5 @@
 from fastapi import *
-from routers import attractions, mrts, static_pages, booking
+from routers import attractions, mrts, static_pages, booking, user
 from fastapi.staticfiles import StaticFiles
 import mysql.connector.pooling
 import os
@@ -40,3 +40,4 @@ app.include_router(attractions.router)
 app.include_router(mrts.router)
 app.include_router(static_pages.router)
 app.include_router(booking.router)
+app.include_router(user.router)
