@@ -35,5 +35,21 @@
     max-width: 100%;
     height: 100%;
     object-fit: cover;
+    // opacity: 0; /* Initially hidden */
+    // transition: opacity 0.5s ease-in-out; /* Smooth transition for fade-in effect */
   }
+}
+
+.blur-load {
+  background-size: cover;
+  background-position: center;
+}
+
+.blur-load.load > img {
+  opacity: 1;
+}
+
+.blur-load > img {
+  opacity: 0;
+  transition: opacity 200ms ease-in-out;
 }

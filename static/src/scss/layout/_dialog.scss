@@ -31,14 +31,6 @@
   margin-bottom: 0.938rem; // 15px
 }
 
-.signup-dialog {
-  height: 20.75rem; // 332px
-}
-
-.signin-dialog {
-  height: 17.188rem; // 275px
-}
-
 dialog {
   margin: 5rem auto 0; //80px
   border: none;
@@ -68,4 +60,14 @@ dialog {
 
 ::backdrop {
   background: $black-opacity-25;
+}
+
+.error-message {
+  color: rgb(203, 68, 74);
+  margin-bottom: 0.625rem;
+}
+
+.success-message {
+  color: rgb(64, 133, 88);
+  margin-bottom: 0.625rem;
 }

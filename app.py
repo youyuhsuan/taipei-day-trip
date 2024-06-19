@@ -12,12 +12,13 @@ dbconfig = {
     "password": os.environ["MYSQL_PASSWORD"],
 }
 
+
 # dbconfig = {
 #     "host": os.environ["DB_HOST"],
 #     "port": os.environ["DB_PORT"],
 #     "database": os.environ["DB_DATABASE"],
 #     "user": os.environ["DB_USER"],
-#     "password": os.environ["MYSQL_PASSWORD"],
+#     "password": os.environ["DB_PASSWORD"],
 # }
 
 cnxpool = mysql.connector.pooling.MySQLConnectionPool(

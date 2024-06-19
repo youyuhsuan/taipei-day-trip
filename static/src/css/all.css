@@ -73,6 +73,12 @@ button {
   color: #666666;
   text-wrap: nowrap;
 }
+.navigation-btn.active {
+  display: block;
+}
+.navigation-btn:not(.active) {
+  display: none;
+}
 
 .arrow-btn {
   width: 2rem;
@@ -378,6 +384,20 @@ hr:nth-of-type(2) {
   object-fit: cover;
 }
 
+.blur-load {
+  background-size: cover;
+  background-position: center;
+}
+
+.blur-load.load > img {
+  opacity: 1;
+}
+
+.blur-load > img {
+  opacity: 0;
+  transition: opacity 200ms ease-in-out;
+}
+
 .navigation {
   position: fixed;
   top: 0;
@@ -475,14 +495,6 @@ footer {
   margin-bottom: 0.938rem;
 }
 
-.signup-dialog {
-  height: 20.75rem;
-}
-
-.signin-dialog {
-  height: 17.188rem;
-}
-
 dialog {
   margin: 5rem auto 0;
   border: none;
@@ -510,6 +522,16 @@ dialog a {
 
 ::backdrop {
   background: rgba(0, 0, 0, 0.25);
+}
+
+.error-message {
+  color: rgb(203, 68, 74);
+  margin-bottom: 0.625rem;
+}
+
+.success-message {
+  color: rgb(64, 133, 88);
+  margin-bottom: 0.625rem;
 }
 
 .index-container {

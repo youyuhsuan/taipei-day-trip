@@ -3,22 +3,23 @@ import re
 import mysql.connector
 import os
 
-# con = mysql.connector.connect(
-# database="DB_DATABASE",
-# user="root",
-# password="MYSQL_PASSWORD",
-# host="3307",
-# )
-
 con = mysql.connector.connect(
-    host=os.environ["DB_HOST"],
-    port=os.environ["DB_PORT"],
-    database=os.environ["DB_DATABASE"],
-    user=os.environ["DB_USER"],
+    database="taipei_attractions",
+    user="root",
     password=os.environ["MYSQL_PASSWORD"],
+    host="localhost",
 )
 
-with open("../data/taipei-attractions.json", "r") as taipei_attractions:
+# con = mysql.connector.connect(
+#     host=os.environ["DB_HOST"],
+#     port=os.environ["DB_PORT"],
+#     database=os.environ["DB_DATABASE"],
+#     user=os.environ["DB_USER"],
+#     password=os.environ["DB_PASSWORD"],
+#       host="3307",
+# )
+
+with open("data/taipei-attractions.json", "r") as taipei_attractions:
     file = json.load(taipei_attractions)
     attractions = file["result"]["results"]
     for attraction in attractions:
@@ -33,7 +34,6 @@ with open("../data/taipei-attractions.json", "r") as taipei_attractions:
         lng = float(attraction["longitude"])
         file = attraction["file"].lower()
         clear_file = re.findall(r"https?://[^\s]+?\.jpg", file)
-
         with con.cursor() as cursor:
             insert_attractions = "INSERT INTO attractions (name, category, description, address, transport, mrt, lat, lng) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
             insert_attractions_values = (

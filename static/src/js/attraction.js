@@ -3,6 +3,7 @@ const currentUrl = window.location.href;
 const regex = /\/attraction\/(\d+)/;
 const match = currentUrl.match(regex);
 let loding = false;
+let currentIndex = 0;
 
 if (match) {
   const attractionId = match[1];
@@ -76,7 +77,8 @@ function createAttraction(
     }
 
     let slideImg = document.createElement("img");
-    slideImg.src = imageInfo;
+    slideImg.dataset.src = imageInfo; // 使用 data-src 屬性來存儲圖片 URL
+    slideImg.placeholder = "blur";
 
     let dot = document.createElement("li");
     dot.className = "dot";
@@ -131,19 +133,31 @@ function carousel() {
   };
 
   const updateSlidePositions = () => {
-    slideWidth = slides[0].getBoundingClientRect().width;
-    slides.forEach(setSlidePosition);
+    const slideWidth = slides[0].getBoundingClientRect().width;
+
+    slides.forEach((slide) => {
+      slide.style.width = `${slideWidth}px`;
+    });
+
+    const currentSlideLeft = currentIndex * slideWidth;
+    slideTrack.style.transform = `translateX(-${currentSlideLeft}px)`;
   };
 
-  slides.forEach(setSlidePosition);
+  slides.forEach((slide, index) => {
+    slide.style.left = `${index * 100}%`;
+  });
 
   window.addEventListener("resize", updateSlidePositions);
 
   const moveToSlide = (track, currentSlide, targetSlide) => {
-    track.style.transform = `translateX(-${targetSlide.style.left})`;
+    currentIndex = slides.indexOf(targetSlide);
+    const slideWidth = slides[0].getBoundingClientRect().width;
+    const targetIndex = slides.indexOf(targetSlide);
+    const targetSlideLeft = targetIndex * slideWidth;
+
+    track.style.transform = `translateX(-${targetSlideLeft}px)`;
     currentSlide.classList.remove("current-slide");
     targetSlide.classList.add("current-slide");
-    updateSlidePositions();
   };
 
   const updateDots = (currentDot, targetDot) => {
@@ -183,7 +197,6 @@ function carousel() {
 
   dotsNav.addEventListener("click", (e) => {
     const targetDot = e.target.closest("li");
-    console.log(e.target);
     if (!targetDot) return;
 
     const currentSlide = slideTrack.querySelector(".current-slide");
@@ -193,6 +206,30 @@ function carousel() {
 
     moveToSlide(slideTrack, currentSlide, targetSlide);
     updateDots(currentDot, targetDot);
+  });
+
+  // Intersection Observer for lazy loading images
+  const lazyLoad = (entries, observer) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const img = entry.target.querySelector("img");
+        if (img && img.dataset.src) {
+          img.src = img.dataset.src;
+          img.removeAttribute("data-src");
+        }
+        observer.unobserve(entry.target);
+      }
+    });
+  };
+
+  const observer = new IntersectionObserver(lazyLoad, {
+    root: null,
+    rootMargin: "0px",
+    threshold: 0.1,
+  });
+
+  slides.forEach((slide) => {
+    observer.observe(slide);
   });
 }
 

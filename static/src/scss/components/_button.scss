@@ -11,6 +11,13 @@ button {
   padding: 0.625rem; // 10px
   color: $secondary-70;
   text-wrap: nowrap;
+  &.active {
+    display: block;
+  }
+
+  &:not(.active) {
+    display: none;
+  }
 }
 
 // list-bar

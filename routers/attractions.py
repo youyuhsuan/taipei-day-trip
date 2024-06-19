@@ -86,14 +86,17 @@ async def get_attractions_attractionId(
     try:
         with db_pool.get_connection() as con:
             with con.cursor(dictionary=True) as cursor:
-                query = """
-                select attractions.*,GROUP_CONCAT(attractions_images.images) AS images from attractions join attractions_images on attractions.id = attractions_images.attractions_id where attractions.id = %s;
-                """
+                query = "select * from attractions where attractions.id = %s;"
                 cursor.execute(query, (attractionId,))
                 data = cursor.fetchone()
+                query = (
+                    "SELECT images FROM attractions_images WHERE attractions_id = %s;"
+                )
+                cursor.execute(query, (attractionId,))
+                image_data = cursor.fetchall()
                 if data:
-                    img_url = data["images"].split(",") if data["images"] else []
-                    data["images"] = img_url
+                    img_urls = [img["images"] for img in image_data]
+                    data["images"] = img_urls
                     return {"data": data}
                 else:
                     content = {
