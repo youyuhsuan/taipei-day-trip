@@ -1,8 +1,6 @@
 @use "typography" as *;
 
 body {
-  max-width: 120rem; // 1920px
-  width: 100%;
   font-family: $font-family;
   overflow-x: clip;
 }

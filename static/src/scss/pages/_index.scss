@@ -14,12 +14,13 @@
 
 .hero {
   position: relative;
+  margin: 0 auto;
   max-width: 120rem;
   width: 100%;
   height: 23.375rem; // 374px
   background-image: url("../image/welcome.png"), $gradient-secondary;
   background-size: 120rem 33.375rem; // 1920px 534px
-  background-position: center 3.375rem;
+  background-position: center 3.375rem; // 54px
   background-repeat: no-repeat;
   @include breakpoint(sm) {
     background-size: 80.188rem 23.375rem; // 1283px 374px

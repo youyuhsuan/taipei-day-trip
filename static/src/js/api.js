@@ -23,11 +23,12 @@ async function getAttractions(keyword = "") {
     let nextpage = responseData.nextPage;
     if (data) {
       for (let entries of data) {
+        let id = entries.id;
         let name = entries.name;
         let mrt = entries.mrt;
         let category = entries.category;
         let image = entries.images[0];
-        createAttractionCard(name, category, mrt, image);
+        createAttractionCard(name, category, mrt, image, id);
       }
       if (nextpage) {
         lastCardObserver.observe(document.querySelector(".footerr"));
@@ -47,11 +48,10 @@ async function getAttractions(keyword = "") {
 async function keywordSearch() {
   const listItem = document.querySelectorAll(".list-item");
   listItem.forEach((item) => {
-    item.addEventListener("click", async (event) => {
+    item.addEventListener("click", (event) => {
       const searchInput = document.querySelector(".search-input");
       const keyword = event.target.textContent.trim(); // Get the text content of the clicked item
       searchInput.value = keyword; // Update the input's value with the keyword
-      console.log(keyword);
       getAttractions(keyword);
     });
   });
@@ -61,7 +61,6 @@ const lastCardObserver = new IntersectionObserver(
   (entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        console.log(entries.target);
         getAttractions();
       }
     });
@@ -69,9 +68,13 @@ const lastCardObserver = new IntersectionObserver(
   { threshold: 0.5 }
 );
 
-function createAttractionCard(name, category, mrt, image) {
+function createAttractionCard(name, category, mrt, image, id) {
   let attractionsCard = document.createElement("div");
   attractionsCard.className = "attractions-card";
+
+  let cardLink = document.createElement("a");
+  cardLink.className = "card-link";
+  cardLink.href = `/attraction/${id}`;
 
   let cardImg = document.createElement("div");
   cardImg.className = "card-img";
@@ -94,7 +97,8 @@ function createAttractionCard(name, category, mrt, image) {
   cardCategory.className = "card-category";
   cardCategory.textContent = category;
 
-  attractionsCard.appendChild(cardImg);
+  attractionsCard.appendChild(cardLink);
+  cardLink.appendChild(cardImg);
   cardImg.appendChild(img);
   cardImg.appendChild(cardName);
   attractionsCard.appendChild(cardContent);
