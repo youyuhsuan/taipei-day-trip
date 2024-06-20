@@ -105,7 +105,6 @@ async function signupData(signupName, signupEmail, signupPassword) {
     });
     const responseData = await response.json();
     const message = responseData["message"];
-    removePreviousMessage();
     if (response.ok) {
       if (responseData["ok"] === true) {
         displayMessage("註冊成功", signupForm, signinLink);
@@ -118,16 +117,15 @@ async function signupData(signupName, signupEmail, signupPassword) {
       displayMessage(message, signupForm, signinLink);
       return;
     }
-    console(responseData);
   } catch (e) {
     console.error(e);
   }
 }
 
 function displayMessage(message, form, anchorElement) {
-  removePreviousMessage();
   let messageSpan = document.createElement("span");
   messageSpan.className = "error-message";
+  removePreviousMessage();
   if (message === "註冊成功") {
     messageSpan.className = "success-message";
   }
@@ -136,8 +134,12 @@ function displayMessage(message, form, anchorElement) {
 }
 
 function removePreviousMessage() {
-  let previousMessages = document.querySelectorAll(".error-message");
-  previousMessages.forEach(function (message) {
+  let errorMessages = document.querySelectorAll(".error-message");
+  let successMessages = document.querySelectorAll(".success-message");
+  errorMessages.forEach(function (message) {
+    message.remove();
+  });
+  successMessages.forEach(function (message) {
     message.remove();
   });
 }
@@ -155,10 +157,12 @@ async function updateAuthButton() {
       },
     });
     const responseDate = await response.json();
-    if (responseDate.data !== "None") {
-      logoutBtn.classList.toggle("active", !token);
-    } else {
+    if (responseDate.data !== null) {
       loginBtn.classList.toggle("active", !token);
+      logoutBtn.classList.toggle("active", token);
+    } else {
+      loginBtn.classList.toggle("active", token);
+      logoutBtn.classList.toggle("active", !token);
     }
   } else {
     loginBtn.classList.toggle("active", !token);

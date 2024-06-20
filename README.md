@@ -1,3 +1,9 @@
+## activates the virtual environment
+
+```shell
+poetry shell
+```
+
 ## export plugins
 
 ```shell
