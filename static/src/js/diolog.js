@@ -82,11 +82,10 @@ async function signinData(signinEmail, signinPassword) {
     }
     if (responseData.token) {
       localStorage.setItem("authToken", responseData.token);
-      updateAuthButton();
       location.reload();
     }
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 }
 
@@ -105,7 +104,6 @@ async function signupData(signupName, signupEmail, signupPassword) {
     });
     const responseData = await response.json();
     const message = responseData["message"];
-    removePreviousMessage();
     if (response.ok) {
       if (responseData["ok"] === true) {
         displayMessage("註冊成功", signupForm, signinLink);
@@ -118,16 +116,15 @@ async function signupData(signupName, signupEmail, signupPassword) {
       displayMessage(message, signupForm, signinLink);
       return;
     }
-    console(responseData);
   } catch (e) {
     console.error(e);
   }
 }
 
 function displayMessage(message, form, anchorElement) {
-  removePreviousMessage();
   let messageSpan = document.createElement("span");
   messageSpan.className = "error-message";
+  removePreviousMessage();
   if (message === "註冊成功") {
     messageSpan.className = "success-message";
   }
@@ -136,44 +133,59 @@ function displayMessage(message, form, anchorElement) {
 }
 
 function removePreviousMessage() {
-  let previousMessages = document.querySelectorAll(".error-message");
-  previousMessages.forEach(function (message) {
+  let errorMessages = document.querySelectorAll(".error-message");
+  let successMessages = document.querySelectorAll(".success-message");
+  errorMessages.forEach(function (message) {
+    message.remove();
+  });
+  successMessages.forEach(function (message) {
     message.remove();
   });
 }
 
-async function updateAuthButton() {
-  let loginBtn = document.querySelector(".login-btn");
-  let logoutBtn = document.querySelector(".logout-btn");
-  let token = localStorage.getItem("authToken");
-  if (token) {
-    const response = await fetch("/api/user/auth", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-    const responseDate = await response.json();
-    if (responseDate.data !== "None") {
-      logoutBtn.classList.toggle("active", !token);
-    } else {
-      loginBtn.classList.toggle("active", !token);
-    }
-  } else {
-    loginBtn.classList.toggle("active", !token);
-    logoutBtn.classList.toggle("active", token);
-  }
+function updateAuthButton(loginBtn, logoutBtn, isLoggedIn) {
+  loginBtn.classList.toggle("active", isLoggedIn);
+  logoutBtn.classList.toggle("active", !isLoggedIn);
 }
 
 function handleLogout() {
+  let loginBtn = document.querySelector(".login-btn");
+  let logoutBtn = document.querySelector(".logout-btn");
   localStorage.removeItem("authToken");
-  updateAuthButton();
+  updateAuthButton(loginBtn, logoutBtn, false);
   location.reload();
 }
 
 document.addEventListener("DOMContentLoaded", async function () {
-  updateAuthButton();
+  let loginBtn = document.querySelector(".login-btn");
   let logoutBtn = document.querySelector(".logout-btn");
   logoutBtn.addEventListener("click", handleLogout);
+  let token = localStorage.getItem("authToken");
+
+  if (token) {
+    try {
+      const response = await fetch("/api/user/auth", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response) {
+        const responseData = await response.json();
+        responseData
+          ? updateAuthButton(loginBtn, logoutBtn, false)
+          : handleLogout();
+      } else {
+        handleLogout();
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      handleLogout();
+    }
+  } else {
+    localStorage.removeItem("authToken");
+    updateAuthButton(loginBtn, logoutBtn, true);
+  }
 });
