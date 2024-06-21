@@ -90,7 +90,7 @@
         display: none;
         background-color: $primary-70;
         border-radius: 50%;
-        border: 2px solid $white;
+        // border: 2px solid $white;
       }
       &:checked::before,
       &:focus::before {

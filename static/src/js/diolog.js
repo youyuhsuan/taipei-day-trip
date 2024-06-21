@@ -1,5 +1,3 @@
-const dialogs = document.querySelectorAll("dialog");
-
 const signinDialog = document.querySelector(".signin-dialog");
 const signupDialog = document.querySelector(".signup-dialog");
 

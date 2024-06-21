@@ -1,7 +1,11 @@
 import {
-  displayMessage,
-  removePreviousMessage,
-} from "../shared/displayMessage";
+  signinForm,
+  signupLink,
+  signupForm,
+  signinLink,
+} from "../variables.js";
+import { removePreviousMessage } from "../shared/removePreviousMessage.js";
+import { displayMessage } from "../shared/displayMessage.js";
 
 async function signinData(signinEmail, signinPassword) {
   try {
@@ -21,11 +25,10 @@ async function signinData(signinEmail, signinPassword) {
     }
     if (responseData.token) {
       localStorage.setItem("authToken", responseData.token);
-      updateAuthButton();
       location.reload();
     }
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 }
 
@@ -44,7 +47,6 @@ async function signupData(signupName, signupEmail, signupPassword) {
     });
     const responseData = await response.json();
     const message = responseData["message"];
-    removePreviousMessage();
     if (response.ok) {
       if (responseData["ok"] === true) {
         displayMessage("註冊成功", signupForm, signinLink);
@@ -57,7 +59,6 @@ async function signupData(signupName, signupEmail, signupPassword) {
       displayMessage(message, signupForm, signinLink);
       return;
     }
-    console(responseData);
   } catch (e) {
     console.error(e);
   }

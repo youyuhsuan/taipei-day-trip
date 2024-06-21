@@ -703,7 +703,6 @@ dialog a {
   display: none;
   background-color: #448899;
   border-radius: 50%;
-  border: 2px solid #ffffff;
 }
 .booking-form input[type=radio]:checked::before, .booking-form input[type=radio]:focus::before {
   display: block;
