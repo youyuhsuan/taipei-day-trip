@@ -81,12 +81,8 @@ async function signinData(signinEmail, signinPassword) {
       return;
     }
     if (responseData.token) {
-      let loginBtn = document.querySelector(".login-btn");
-      let logoutBtn = document.querySelector(".logout-btn");
       localStorage.setItem("authToken", responseData.token);
-      console.log("reload first");
       location.reload();
-      console.log("reload second");
     }
   } catch (e) {
     console.error(e);
@@ -178,7 +174,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       if (response) {
         const responseData = await response.json();
-        responseData.data
+        responseData
           ? updateAuthButton(loginBtn, logoutBtn, false)
           : handleLogout();
       } else {

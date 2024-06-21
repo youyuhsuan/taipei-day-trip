@@ -115,24 +115,22 @@ async def signup(request: Request, UserAuth: UserAuth):
 async def get_current_user(request: Request):
     authorization = request.headers.get("Authorization")
     scheme, credentials = authorization.split(" ")
-    if scheme != "Bearer":
-        return None
-    if credentials:
-        try:
-            credentials = decodeJWT(credentials)
-            credentials = {
-                "data": {
-                    "id": credentials.get("id"),
-                    "name": credentials.get("name"),
-                    "email": credentials.get("email"),
+    if scheme == "Bearer":
+        if credentials:
+            try:
+                credentials = decodeJWT(credentials)
+                credentials = {
+                    "data": {
+                        "id": credentials.get("id"),
+                        "name": credentials.get("name"),
+                        "email": credentials.get("email"),
+                    }
                 }
-            }
-            return credentials
-        except Exception as e:
-            raise HTTPException(
-                status_code=500,
-                detail="Internal server error",
-            )
+                return credentials
+            except Exception as e:
+                return None
+        else:
+            return None
     else:
         return None
 
