@@ -7,9 +7,9 @@ import os
 app = FastAPI()
 
 dbconfig = {
-    "database": "taipei_attractions",
-    "user": "root",
-    "password": os.environ["MYSQL_PASSWORD"],
+    "database": os.environ["DB_DATABASE"],
+    "user": os.environ["DB_USER"],
+    "password": os.environ["DB_PASSWORD"],
 }
 
 

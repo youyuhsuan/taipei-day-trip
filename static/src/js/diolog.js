@@ -81,12 +81,15 @@ async function signinData(signinEmail, signinPassword) {
       return;
     }
     if (responseData.token) {
+      let loginBtn = document.querySelector(".login-btn");
+      let logoutBtn = document.querySelector(".logout-btn");
       localStorage.setItem("authToken", responseData.token);
-      updateAuthButton();
+      console.log("reload first");
       location.reload();
+      console.log("reload second");
     }
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 }
 
@@ -144,40 +147,49 @@ function removePreviousMessage() {
   });
 }
 
-async function updateAuthButton() {
-  let loginBtn = document.querySelector(".login-btn");
-  let logoutBtn = document.querySelector(".logout-btn");
-  let token = localStorage.getItem("authToken");
-  if (token) {
-    const response = await fetch("/api/user/auth", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-    const responseDate = await response.json();
-    if (responseDate.data !== null) {
-      loginBtn.classList.toggle("active", !token);
-      logoutBtn.classList.toggle("active", token);
-    } else {
-      loginBtn.classList.toggle("active", token);
-      logoutBtn.classList.toggle("active", !token);
-    }
-  } else {
-    loginBtn.classList.toggle("active", !token);
-    logoutBtn.classList.toggle("active", token);
-  }
+function updateAuthButton(loginBtn, logoutBtn, isLoggedIn) {
+  loginBtn.classList.toggle("active", isLoggedIn);
+  logoutBtn.classList.toggle("active", !isLoggedIn);
 }
 
 function handleLogout() {
+  let loginBtn = document.querySelector(".login-btn");
+  let logoutBtn = document.querySelector(".logout-btn");
   localStorage.removeItem("authToken");
-  updateAuthButton();
+  updateAuthButton(loginBtn, logoutBtn, false);
   location.reload();
 }
 
 document.addEventListener("DOMContentLoaded", async function () {
-  updateAuthButton();
+  let loginBtn = document.querySelector(".login-btn");
   let logoutBtn = document.querySelector(".logout-btn");
   logoutBtn.addEventListener("click", handleLogout);
+  let token = localStorage.getItem("authToken");
+
+  if (token) {
+    try {
+      const response = await fetch("/api/user/auth", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response) {
+        const responseData = await response.json();
+        responseData.data
+          ? updateAuthButton(loginBtn, logoutBtn, false)
+          : handleLogout();
+      } else {
+        handleLogout();
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      handleLogout();
+    }
+  } else {
+    localStorage.removeItem("authToken");
+    updateAuthButton(loginBtn, logoutBtn, true);
+  }
 });
