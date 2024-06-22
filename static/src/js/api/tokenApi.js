@@ -1,6 +1,6 @@
 import { loginBtn, logoutBtn, token } from "../variables.js";
-import { handleLogout } from "../shared/handleLogout.js";
-import { updateAuthButton } from "../shared/updateAuthButton.js";
+import { handleLogout } from "../utils/handleLogout.js";
+import { updateAuthButton } from "../utils/updateAuthButton.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
   logoutBtn.addEventListener("click", handleLogout);

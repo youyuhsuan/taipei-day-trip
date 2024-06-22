@@ -5,7 +5,7 @@ let loding = false;
 let page = 0;
 let current_spot = "";
 
-export async function attractionsApi(keyword = "") {
+async function attractionsApi(keyword = "") {
   if (loding) return;
   loding = true;
   try {
@@ -59,3 +59,5 @@ const lastCardObserver = new IntersectionObserver(
 );
 
 attractionsApi();
+
+export { attractionsApi };

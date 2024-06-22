@@ -1,4 +1,6 @@
-export function carousel() {
+let currentIndex = 0;
+
+function carousel() {
   let carouselPrevBtn = document.querySelector(".carousel-prev-button");
   let carouselNextBtn = document.querySelector(".carousel-next-button");
   let slideTrack = document.querySelector(".slide-track");
@@ -110,3 +112,5 @@ export function carousel() {
     observer.observe(slide);
   });
 }
+
+export { carousel };

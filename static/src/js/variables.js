@@ -7,7 +7,6 @@ export const signupLink = signinForm.querySelector(".signup-link");
 export const loginBtn = document.querySelector(".login-btn");
 export const logoutBtn = document.querySelector(".logout-btn");
 export let token = localStorage.getItem("authToken");
-
 export const attractionsContainer = document.querySelector(
   ".attractions-container"
 );

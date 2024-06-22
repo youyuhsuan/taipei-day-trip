@@ -7,7 +7,7 @@ import {
   signinLink,
 } from "../variables.js";
 
-import { removePreviousMessage } from "../shared/removePreviousMessage.js";
+import { removePreviousMessage } from "../utils/removePreviousMessage.js";
 
 const openDialogButton = document.querySelector(".open-dialog");
 const closeDialogButton = document.querySelectorAll(".close-dialog");

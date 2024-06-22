@@ -4,8 +4,8 @@ import {
   signupForm,
   signinLink,
 } from "../variables.js";
-import { removePreviousMessage } from "../shared/removePreviousMessage.js";
-import { displayMessage } from "../shared/displayMessage.js";
+import { removePreviousMessage } from "../utils/removePreviousMessage.js";
+import { displayMessage } from "../utils/displayMessage.js";
 
 async function signinData(signinEmail, signinPassword) {
   try {

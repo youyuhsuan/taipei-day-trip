@@ -1,8 +1,10 @@
 import { attractionsContainer } from "../variables.js";
 
-export function createAttractionCard(name, category, mrt, image, id) {
-  let attractionsCard = document.createElement("div");
+function createAttractionCard(name, category, mrt, image, id) {
+  if (!attractionsContainer) return;
+  let attractionsCard = document.createElement("figure");
   attractionsCard.className = "attractions-card";
+  attractionsCard.setAttribute("loading", "lazy");
 
   let cardLink = document.createElement("a");
   cardLink.className = "card-link";
@@ -13,6 +15,8 @@ export function createAttractionCard(name, category, mrt, image, id) {
 
   let img = document.createElement("img");
   img.src = image;
+  img.alt = name;
+  img.setAttribute("loading", "lazy");
 
   let cardName = document.createElement("p");
   cardName.textContent = name;
@@ -38,3 +42,5 @@ export function createAttractionCard(name, category, mrt, image, id) {
   cardContent.appendChild(cardCategory);
   attractionsContainer.appendChild(attractionsCard);
 }
+
+export { createAttractionCard };

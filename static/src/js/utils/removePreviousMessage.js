@@ -1,4 +1,4 @@
-export function removePreviousMessage() {
+function removePreviousMessage() {
   let errorMessages = document.querySelectorAll(".error-message");
   let successMessages = document.querySelectorAll(".success-message");
   errorMessages.forEach(function (message) {
@@ -8,3 +8,5 @@ export function removePreviousMessage() {
     message.remove();
   });
 }
+
+export { removePreviousMessage };

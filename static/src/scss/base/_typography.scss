@@ -1,4 +1,21 @@
-$font-family: "Noto Sans TC", sans-serif;
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap");
+@font-face {
+  font-family: "Noto Sans TC";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/notosanstc/v35/-nF7OG829Oofr2wohFbTp9iFOisNA_cTyNromxqQuEMQ2wHYwbnmy1R1jDujLebozBXCo2qYhRo.6.woff2)
+    format("woff2");
+  unicode-range: U+ff78-ff7e, U+ff80-ff86, U+ff89-ff94, U+ff97-ff9e, U+ffb9,
+    U+ffe0-ffe3, U+ffe9, U+ffeb, U+ffed, U+fffc, U+1d7c7, U+1f004, U+1f0cf,
+    U+1f141-1f142, U+1f150, U+1f154, U+1f158, U+1f15b, U+1f15d-1f15e,
+    U+1f162-1f163, U+1f170-1f171, U+1f174, U+1f177-1f178, U+1f17d-1f17f,
+    U+1f192-1f195, U+1f197-1f19a, U+1f1e6-1f1f5, U+1f1f7-1f1ff, U+1f21a, U+1f22f,
+    U+1f232-1f237, U+1f239-1f23a, U+1f250-1f251, U+1f300, U+1f302-1f319;
+}
+
+$font-family: "Noto Sans TC", "Segoe UI", Frutiger, "Frutiger Linotype",
+  "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
 
 $font-size-base: 1rem;
 $line-height-base: 1rem;
@@ -21,26 +38,40 @@ $btn-font-size: $font-size-base * 1.188; // 19px
 $content-font-size: $font-size-base;
 $category-list-font-size: $font-size-base * 0.875; // 14px
 
+* {
+  font-display: swap;
+  font-family: $font-family;
+  font-optical-sizing: auto;
+}
+
 // Element Styles
 h1 {
+  font-family: $font-family;
   font-weight: $font-weight-bold;
   font-size: $h1-font-size;
   line-height: $line-height-slogan-dialog;
 }
 
 h2 {
+  font-family: $font-family;
   font-weight: $font-weight-bold;
   font-size: $h2-font-size;
   line-height: $line-height-headline;
 }
 
 h3 {
+  font-family: $font-family;
   font-size: $h3-font-size;
   line-height: $line-height-slogan-dialog;
 }
 
+button {
+  font-family: $font-family;
+}
+
 // Composite Styles
 .font-btn {
+  font-family: $font-family;
   font-size: $btn-font-size;
   &.bold {
     font-weight: $font-weight-bold;
@@ -52,15 +83,18 @@ h3 {
 }
 
 .font-content {
+  font-family: $font-family;
   font-size: $font-size-base;
 }
 
 .font-body {
+  font-family: $font-family;
   font-size: $font-size-base;
   line-height: $line-height-body;
 }
 
 .font-category-list {
+  font-family: $font-family;
   font-weight: $font-weight-medium;
   font-size: $category-list-font-size;
   font-weight: $font-weight-medium;

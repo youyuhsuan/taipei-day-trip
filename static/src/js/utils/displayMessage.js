@@ -1,6 +1,6 @@
-import { removePreviousMessage } from "../shared/removePreviousMessage.js";
+import { removePreviousMessage } from "./removePreviousMessage.js";
 
-export function displayMessage(message, form, anchorElement) {
+function displayMessage(message, form, anchorElement) {
   let messageSpan = document.createElement("span");
   messageSpan.className = "error-message";
   removePreviousMessage();
@@ -10,3 +10,5 @@ export function displayMessage(message, form, anchorElement) {
   messageSpan.textContent = message;
   form.insertBefore(messageSpan, anchorElement);
 }
+
+export { displayMessage };

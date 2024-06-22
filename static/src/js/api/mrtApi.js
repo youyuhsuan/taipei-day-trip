@@ -1,7 +1,7 @@
 import { createMrtListItem } from "../utils/createMrtListItem.js";
 import { keywordSearch } from "../utils/keywordSearch.js";
 
-export async function mrtApi() {
+async function mrtApi() {
   try {
     let response = await fetch("/api/mrts");
     let responseDate = await response.json();
@@ -16,3 +16,5 @@ export async function mrtApi() {
 }
 
 mrtApi();
+
+export { mrtApi };
