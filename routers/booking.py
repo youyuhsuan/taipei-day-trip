@@ -202,27 +202,15 @@ async def delete_booking(request: Request, token: str = Depends(JWTBearer())):
         )
     db_pool = request.state.db_pool
     try:
-        with db_pool.get_connect() as con:
+        with db_pool.get_connection() as con:
             with con.cursor(dictionary=True) as cursor:
-                if not booking:
-                    content = {
-                        "error": True,
-                        "message": "Booking not found",
-                    }
-                    return JSONResponse(
-                        status_code=404,
-                        content=content,
-                        media_type="application/json",
-                    )
-                delete_query = "DELETE FROM booking WHERE id = %s"
-                cursor.execute(delete_query, (booking["id"],))
+                credentials = user.decodeJWT(token)
+                delete_query = "DELETE FROM booking WHERE user_id = %s"
+                cursor.execute(delete_query, (credentials["id"],))
                 con.commit()
-
                 return {
                     "ok": True,
-                    "message": "Booking deleted successfully",
                 }
-
     except Exception as e:
         content = {
             "error": True,
