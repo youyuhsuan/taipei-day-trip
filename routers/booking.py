@@ -80,6 +80,8 @@ async def get_booking(request: Request, token: str = Depends(JWTBearer())):
                 query = "SELECT * FROM booking WHERE user_id = %s"
                 cursor.execute(query, (credentials["id"],))
                 match_booking = cursor.fetchone()
+                if not match_booking:
+                    return None
                 query = """
                 SELECT attractions.id, attractions.name, attractions.address, attractions_images.images AS image
                 FROM attractions
@@ -88,21 +90,21 @@ async def get_booking(request: Request, token: str = Depends(JWTBearer())):
                 LIMIT 1;"""
                 cursor.execute(query, (match_booking["attraction_id"],))
                 match_attraction = cursor.fetchone()
-                if match_booking and match_attraction:
-                    data = {
-                        "attraction": {
-                            "id": match_attraction["id"],
-                            "name": match_attraction["name"],
-                            "address": match_attraction["address"],
-                            "image": match_attraction["image"],
-                        },
-                        "date": match_booking["date"],
-                        "time": match_booking["time"],
-                        "price": match_booking["price"],
-                    }
-                    return {"data": data}
-                else:
+                if not match_attraction:
                     return None
+                data = {
+                    "attraction": {
+                        "id": match_attraction["id"],
+                        "name": match_attraction["name"],
+                        "address": match_attraction["address"],
+                        "image": match_attraction["image"],
+                    },
+                    "date": match_booking["date"],
+                    "time": match_booking["time"],
+                    "price": match_booking["price"],
+                }
+                return {"data": data}
+
     except Exception as e:
         content = {
             "error": True,

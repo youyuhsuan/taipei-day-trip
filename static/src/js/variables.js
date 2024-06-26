@@ -10,3 +10,4 @@ export const attractionsContainer = document.querySelector(
   ".attractions-container"
 );
 export let token = localStorage.getItem("authToken");
+export const booking = document.querySelector(".booking");

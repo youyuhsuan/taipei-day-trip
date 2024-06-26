@@ -60,6 +60,22 @@ const lastCardObserver = new IntersectionObserver(
 );
 
 // TODO:分檔
+
+const listItem = document.querySelectorAll(".list-item");
+
+function keywordSearch() {
+  listItem.forEach((item) => {
+    item.addEventListener("click", (event) => {
+      const searchInput = document.querySelector(".search-input");
+      const keyword = event.target.textContent.trim();
+      searchInput.value = keyword;
+      attractionsApi(keyword);
+    });
+  });
+}
+
+attractionsApi();
+export { attractionsApi, keywordSearch };
 document.addEventListener("DOMContentLoaded", () => {
   const searchForm = document.getElementById("search-form");
   const searchInput = document.getElementById("search-input");
@@ -70,7 +86,3 @@ document.addEventListener("DOMContentLoaded", () => {
     attractionsApi(keyword);
   });
 });
-
-attractionsApi();
-
-export { attractionsApi };

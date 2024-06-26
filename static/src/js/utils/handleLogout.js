@@ -7,4 +7,10 @@ function handleLogout() {
   location.reload();
 }
 
-export { handleLogout };
+function handleLogoutAndRedirect() {
+  updateAuthButton(loginBtn, logoutBtn, false);
+  localStorage.removeItem("authToken");
+  window.location.href = "/";
+}
+
+export { handleLogout, handleLogoutAndRedirect };

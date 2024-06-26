@@ -1,4 +1,4 @@
-import { token } from "../variables.js";
+import { token, booking } from "../variables.js";
 import { creatBookingInfo } from "../components/creatBookingInfo.js";
 
 async function bookingGetApi() {
@@ -11,15 +11,22 @@ async function bookingGetApi() {
       },
     });
     const responseData = await response.json();
+    if (responseData) {
+      let data = responseData.data;
+      let name = data.attraction.name;
+      let address = data.attraction.address;
+      let image = data.attraction.image;
+      let date = data.date;
+      let time = data.time;
+      let price = data.price;
+      creatBookingInfo(name, address, image, date, time, price);
+    } else {
+      let bookingContent = document.createElement("div");
+      bookingContent.className = "booking-info";
+      bookingContent.textContent = "目前沒有任何預約的行稱";
 
-    let data = responseData.data;
-    let name = data.attraction.name;
-    let address = data.attraction.address;
-    let image = data.attraction.image;
-    let date = data.date;
-    let time = data.time;
-    let price = data.price;
-    creatBookingInfo(name, address, image, date, time, price);
+      booking.appendChild(bookingContent);
+    }
   } catch (error) {
     console.error("bookingGetApi error:", error);
   }

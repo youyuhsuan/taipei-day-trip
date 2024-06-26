@@ -1,16 +1,29 @@
 @use "../abstracts/variables" as *;
 @use "../abstracts/mixins" as *;
 
-.headline {
+#booking-container {
   color: $secondary-70;
-  margin-bottom: 1.875rem; // 30px
+
+  input {
+    color: $secondary-50;
+    &:focus,
+    &:active {
+      color: $black;
+    }
+  }
+}
+
+.headline {
+  margin: 2.5rem 0 1.875rem; //40px 0 30px
+  line-height: 1.688rem; // 27px
 }
 
 .booking {
   max-width: 75rem; // 1200px
   width: 100%;
   display: flex;
-  gap: 1.875rem; //30px
+  gap: 1.875rem; // 30px
+  margin-bottom: 2.5rem; // 40px
   @include breakpoint(md) {
     flex-direction: column;
   }
@@ -37,20 +50,20 @@
   width: 100%;
 }
 
-.booking-title {
+.booking-name {
   color: $primary-70;
-}
-
-.info-item {
-  display: flex;
-  align-items: center;
-
-  .booking-label {
-    margin: 0;
-  }
+  margin-bottom: 1.25rem; // 20px
 }
 
 .booking-info {
   display: flex;
   flex-direction: column;
+  & > div {
+    margin-bottom: 0.625rem; // 10px
+    line-height: 1.5rem; // 24px
+  }
+}
+
+.contact > * {
+  margin-bottom: 0.625rem;
 }

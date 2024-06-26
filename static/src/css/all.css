@@ -241,7 +241,7 @@ button {
   color: #000000;
   border-radius: 5px 0px 0px 5px;
 }
-.search-bar .search-input:focus {
+.search-bar .search-input:focus, .search-bar .search-input:active {
   color: #000000;
 }
 @media (max-width: 576px) {
@@ -384,9 +384,15 @@ hr {
 hr:first-of-type {
   margin-top: 3.375rem;
 }
-hr:nth-of-type(2) {
+
+#attraction-container:nth-of-type(2) {
   max-width: 1200px;
   width: 100%;
+}
+
+#booking-container hr:first-of-type {
+  margin-top: 0rem;
+  margin-bottom: 2.5rem;
 }
 
 .carousel {
@@ -522,6 +528,11 @@ footer {
   padding: 0.938rem;
   color: #757575;
 }
+.signin-dialog input:focus, .signin-dialog input:active,
+.signup-dialog input:focus,
+.signup-dialog input:active {
+  color: #000000;
+}
 .signin-dialog .submit,
 .signup-dialog .submit {
   background-color: #448899;
@@ -583,12 +594,12 @@ dialog a {
   margin-bottom: 0.625rem;
 }
 
-.index-container {
+#index-container {
   width: 100%;
   padding: 0 2.5rem;
 }
 @media (max-width: 576px) {
-  .index-container {
+  #index-container {
     padding: 0 0.938rem;
   }
 }
@@ -823,9 +834,19 @@ dialog a {
   content: "元";
 }
 
-.headline {
+#booking-container {
   color: #666666;
-  margin-bottom: 1.875rem;
+}
+#booking-container input {
+  color: #757575;
+}
+#booking-container input:focus, #booking-container input:active {
+  color: #000000;
+}
+
+.headline {
+  margin: 2.5rem 0 1.875rem;
+  line-height: 1.688rem;
 }
 
 .booking {
@@ -833,6 +854,7 @@ dialog a {
   width: 100%;
   display: flex;
   gap: 1.875rem;
+  margin-bottom: 2.5rem;
 }
 @media (max-width: 768px) {
   .booking {
@@ -863,21 +885,22 @@ dialog a {
   width: 100%;
 }
 
-.booking-title {
+.booking-name {
   color: #448899;
-}
-
-.info-item {
-  display: flex;
-  align-items: center;
-}
-.info-item .booking-label {
-  margin: 0;
+  margin-bottom: 1.25rem;
 }
 
 .booking-info {
   display: flex;
   flex-direction: column;
+}
+.booking-info > div {
+  margin-bottom: 0.625rem;
+  line-height: 1.5rem;
+}
+
+.contact > * {
+  margin-bottom: 0.625rem;
 }
 
 /*# sourceMappingURL=all.css.map */
