@@ -832,6 +832,7 @@ dialog a {
   max-width: 75rem;
   width: 100%;
   display: flex;
+  gap: 1.875rem;
 }
 @media (max-width: 768px) {
   .booking {
@@ -844,6 +845,22 @@ dialog a {
     margin: 0;
     gap: 1.25rem;
   }
+}
+
+.booking-image {
+  max-width: 15.625rem;
+  height: 12.5rem;
+  width: 100%;
+  overflow: clip;
+}
+.booking-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.booking-content {
+  width: 100%;
 }
 
 .booking-title {

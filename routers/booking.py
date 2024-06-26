@@ -1,7 +1,7 @@
 from decimal import Decimal
 from enum import Enum
 from datetime import date, datetime, timezone
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from typing import Annotated, Optional
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 import jwt
@@ -70,6 +70,8 @@ class BookAttraction(BaseModel):
 
 @router.get("/api/booking", tags=["Booking"])
 async def get_booking(request: Request, token: str = Depends(JWTBearer())):
+    if not token:
+        return None
     db_pool = request.state.db_pool
     try:
         with db_pool.get_connection() as con:
@@ -117,7 +119,6 @@ async def get_booking(request: Request, token: str = Depends(JWTBearer())):
 async def post_booking(
     request: Request, BookAttraction: BookAttraction, token: str = Depends(JWTBearer())
 ) -> dict:
-    db_pool = request.state.db_pool
     if not token:
         content = {
             "error": True,
@@ -128,6 +129,7 @@ async def post_booking(
             content=content,
             media_type="application/json",
         )
+    db_pool = request.state.db_pool
     try:
         with db_pool.get_connection() as con:
             with con.cursor(dictionary=True) as cursor:

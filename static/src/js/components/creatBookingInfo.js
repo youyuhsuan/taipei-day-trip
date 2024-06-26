@@ -4,7 +4,7 @@ const bookingContent = booking.querySelector(".booking-content");
 const bookingInfo = booking.querySelector(".booking-info");
 
 function creatBookingInfo(name, address, image, date, time, price) {
-  let img = document.createElement("image");
+  let img = document.createElement("img");
   img.src = image;
   img.alt = name;
   img.setAttribute("loading", "lazy");
