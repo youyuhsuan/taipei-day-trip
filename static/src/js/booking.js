@@ -7,6 +7,7 @@ import "./api/tokenApi.js";
 import "./api/bookingGetApi.js";
 
 // components
+import "./components/bookingBtn.js";
 import "./components/dialog.js";
 import "./components/authForm.js";
 

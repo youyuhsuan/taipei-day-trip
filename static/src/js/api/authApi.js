@@ -16,13 +16,13 @@ async function signinData(signinEmail, signinPassword) {
       },
       body: JSON.stringify({ email: signinEmail, password: signinPassword }),
     });
+    const responseData = await response.json();
     if (!response.ok) {
       const message = responseData["message"];
       removePreviousMessage();
       displayMessage(message, signinForm, signupLink);
       return;
     }
-    const responseData = await response.json();
     if (responseData.token) {
       localStorage.setItem("authToken", responseData.token);
       location.reload();

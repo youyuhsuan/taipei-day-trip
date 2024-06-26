@@ -17,6 +17,12 @@ signinForm.addEventListener("submit", async function (event) {
   let signinPassword = document.getElementById("signin-password").value.trim();
   event.preventDefault();
   removePreviousMessage();
+
+  if (signinEmail === "" || signinPassword === "") {
+    displayMessage("帳號或密碼不能為空值", signinForm, signupLink);
+    return;
+  }
+
   if (!emailRegex.test(signinEmail)) {
     displayMessage("帳號格式不正確", signinForm, signupLink);
     return;
@@ -25,10 +31,7 @@ signinForm.addEventListener("submit", async function (event) {
   //   displayMessage("密碼格式不正確", signinForm, signupLink);
   //   return;
   // }
-  if (signinEmail === "" || signinPassword === "") {
-    displayMessage("帳號或密碼不能為空值", signinForm, signupLink);
-    return;
-  }
+
   await signinData(signinEmail, signinPassword);
 });
 
@@ -38,6 +41,12 @@ signupForm.addEventListener("submit", async function (event) {
   let signupPassword = document.getElementById("signup-password").value.trim();
   event.preventDefault();
   removePreviousMessage();
+
+  if (signupName === "" || signupEmail === "" || signupPassword === "") {
+    displayMessage("姓名, 電子郵件或密碼不能為空值", signupForm, signinLink);
+    return;
+  }
+
   if (!emailRegex.test(signupEmail)) {
     displayMessage("帳號格式不正確", signinForm, signupLink);
     return;
@@ -47,9 +56,5 @@ signupForm.addEventListener("submit", async function (event) {
   //   return;
   // }
 
-  if (signupName === "" || signupEmail === "" || signupPassword === "") {
-    displayMessage("姓名, 電子郵件或密碼不能為空值", signupForm, signinLink);
-    return;
-  }
   await signupData(signupName, signupEmail, signupPassword);
 });

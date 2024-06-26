@@ -1,13 +1,19 @@
 const booking = document.querySelector(".booking");
-const bookingImage = booking.querySelector(".booking-image");
-const bookingContent = booking.querySelector(".booking-content");
-const bookingInfo = booking.querySelector(".booking-info");
 
 function creatBookingInfo(name, address, image, date, time, price) {
+  let bookingImage = document.createElement("div");
+  bookingImage.className = "booking-image";
+
   let img = document.createElement("img");
   img.src = image;
   img.alt = name;
   img.setAttribute("loading", "lazy");
+
+  let bookingContent = document.createElement("div");
+  bookingContent.className = "booking-content";
+
+  let bookingInfo = document.createElement("div");
+  bookingInfo.className = "booking-info";
 
   let bookingName = document.createElement("span");
   bookingName.className = "booking-name";
@@ -30,8 +36,12 @@ function creatBookingInfo(name, address, image, date, time, price) {
   bookingAddress.className = "booking-address";
   bookingAddress.textContent = address;
 
+  booking.appendChild(bookingImage);
   bookingImage.appendChild(img);
-  bookingContent.insertBefore(bookingName, bookingInfo);
+  booking.appendChild(bookingContent);
+  bookingContent.appendChild(bookingName);
+  bookingContent.appendChild(bookingInfo);
+
   bookingInfo.appendChild(bookingDate);
   bookingInfo.appendChild(bookingTime);
   bookingInfo.appendChild(bookingPrice);

@@ -11,6 +11,7 @@ async function bookingGetApi() {
       },
     });
     const responseData = await response.json();
+
     let data = responseData.data;
     let name = data.attraction.name;
     let address = data.attraction.address;
