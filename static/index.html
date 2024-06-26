@@ -6,6 +6,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
+      rel="shortcut icon"
+      href="/static/src/image/icon/wehelp.svg"
+      type="image/x-icon"
+    />
+    <link
       rel="preload"
       href="https://fonts.gstatic.com/s/notosanstc/v35/-nF7OG829Oofr2wohFbTp9iFOisNA_cTyNromxqQuEMQ2wHYwbnmy1R1jDujLebozBXCo2qYhRo.0.woff2"
       type="font/woff2"
@@ -23,8 +28,8 @@
         <img src="/static/src/image/icon/close.png" alt="Close" />
       </button>
       <h3 class="signin-title bold">登入會員帳號</h3>
-      <form class="signin-form">
-        <label for="signin-email"></label>
+      <form method="POST" class="signin-form">
+        <label for="signin-email"> </label>
         <input
           type="email"
           name="email"
@@ -32,7 +37,7 @@
           autocomplete="email"
           placeholder="輸入帳號"
         />
-        <label for="signin-password"></label>
+        <label for="signin-password"> </label>
         <input
           type="password"
           name="password"
@@ -49,8 +54,8 @@
         <img src="/static/src/image/icon/close.png" alt="Close" />
       </button>
       <h3 class="signup-title bold">註冊會員帳號</h3>
-      <form method="POST" class="signup-form" action="/api/user">
-        <label for="signup-name"> </label>
+      <form method="POST" class="signup-form">
+        <label for="signup-name"></label>
         <input
           type="name"
           name="name"
@@ -66,7 +71,7 @@
           autocomplete="email"
           placeholder="輸入電子郵件"
         />
-        <label for="signup-password"> </label>
+        <label for="signup-password"></label>
         <input
           type="password"
           name="password"
@@ -83,7 +88,10 @@
         <a class="navigation-brand" href="/">台北一日遊</a>
         <div class="navigation-menu">
           <div class="navigation-collapse">
-            <button class="navigation-btn font-button medium active">
+            <button
+              class="navigation-btn font-button medium active"
+              onclick="window.location.href='/booking'"
+            >
               預定行程
             </button>
             <button
@@ -92,7 +100,7 @@
               登入/註冊
             </button>
             <button
-              class="logout-btn navigation-btn font-button regular open-dialog"
+              class="logout-btn navigation-btn font-button medium open-dialog"
             >
               登出
             </button>
@@ -109,14 +117,12 @@
               探索每個角落，體驗城市的深度旅遊行程
             </p>
           </div>
-          <form
-            class="search-bar"
-            onsubmit="getAttractions(this.spot.value);return false;"
-          >
+          <form class="search-bar" id="search-form">
             <input
               class="search-input font-body bold"
               type="search"
               name="spot"
+              id="search-input"
               placeholder="輸入景點名稱查詢"
             />
             <button type="submit" class="search-btn">

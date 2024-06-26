@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse
 router = APIRouter()
 
 
-@router.get("/api/mrts")
+@router.get("/api/mrts", tags=["MRT Station"])
 async def get_attractions_mrt(
     request: Request,
 ):

@@ -1,4 +1,12 @@
-export function createAttraction(
+let carousel = document.querySelector(".carousel");
+let dots = document.querySelector(".dots");
+let attractionContent = document.querySelector(".attraction-content");
+
+let info = document.querySelector(".info");
+let address = info.querySelector(".address");
+let transport = info.querySelector(".transport");
+
+function createAttraction(
   nameInfo,
   categoryInfo,
   descriptionInfo,
@@ -7,14 +15,6 @@ export function createAttraction(
   mrtInfo,
   imagesInfo
 ) {
-  let carousel = document.querySelector(".carousel");
-  let dots = document.querySelector(".dots");
-  let attractionContent = document.querySelector(".attraction-content");
-
-  let info = document.querySelector(".info");
-  let address = info.querySelector(".address");
-  let transport = info.querySelector(".transport");
-
   let slideTrack = document.createElement("ul");
   slideTrack.className = "slide-track";
 
@@ -70,3 +70,5 @@ export function createAttraction(
   address.before(description);
   transport.appendChild(transportContent);
 }
+
+export { createAttraction };

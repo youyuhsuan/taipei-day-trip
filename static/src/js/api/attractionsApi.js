@@ -1,13 +1,14 @@
 import { attractionsContainer } from "../variables.js";
-import { createAttractionCard } from "../utils/createAttractionCard.js";
+import { createAttractionCard } from "../components/createAttractionCard.js";
 
-let loding = false;
+let loading = false;
 let page = 0;
 let current_spot = "";
 
+// FIXME:keyword
 async function attractionsApi(keyword = "") {
-  if (loding) return;
-  loding = true;
+  if (loading) return;
+  loading = true;
   try {
     if (keyword) {
       page = 0;
@@ -43,7 +44,7 @@ async function attractionsApi(keyword = "") {
   } catch (error) {
     console.error(error);
   } finally {
-    loding = false;
+    loading = false;
   }
 }
 
@@ -57,6 +58,18 @@ const lastCardObserver = new IntersectionObserver(
   },
   { threshold: 0.5 }
 );
+
+// TODO:分檔
+document.addEventListener("DOMContentLoaded", () => {
+  const searchForm = document.getElementById("search-form");
+  const searchInput = document.getElementById("search-input");
+
+  searchForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const keyword = searchInput.value.trim();
+    attractionsApi(keyword);
+  });
+});
 
 attractionsApi();
 

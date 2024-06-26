@@ -8,6 +8,7 @@ function createAttractionCard(name, category, mrt, image, id) {
 
   let cardLink = document.createElement("a");
   cardLink.className = "card-link";
+  cardLink.dataset.attractionId = id;
   cardLink.href = `/attraction/${id}`;
 
   let cardImg = document.createElement("div");

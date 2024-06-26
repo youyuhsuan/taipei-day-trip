@@ -16,6 +16,32 @@ ACCESS_TOKEN_EXPIRE_DAYS = 7
 router = APIRouter()
 
 
+class JWTBearer(HTTPBearer):
+    def __init__(self, auto_error: bool = True):
+        super(JWTBearer, self).__init__(auto_error=auto_error)
+
+    async def __call__(self, request: Request):
+        credentials: HTTPAuthorizationCredentials = await super(
+            JWTBearer, self
+        ).__call__(request)
+        if credentials:
+            print(credentials)
+            if not credentials.scheme == "Bearer":
+                return None
+            if not self.verify_jwt(credentials.credentials):
+                return None
+            return credentials.credentials
+        else:
+            return None
+
+    def verify_jwt(self, jwt_token: str) -> bool:
+        try:
+            payload = jwt.decode(jwt_token, SECRET_KEY, algorithms=[ALGORITHM])
+            return payload["exp"] >= datetime.now(timezone.utc).timestamp()
+        except:
+            return False
+
+
 class User(BaseModel):
     email: Annotated[EmailStr, Field(description="The user's email")]
     password: Annotated[str, Field(description="The user's password")]
@@ -67,11 +93,9 @@ async def signup(request: Request, UserAuth: UserAuth):
     try:
         with db_pool.get_connection() as con:
             with con.cursor(dictionary=True) as cursor:
-                name = UserAuth.name
-                email = UserAuth.email
                 password = UserAuth.password
-                query = "SELECT email FROM user WHERE email = %s"
-                cursor.execute(query, (email,))
+                query = "SELECT email FROM users WHERE email = %s"
+                cursor.execute(query, (UserAuth.email,))
                 match_email = cursor.fetchone()
                 if match_email:
                     content = {
@@ -86,13 +110,13 @@ async def signup(request: Request, UserAuth: UserAuth):
                 else:
                     hashed_password = get_password_hash(password)
                     insert_new_account = (
-                        "INSERT INTO user(name,email,password) VALUES (%s, %s, %s)"
+                        "INSERT INTO users(name,email,password) VALUES (%s, %s, %s)"
                     )
                     cursor.execute(
                         insert_new_account,
                         (
-                            name,
-                            email,
+                            UserAuth.name,
+                            UserAuth.email,
                             hashed_password,
                         ),
                     )
@@ -112,27 +136,20 @@ async def signup(request: Request, UserAuth: UserAuth):
 
 
 @router.get("/api/user/auth", tags=["User"])
-async def get_current_user(request: Request):
-    authorization = request.headers.get("Authorization")
-    scheme, credentials = authorization.split(" ")
-    if scheme == "Bearer":
-        if credentials:
-            try:
-                credentials = decodeJWT(credentials)
-                credentials = {
-                    "data": {
-                        "id": credentials.get("id"),
-                        "name": credentials.get("name"),
-                        "email": credentials.get("email"),
-                    }
+async def get_current_user(token: str = Depends(JWTBearer())):
+    if token:
+        try:
+            credentials = decodeJWT(token)
+            credentials = {
+                "data": {
+                    "id": credentials.get("id"),
+                    "name": credentials.get("name"),
+                    "email": credentials.get("email"),
                 }
-                return credentials
-            except Exception as e:
-                return None
-        else:
+            }
+            return credentials
+        except Exception as e:
             return None
-    else:
-        return None
 
 
 @router.put("/api/user/auth", tags=["User"])
@@ -143,7 +160,7 @@ async def put_user_auth(request: Request, User: User):
             with con.cursor(dictionary=True) as cursor:
                 email = User.email
                 password = User.password
-                query = "SELECT id, name, email, password FROM user WHERE email = %s;"
+                query = "SELECT id, name, email, password FROM users WHERE email = %s;"
                 cursor.execute(query, (email,))
                 match_user = cursor.fetchone()
                 if not match_user:

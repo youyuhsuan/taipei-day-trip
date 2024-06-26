@@ -13,6 +13,11 @@ dbconfig = {
 }
 
 
+SECRET_KEY = os.environ["SECRET_KEY"]
+ALGORITHM = os.environ["ALGORITHM"]
+ACCESS_TOKEN_EXPIRE_DAYS = 7
+
+
 # dbconfig = {
 #     "host": os.environ["DB_HOST"],
 #     "port": os.environ["DB_PORT"],

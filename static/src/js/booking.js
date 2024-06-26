@@ -2,15 +2,14 @@
 import "./variables.js";
 
 // api
-import "./api/attractionsApi.js";
-import "./api/mrtApi.js";
 import "./api/authApi.js";
 import "./api/tokenApi.js";
+import "./api/bookingGetApi.js";
 
 // components
 import "./components/dialog.js";
 import "./components/authForm.js";
-import "./components/listBar.js";
 
 // utils
-import "./utils/createCookie.js";
+import "./page/renderUser.js";
+import "./utils/parseJWT.js";

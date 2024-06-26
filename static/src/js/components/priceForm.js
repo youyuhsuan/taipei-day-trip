@@ -4,16 +4,23 @@ const afternoon = document.getElementById("afternoon");
 const price = bookingForm.querySelector(".price");
 const priceAmount = price.querySelector(".price-amount");
 
-function radio() {
-  priceAmount.textContent = "新台幣 2000元";
+function updatePrice(price) {
+  priceAmount.setAttribute("data-price", price);
+  priceAmount.textContent = price.toLocaleString();
+}
+
+function setPrice() {
+  updatePrice(2000);
 
   morning.addEventListener("click", () => {
-    priceAmount.textContent = "新台幣 2000元";
+    updatePrice(2000);
   });
 
   afternoon.addEventListener("click", () => {
-    priceAmount.textContent = "新台幣 2500元";
+    updatePrice(2500);
   });
 }
 
-export { radio };
+document.addEventListener("DOMContentLoaded", setPrice);
+
+export { setPrice };

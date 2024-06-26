@@ -27,6 +27,7 @@ with open("data/taipei-attractions.json", "r") as taipei_attractions:
         name = attraction["name"]
         category = attraction["CAT"]
         description = attraction["description"]
+        # FIXME:address留白
         address = re.sub(r"\s+", "", attraction["address"]).strip()
         transport = attraction["direction"]
         mrt = attraction["MRT"]

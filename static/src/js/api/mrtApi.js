@@ -1,5 +1,5 @@
-import { createMrtListItem } from "../utils/createMrtListItem.js";
-import { keywordSearch } from "../utils/keywordSearch.js";
+import { createMrtListItem } from "../components/createMrtListItem.js";
+import { keywordSearch } from "../page/keywordSearch.js";
 
 async function mrtApi() {
   try {

@@ -1,5 +1,5 @@
-import { createAttraction } from "../utils/createAttraction.js";
-import { radio } from "../components/radio.js";
+import { createAttraction } from "../components/createAttraction.js";
+import { setPrice } from "../components/priceForm.js";
 import { carousel } from "../components/carousel.js";
 
 const currentUrl = window.location.href;
@@ -14,6 +14,7 @@ if (match) {
 } else {
   console.log("No ID found in URL");
 }
+
 async function attractionApi(attractionId) {
   if (loding) return;
   loding = true;
@@ -39,7 +40,7 @@ async function attractionApi(attractionId) {
         imagesInfo
       );
       carousel();
-      radio();
+      setPrice();
     }
   } catch (error) {
     console.error(error);

@@ -1,0 +1,39 @@
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+.headline {
+  color: $secondary-70;
+  margin-bottom: 1.875rem; // 30px
+}
+
+.booking {
+  max-width: 75rem; // 1200px
+  width: 100%;
+  display: flex;
+  @include breakpoint(md) {
+    flex-direction: column;
+  }
+  @include breakpoint(sm) {
+    padding: 0;
+    margin: 0;
+    gap: 1.25rem; // 20px
+  }
+}
+
+.booking-title {
+  color: $primary-70;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+
+  .booking-label {
+    margin: 0;
+  }
+}
+
+.booking-info {
+  display: flex;
+  flex-direction: column;
+}

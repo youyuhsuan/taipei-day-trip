@@ -1,15 +1,18 @@
+// variables
 import "./variables.js";
 
 // api
+import "./api/attractionApi.js";
+import "./api/bookingPostApi.js";
 import "./api/authApi.js";
 import "./api/tokenApi.js";
-import "./api/attractionApi.js";
-
-// utils
-import "./utils/createAttraction.js";
 
 // components
 import "./components/dialog.js";
-import "./components/auth.js";
+import "./components/authForm.js";
 import "./components/carousel.js";
-import "./components/radio.js";
+import "./components/priceForm.js";
+import "./components/bookingForm.js";
+
+// utils
+import "./components/createAttraction.js";

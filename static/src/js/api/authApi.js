@@ -16,19 +16,19 @@ async function signinData(signinEmail, signinPassword) {
       },
       body: JSON.stringify({ email: signinEmail, password: signinPassword }),
     });
-    const responseData = await response.json();
     if (!response.ok) {
       const message = responseData["message"];
       removePreviousMessage();
       displayMessage(message, signinForm, signupLink);
       return;
     }
+    const responseData = await response.json();
     if (responseData.token) {
       localStorage.setItem("authToken", responseData.token);
       location.reload();
     }
   } catch (e) {
-    console.error(e);
+    console.error("signinData Error:", e);
   }
 }
 
@@ -60,7 +60,7 @@ async function signupData(signupName, signupEmail, signupPassword) {
       return;
     }
   } catch (e) {
-    console.error(e);
+    console.error("signupData Error:", e);
   }
 }
 

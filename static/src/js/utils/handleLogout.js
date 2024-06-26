@@ -1,5 +1,5 @@
 import { loginBtn, logoutBtn } from "../variables.js";
-import { updateAuthButton } from "./updateAuthButton.js";
+import { updateAuthButton } from "../page/updateAuthButton.js";
 
 function handleLogout() {
   localStorage.removeItem("authToken");
