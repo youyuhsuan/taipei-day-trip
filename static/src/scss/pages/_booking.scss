@@ -3,6 +3,7 @@
 
 #booking-container {
   color: $secondary-70;
+  margin-bottom: 2.5rem; // 40px
   @include breakpoint(xl) {
     padding: 0 2.5rem;
   }

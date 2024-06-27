@@ -549,6 +549,12 @@ footer {
   color: #ffffff;
 }
 
+.booking-footer {
+  align-items: unset;
+  padding-top: 2.5rem;
+  height: 100dvh;
+}
+
 .signin-dialog,
 .signup-dialog {
   width: 21.25rem;
@@ -868,6 +874,7 @@ dialog a {
 
 #booking-container {
   color: #666666;
+  margin-bottom: 2.5rem;
 }
 @media (max-width: 1200px) {
   #booking-container {

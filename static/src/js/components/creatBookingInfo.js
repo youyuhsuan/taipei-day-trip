@@ -80,6 +80,8 @@ async function creatBookingInfo(name, address, image, date, time, price) {
   infoAddress.className = "booking-address";
   infoAddress.textContent = address;
 
+  let hr = document.createElement("hr");
+
   let contact = document.createElement("section");
   contact.className = "contact";
 

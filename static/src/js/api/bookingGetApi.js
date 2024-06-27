@@ -45,6 +45,8 @@ async function bookingGetApi() {
       bookingContent.className = "booking-info";
       bookingContent.textContent = "目前沒有任何預約的行稱";
       booking.appendChild(bookingContent);
+      let footer = document.querySelector("footer");
+      footer.classList.add("booking-footer");
     }
   } catch (error) {
     console.error("bookingGetApi error:", error);
