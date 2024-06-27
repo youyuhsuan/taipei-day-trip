@@ -2,7 +2,7 @@ from decimal import Decimal
 from enum import Enum
 from datetime import date, datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, Request
-from typing import Annotated, Optional
+from typing import Annotated
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 import jwt
 from pydantic import BaseModel, EmailStr, Field
@@ -19,6 +19,40 @@ ALGORITHM = os.environ["ALGORITHM"]
 ACCESS_TOKEN_EXPIRE_DAYS = 7
 
 
+from fastapi import HTTPException, Request
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from datetime import datetime, timezone
+import jwt
+
+from fastapi import Request
+from fastapi.responses import JSONResponse
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from datetime import datetime, timezone
+import jwt
+
+
+from fastapi import HTTPException, Request
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from datetime import datetime, timezone
+import jwt
+
+
+class CustomHTTPException(HTTPException):
+    def __init__(self, status_code: int, error: bool, message: str):
+        super().__init__(
+            status_code=status_code, detail={"error": error, "message": message}
+        )
+        self.error = error
+        self.message = message
+
+
+class CustomHTTPException(HTTPException):
+    def __init__(self, status_code: int, error: bool, message: str):
+        self.status_code = status_code
+        self.error = error
+        self.message = message
+
+
 class JWTBearer(HTTPBearer):
     def __init__(self, auto_error: bool = True):
         super(JWTBearer, self).__init__(auto_error=auto_error)
@@ -28,13 +62,21 @@ class JWTBearer(HTTPBearer):
             JWTBearer, self
         ).__call__(request)
         if credentials:
-            if not credentials.scheme == "Bearer":
-                return None
+            if credentials.scheme != "Bearer":
+                raise CustomHTTPException(
+                    status_code=403, error=True, message="Invalid authentication scheme"
+                )
             if not self.verify_jwt(credentials.credentials):
-                return None
+                raise CustomHTTPException(
+                    status_code=403,
+                    error=True,
+                    message="Invalid token or expired token",
+                )
             return credentials.credentials
         else:
-            return None
+            raise CustomHTTPException(
+                status_code=403, error=True, message="Invalid authorization code"
+            )
 
     def verify_jwt(self, jwt_token: str) -> bool:
         try:

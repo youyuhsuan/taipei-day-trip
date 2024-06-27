@@ -1,4 +1,5 @@
 from fastapi import *
+from fastapi.responses import JSONResponse
 from routers import attractions, mrts, static_pages, booking, user
 from fastapi.staticfiles import StaticFiles
 import mysql.connector.pooling
@@ -30,6 +31,7 @@ cnxpool = mysql.connector.pooling.MySQLConnectionPool(
     pool_name="mypool", pool_size=5, **dbconfig
 )
 
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
@@ -38,6 +40,16 @@ async def attach_db_connection(request: Request, call_next):
     request.state.db_pool = cnxpool
     response = await call_next(request)
     return response
+
+
+@app.exception_handler(booking.CustomHTTPException)
+async def custom_http_exception_handler(
+    request: Request, exc: booking.CustomHTTPException
+):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"error": exc.error, "message": exc.message},
+    )
 
 
 router = APIRouter()

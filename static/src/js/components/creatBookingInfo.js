@@ -1,7 +1,7 @@
 import { booking } from "../variables.js";
 import { bookingDeleteApi } from "../api/bookingDeleteApi.js";
 
-const bookingContainer = document.getElementById("booking-container");
+let totalPrice = document.querySelector(".total-price");
 
 async function creatBookingInfo(name, address, image, date, time, price) {
   let bookingImage = document.createElement("div");
@@ -28,18 +28,18 @@ async function creatBookingInfo(name, address, image, date, time, price) {
   icon.src = "static/src/image/icon/delete.png";
 
   let titleName = document.createElement("span");
-  titleName.className = "title-name";
+  titleName.className = "title-name bold";
   titleName.textContent = "台北一日遊：";
 
   let infoName = document.createElement("span");
-  infoName.className = "info-name";
+  infoName.className = "info-name bold";
   infoName.textContent = name;
 
   let bookingDate = document.createElement("div");
   bookingDate.className = "booking-date";
 
   let titleDate = document.createElement("span");
-  titleDate.className = "title-date";
+  titleDate.className = "title-date bold";
   titleDate.textContent = "日期：";
 
   let infoDate = document.createElement("span");
@@ -50,7 +50,7 @@ async function creatBookingInfo(name, address, image, date, time, price) {
   bookingTime.className = "booking-time";
 
   let titleTime = document.createElement("span");
-  titleTime.className = "title-time";
+  titleTime.className = "title-time bold";
   titleTime.textContent = "時間：";
 
   let infoTime = document.createElement("span");
@@ -62,7 +62,7 @@ async function creatBookingInfo(name, address, image, date, time, price) {
   bookingPrice.className = "booking-price";
 
   let titlePrice = document.createElement("span");
-  titlePrice.className = "title-price";
+  titlePrice.className = "title-price bold";
   titlePrice.textContent = "費用：";
 
   let infoPrice = document.createElement("span");
@@ -73,14 +73,12 @@ async function creatBookingInfo(name, address, image, date, time, price) {
   bookingAddress.className = "booking-price";
 
   let titleAddress = document.createElement("span");
-  titleAddress.className = "title-address";
+  titleAddress.className = "title-address bold";
   titleAddress.textContent = "地址：";
 
   let infoAddress = document.createElement("span");
   infoAddress.className = "booking-address";
   infoAddress.textContent = address;
-
-  let hr = document.createElement("hr");
 
   let contact = document.createElement("section");
   contact.className = "contact";
@@ -139,6 +137,7 @@ async function creatBookingInfo(name, address, image, date, time, price) {
   note.textContent =
     "請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。";
 
+  totalPrice.textContent = `總價：新台幣 ${price} 元`;
   booking.appendChild(bookingImage);
   bookingImage.appendChild(img);
 
@@ -167,6 +166,7 @@ async function creatBookingInfo(name, address, image, date, time, price) {
   bookingInfo.appendChild(bookingAddress);
   bookingAddress.appendChild(titleAddress);
   bookingAddress.appendChild(infoAddress);
+
   deleteIcon.addEventListener("click", async function () {
     bookingDeleteApi();
   });

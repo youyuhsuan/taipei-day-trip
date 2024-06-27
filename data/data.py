@@ -6,7 +6,7 @@ import os
 con = mysql.connector.connect(
     database="taipei_attractions",
     user="root",
-    password=os.environ["MYSQL_PASSWORD"],
+    password=os.environ["DB_PASSWORD"],
     host="localhost",
 )
 
