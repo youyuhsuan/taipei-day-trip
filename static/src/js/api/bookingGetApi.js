@@ -1,8 +1,24 @@
 import { token, booking } from "../variables.js";
 import { creatBookingInfo } from "../components/creatBookingInfo.js";
-import { renderUser } from "../page/renderUser.js";
+// import { renderUser } from "../page/renderUser.js";
+// import { glbalToken } from "../utils/bookingHandleLogout.js";
 
 let bookInfo = document.querySelector(".book-info");
+let bookingEmail = document.getElementById("booking-email");
+let bookingName = document.getElementById("booking-name");
+let userName = document.querySelector(".user");
+
+window.tokenDataCallBack = function (tokenData) {
+  let name = tokenData["data"]["name"];
+  let email = tokenData["data"]["email"];
+  user(name, email);
+};
+
+function user(name, email) {
+  bookingEmail.value = email;
+  bookingName.value = name;
+  userName.textContent = name;
+}
 
 async function bookingGetApi() {
   try {
@@ -22,7 +38,6 @@ async function bookingGetApi() {
       let date = data.date;
       let time = data.time;
       let price = data.price;
-      renderUser();
       bookInfo.classList.toggle("active");
       creatBookingInfo(name, address, image, date, time, price);
     } else {

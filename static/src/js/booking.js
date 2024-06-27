@@ -9,5 +9,5 @@ import "./api/bookingDeleteApi.js";
 import "./components/bookingBtn.js";
 
 // utils
-import "./page/renderUser.js";
+
 import "./utils/bookingHandleLogout.js";
