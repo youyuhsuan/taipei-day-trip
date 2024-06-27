@@ -2,6 +2,7 @@ import { loginBtn, logoutBtn, token } from "../variables.js";
 import { handleLogoutAndRedirect } from "../utils/handleLogout.js";
 import { updateAuthButton } from "../page/updateAuthButton.js";
 
+let glbalToken;
 document.addEventListener("DOMContentLoaded", async function () {
   logoutBtn.addEventListener("click", handleLogoutAndRedirect);
   if (token) {
@@ -16,7 +17,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       if (response) {
         const responseData = await response.json();
-        console.log(responseData);
+        glbalToken = responseData;
         if (typeof window.tokenDataCallBack === "function") {
           window.tokenDataCallBack(responseData);
         }
@@ -24,13 +25,16 @@ document.addEventListener("DOMContentLoaded", async function () {
           ? updateAuthButton(loginBtn, logoutBtn, false)
           : handleLogoutAndRedirect();
       } else {
+        glbalToken = null;
         handleLogoutAndRedirect();
       }
     } catch (error) {
+      glbalToken = null;
       console.error("Error fetching user data:", error);
       handleLogoutAndRedirect();
     }
   } else {
+    glbalToken = null;
     if (typeof window.tokenDataCallBack === "function") {
       window.tokenDataCallBack(null);
     }
@@ -39,3 +43,4 @@ document.addEventListener("DOMContentLoaded", async function () {
     updateAuthButton(loginBtn, logoutBtn, true);
   }
 });
+export {glbalToken};

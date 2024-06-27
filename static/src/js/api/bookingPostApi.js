@@ -1,6 +1,10 @@
-import { token } from "../variables.js";
-
+import { token, signinDialog } from "../variables.js";
+import {glbalToken} from "../utils/bookingHandleLogout.js"
 async function bookingPostApi(attractionId, date, time, price) {
+  if(glbalToken===null){
+    signinDialog.showModal();
+    return;
+  }
   try {
     const response = await fetch("/api/booking", {
       method: "POST",
@@ -19,7 +23,10 @@ async function bookingPostApi(attractionId, date, time, price) {
       window.location.href = "/booking";
     }
   } catch (e) {
+    signinDialog.showModal();
+
     console.error("bookingPostApi error:", e);
+    
   }
 }
 

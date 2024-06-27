@@ -5,11 +5,11 @@ from pydantic import BaseModel, EmailStr, Field
 from typing import Annotated
 from passlib.context import CryptContext
 from datetime import datetime, timedelta, timezone
-from jose import jwt
+import jwt
 import os
 
 
-SECRET_KEY = os.environ["SECRET_KEY"]
+SECRET_KEY = os.environ["JWT_SECRET"]
 ALGORITHM = os.environ["ALGORITHM"]
 ACCESS_TOKEN_EXPIRE_DAYS = 7
 

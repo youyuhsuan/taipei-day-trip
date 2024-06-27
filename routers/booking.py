@@ -14,7 +14,7 @@ import os
 router = APIRouter()
 
 
-SECRET_KEY = os.environ["SECRET_KEY"]
+SECRET_KEY = os.environ["JWT_SECRET"]
 ALGORITHM = os.environ["ALGORITHM"]
 ACCESS_TOKEN_EXPIRE_DAYS = 7
 

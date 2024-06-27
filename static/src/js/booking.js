@@ -10,5 +10,4 @@ import "./components/bookingBtn.js";
 
 // utils
 import "./page/renderUser.js";
-import "./utils/parseJwt.js";
 import "./utils/bookingHandleLogout.js";

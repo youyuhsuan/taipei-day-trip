@@ -7,13 +7,13 @@ import os
 app = FastAPI()
 
 dbconfig = {
-    "database": os.environ["DB_DATABASE"],
-    "user": os.environ["DB_USER"],
-    "password": os.environ["DB_PASSWORD"],
+    "database": "taipei_attractions",
+    "user": "root",
+    "password": "betty520",
 }
 
 
-SECRET_KEY = os.environ["SECRET_KEY"]
+SECRET_KEY = os.environ["JWT_SECRET"]
 ALGORITHM = os.environ["ALGORITHM"]
 ACCESS_TOKEN_EXPIRE_DAYS = 7
 
