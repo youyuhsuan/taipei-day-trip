@@ -1,5 +1,6 @@
 import { token, booking } from "../variables.js";
 import { creatBookingInfo } from "../components/creatBookingInfo.js";
+import { handleLogoutAndRedirect } from "../utils/handleLogout.js";
 // import { renderUser } from "../page/renderUser.js";
 // import { glbalToken } from "../utils/bookingHandleLogout.js";
 
@@ -29,8 +30,10 @@ async function bookingGetApi() {
         Authorization: `Bearer ${token}`,
       },
     });
+    console.log(response);
     const responseData = await response.json();
-    if (responseData) {
+    console.log(responseData);
+    if (responseData && responseData.data) {
       let data = responseData.data;
       let name = data.attraction.name;
       let address = data.attraction.address;
@@ -40,10 +43,12 @@ async function bookingGetApi() {
       let price = data.price;
       bookInfo.classList.toggle("active");
       creatBookingInfo(name, address, image, date, time, price);
+    } else if (responseData && responseData.error) {
+      handleLogoutAndRedirect();
     } else {
       let bookingContent = document.createElement("div");
       bookingContent.className = "booking-info";
-      bookingContent.textContent = "目前沒有任何預約的行稱";
+      bookingContent.textContent = "目前沒有任何預約的行程";
       booking.appendChild(bookingContent);
       let footer = document.querySelector("footer");
       footer.classList.add("booking-footer");
