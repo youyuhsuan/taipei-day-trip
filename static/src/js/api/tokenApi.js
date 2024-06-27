@@ -16,6 +16,10 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       if (response) {
         const responseData = await response.json();
+        if (typeof window.tokenDataCallBack === "function") {
+          window.tokenDataCallBack(responseData);
+        }
+        console.log(responseData);
         responseData
           ? updateAuthButton(loginBtn, logoutBtn, false)
           : handleLogout();
@@ -27,6 +31,9 @@ document.addEventListener("DOMContentLoaded", async function () {
       handleLogout();
     }
   } else {
+    if (typeof window.tokenDataCallBack === "function") {
+      window.tokenDataCallBack(null);
+    }
     localStorage.removeItem("authToken");
     updateAuthButton(loginBtn, logoutBtn, true);
   }

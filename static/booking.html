@@ -18,6 +18,17 @@
     <title>Booking</title>
   </head>
   <body>
+    <script>
+      window.tokenDataCallBack = function (tokenData) {
+        console.log(tokenData);
+        if (tokenData === null) {
+          window.location.href = "/";
+        } else {
+          console.log("NO");
+        }
+      };
+    </script>
+
     <dialog class="signin-dialog" backdrop="modal">
       <button type="submit" class="close-dialog">
         <img src="/static/src/image/icon/close.png" alt="Close" />

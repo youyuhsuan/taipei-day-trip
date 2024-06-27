@@ -5,7 +5,8 @@ import "./variables.js";
 import "./api/attractionApi.js";
 import "./api/bookingPostApi.js";
 import "./api/authApi.js";
-import "./api/tokenApi.js";
+// import "./api/tokenApi.js";
+import "./utils/bookingHandleLogout.js";
 
 // components
 import "./components/bookingBtn.js";
