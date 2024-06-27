@@ -3,6 +3,7 @@ import { handleLogoutAndRedirect } from "../utils/handleLogout.js";
 import { updateAuthButton } from "../page/updateAuthButton.js";
 
 let glbalToken;
+
 document.addEventListener("DOMContentLoaded", async function () {
   logoutBtn.addEventListener("click", handleLogoutAndRedirect);
   if (token) {
@@ -43,4 +44,5 @@ document.addEventListener("DOMContentLoaded", async function () {
     updateAuthButton(loginBtn, logoutBtn, true);
   }
 });
-export {glbalToken};
+
+export { glbalToken };

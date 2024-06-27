@@ -1,6 +1,9 @@
 import { booking } from "../variables.js";
+import { bookingDeleteApi } from "../api/bookingDeleteApi.js";
 
-function creatBookingInfo(name, address, image, date, time, price) {
+const bookingContainer = document.getElementById("booking-container");
+
+async function creatBookingInfo(name, address, image, date, time, price) {
   let bookingImage = document.createElement("div");
   bookingImage.className = "booking-image";
 
@@ -17,6 +20,12 @@ function creatBookingInfo(name, address, image, date, time, price) {
 
   let bookingName = document.createElement("div");
   bookingName.className = "booking-name";
+
+  let deleteIcon = document.createElement("i");
+  deleteIcon.className = "delete-icon";
+
+  let icon = document.createElement("img");
+  icon.src = "static/src/image/icon/delete.png";
 
   let titleName = document.createElement("span");
   titleName.className = "title-name";
@@ -71,6 +80,65 @@ function creatBookingInfo(name, address, image, date, time, price) {
   infoAddress.className = "booking-address";
   infoAddress.textContent = address;
 
+  let hr = document.createElement("hr");
+
+  let contact = document.createElement("section");
+  contact.className = "contact";
+
+  let contactTitle = document.createElement("div");
+  contactTitle.className = "contact-title font-btn bold";
+  contactTitle.textContent = "您的聯絡資訊";
+
+  let contactForm = document.createElement("form");
+  contactForm.className = "contact-form";
+
+  let formGroup = document.createElement("div");
+  formGroup.className = "formGroup";
+
+  let bookNameLabel = document.createElement("label");
+  bookNameLabel.setAttribute("for", "book-name");
+  bookNameLabel.className = "medium font-body";
+  bookNameLabel.textContent = "聯絡姓名：";
+
+  let bookNameInput = document.createElement("input");
+  bookNameInput.setAttribute("type", "text");
+  bookNameInput.setAttribute("name", "name");
+  bookNameInput.setAttribute("id", "book-name");
+  bookNameInput.setAttribute("autocomplete", "name");
+  bookNameInput.setAttribute("placeholder", "輸入姓名");
+  bookNameInput.setAttribute("required", "");
+
+  let bookEmailLabel = document.createElement("label");
+  bookEmailLabel.setAttribute("for", "book-email");
+  bookEmailLabel.className = "medium font-body";
+  bookEmailLabel.textContent = "連絡信箱：";
+
+  let bookEmailInput = document.createElement("input");
+  bookEmailInput.setAttribute("type", "email");
+  bookEmailInput.setAttribute("name", "email");
+  bookEmailInput.setAttribute("id", "book-email");
+  bookEmailInput.setAttribute("autocomplete", "email");
+  bookEmailInput.setAttribute("placeholder", "輸入電子郵件");
+  bookEmailInput.setAttribute("required", "");
+
+  let bookPhoneLabel = document.createElement("label");
+  bookPhoneLabel.setAttribute("for", "book-phone");
+  bookPhoneLabel.className = "medium font-body";
+  bookPhoneLabel.textContent = "連絡信箱：";
+
+  let bookPhoneInput = document.createElement("input");
+  bookPhoneInput.setAttribute("type", "phone");
+  bookPhoneInput.setAttribute("name", "phone");
+  bookPhoneInput.setAttribute("id", "book-phone");
+  bookPhoneInput.setAttribute("autocomplete", "phone");
+  bookPhoneInput.setAttribute("placeholder", "輸入手機號碼");
+  bookPhoneInput.setAttribute("required", "");
+
+  let note = document.createElement("p");
+  note.className = "note font-body bold";
+  note.textContent =
+    "請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。";
+
   booking.appendChild(bookingImage);
   bookingImage.appendChild(img);
 
@@ -80,6 +148,9 @@ function creatBookingInfo(name, address, image, date, time, price) {
 
   bookingName.appendChild(titleName);
   bookingName.appendChild(infoName);
+
+  bookingContent.appendChild(deleteIcon);
+  deleteIcon.appendChild(icon);
 
   bookingInfo.appendChild(bookingDate);
   bookingDate.appendChild(titleDate);
@@ -96,6 +167,9 @@ function creatBookingInfo(name, address, image, date, time, price) {
   bookingInfo.appendChild(bookingAddress);
   bookingAddress.appendChild(titleAddress);
   bookingAddress.appendChild(infoAddress);
+  deleteIcon.addEventListener("click", async function () {
+    bookingDeleteApi();
+  });
 }
 
 export { creatBookingInfo };

@@ -105,3 +105,25 @@ button {
   background-color: $black;
   border: 1px solid $white;
 }
+
+.delete-icon {
+  all: unset;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1.875rem; // 30px
+  height: 1.875rem; // 30px
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.confirm-btn {
+  width: 10.813rem; // 173px
+  height: 2.25rem; // 36px
+  background-color: $primary-70;
+  color: $white;
+  text-wrap: nowrap;
+  border-radius: 5px;
+}

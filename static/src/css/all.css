@@ -215,6 +215,28 @@ button {
   border: 1px solid #ffffff;
 }
 
+.delete-icon {
+  all: unset;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1.875rem;
+  height: 1.875rem;
+}
+.delete-icon img {
+  width: 100%;
+  height: 100%;
+}
+
+.confirm-btn {
+  width: 10.813rem;
+  height: 2.25rem;
+  background-color: #448899;
+  color: #ffffff;
+  text-wrap: nowrap;
+  border-radius: 5px;
+}
+
 .search-bar {
   display: flex;
   width: 28.75rem;
@@ -390,6 +412,10 @@ hr:first-of-type {
   width: 100%;
 }
 
+#booking-container hr {
+  margin-top: 0rem;
+  margin-bottom: 2.5rem;
+}
 #booking-container hr:first-of-type {
   margin-top: 0rem;
   margin-bottom: 2.5rem;
@@ -837,12 +863,6 @@ dialog a {
 #booking-container {
   color: #666666;
 }
-#booking-container input {
-  color: #757575;
-}
-#booking-container input:focus, #booking-container input:active {
-  color: #000000;
-}
 
 .headline {
   margin: 2.5rem 0 1.875rem;
@@ -882,6 +902,7 @@ dialog a {
 }
 
 .booking-content {
+  position: relative;
   width: 100%;
 }
 
@@ -899,8 +920,58 @@ dialog a {
   line-height: 1.5rem;
 }
 
-.contact > * {
-  margin-bottom: 0.625rem;
+.form-group {
+  margin-bottom: 0.938rem;
+}
+
+.contact-title,
+.payment-title {
+  margin-bottom: 1.25rem;
+}
+
+.contact-form,
+.payment-form {
+  margin-bottom: 2.5rem;
+}
+.contact-form input,
+.payment-form input {
+  color: #757575;
+  border: 1px solid #e8e8e8;
+  width: 12.5rem;
+  border-radius: 5px;
+  font-size: 16px;
+}
+.contact-form input:focus, .contact-form input:active,
+.payment-form input:focus,
+.payment-form input:active {
+  color: #000000;
+}
+.contact-form input::placeholder,
+.payment-form input::placeholder {
+  line-height: 1.125rem;
+}
+.contact-form .expiration-date,
+.payment-form .expiration-date {
+  border: 1px solid #e8e8e8;
+  border-radius: 5px;
+}
+
+.confirm {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2.5rem;
+}
+
+.confirm > * {
+  margin: 0 0 1.375rem auto;
+}
+
+.book-info {
+  display: none;
+}
+.book-info.active {
+  display: block;
 }
 
 /*# sourceMappingURL=all.css.map */

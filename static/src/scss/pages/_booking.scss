@@ -3,14 +3,6 @@
 
 #booking-container {
   color: $secondary-70;
-
-  input {
-    color: $secondary-50;
-    &:focus,
-    &:active {
-      color: $black;
-    }
-  }
 }
 
 .headline {
@@ -47,6 +39,7 @@
 }
 
 .booking-content {
+  position: relative;
   width: 100%;
 }
 
@@ -64,6 +57,55 @@
   }
 }
 
-.contact > * {
-  margin-bottom: 0.625rem;
+.form-group {
+  margin-bottom: 0.938rem; // 15px
+}
+
+.contact-title,
+.payment-title {
+  margin-bottom: 1.25rem; // 20px
+}
+
+.contact-form,
+.payment-form {
+  margin-bottom: 2.5rem; //40px
+
+  input {
+    color: $secondary-50;
+    border: 1px solid $secondary-20;
+    width: 12.5rem; // 200px
+    border-radius: 5px;
+    font-size: 16px;
+
+    &:focus,
+    &:active {
+      color: $black;
+    }
+    &::placeholder {
+      line-height: 1.125rem; // 18px
+    }
+  }
+
+  .expiration-date {
+    border: 1px solid $secondary-20;
+    border-radius: 5px;
+  }
+}
+
+.confirm {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2.5rem;
+}
+
+.confirm > * {
+  margin: 0 0 1.375rem auto;
+}
+
+.book-info {
+  display: none;
+  &.active {
+    display: block;
+  }
 }

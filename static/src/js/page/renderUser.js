@@ -1,6 +1,11 @@
-// import { token } from "../variables.js";
-// import { parseJwt } from "../utils/parseJwt.js";
+import { glbalToken } from "../utils/bookingHandleLogout.js";
 
-// let parsedToken = parseJwt(token);
-// let user = document.querySelector(".user");
-// user.textContent = parsedToken.name;
+console.log("glbalToken", glbalToken);
+let bookingName = document.getElementById("booking-name");
+let bookingEmail = document.getElementById("booking-email");
+
+function renderUser() {
+  bookingName.value = glbalToken;
+}
+
+export { renderUser };

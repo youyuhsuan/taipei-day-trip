@@ -9,7 +9,7 @@ import jwt
 import os
 
 
-SECRET_KEY = os.environ["JWT_SECRET"]
+SECRET_KEY = os.environ["SECRET_KEY"]
 ALGORITHM = os.environ["ALGORITHM"]
 ACCESS_TOKEN_EXPIRE_DAYS = 7
 

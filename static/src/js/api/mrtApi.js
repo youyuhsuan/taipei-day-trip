@@ -1,5 +1,4 @@
 import { createMrtListItem } from "../components/createMrtListItem.js";
-import { keywordSearch } from "../page/keywordSearch.js";
 
 async function mrtApi() {
   try {
@@ -9,7 +8,6 @@ async function mrtApi() {
     for (let mrt of mrts) {
       createMrtListItem(mrt);
     }
-    keywordSearch();
   } catch (error) {
     console.error(error);
   }

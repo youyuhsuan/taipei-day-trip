@@ -28,7 +28,6 @@
         }
       };
     </script>
-
     <dialog class="signin-dialog" backdrop="modal">
       <button type="submit" class="close-dialog">
         <img src="/static/src/image/icon/close.png" alt="Close" />
@@ -120,109 +119,115 @@
       </div>
       <section class="booking"></section>
       <hr />
-      <section class="contact">
-        <span class="contact-title button bold">您的聯絡資訊</span>
-        <form id="contact-form">
-          <div class="form-group">
-            <label for="booking-name" class="medium">聯絡姓名：</label>
-            <input
-              type="text"
-              name="name"
-              id="booking-name"
-              autocomplete="name"
-              placeholder="輸入姓名"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label for="booking-email" class="medium">連絡信箱：</label>
-            <input
-              type="email"
-              name="email"
-              id="booking-email"
-              autocomplete="email"
-              placeholder="輸入電子郵件"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label for="booking-phone" class="medium">手機號碼：</label>
-            <input
-              type="tel"
-              name="phone"
-              id="booking-phone"
-              autocomplete="tel"
-              placeholder="輸入手機號碼"
-              required
-            />
-          </div>
-          <p class="note bold">
-            請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。
-          </p>
-        </form>
-      </section>
-      <hr />
-      <section class="payment">
-        <span class="payment-title button bold">信用卡付款資訊</span>
-        <form id="payment-form">
-          <div class="form-group">
-            <label for="booking-ccn" class="medium">卡片號碼：</label>
-            <input
-              id="booking-ccn"
-              type="tel"
-              inputmode="numeric"
-              pattern="[0-9\s]{13,19}"
-              autocomplete="cc-number"
-              maxlength="19"
-              placeholder="xxxx xxxx xxxx xxxx"
-              required
-            />
-          </div>
-          <div class="form-group medium">
-            <label for="booking-month">過期時間：</label>
-            <div class="expiration-date">
+      <div class="book-info">
+        <section class="contact">
+          <div class="contact-title font-btn bold">您的聯絡資訊</div>
+          <form class="contact-form">
+            <div class="form-group">
+              <label for="booking-name" class="medium font-body"
+                >聯絡姓名：</label
+              >
               <input
-                autocomplete="cc-exp-month"
-                class="exp"
-                id="booking-month"
-                maxlength="2"
-                pattern="[0-9]*"
-                inputmode="numeric"
-                placeholder="MM"
                 type="text"
-                required
-              />
-              <input
-                autocomplete="cc-exp-year"
-                class="exp"
-                id="booking-year"
-                maxlength="2"
-                pattern="[0-9]*"
-                inputmode="numeric"
-                placeholder="YY"
-                type="text"
+                name="name"
+                id="booking-name"
+                autocomplete="name"
+                placeholder="輸入姓名"
                 required
               />
             </div>
-          </div>
-          <div class="form-group">
-            <label for="booking-cvv" class="medium">驗證密碼：</label>
-            <input
-              id="booking-cvv"
-              type="number"
-              max="999"
-              pattern="[0-9]{3,4}"
-              name="cvv"
-              placeholder="CVV"
-              required
-            />
-          </div>
-        </form>
-      </section>
-      <span>總價：新台幣 2000 元</span>
-      <button type="submit" form="contact-form payment-form">
-        確認訂購並付款
-      </button>
+            <div class="form-group">
+              <label for="booking-email" class="medium font-body"
+                >連絡信箱：</label
+              >
+              <input
+                type="email"
+                name="email"
+                id="booking-email"
+                autocomplete="email"
+                placeholder="輸入電子郵件"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="booking-phone" class="medium font-body"
+                >手機號碼：</label
+              >
+              <input
+                type="tel"
+                name="phone"
+                id="booking-phone"
+                autocomplete="tel"
+                placeholder="輸入手機號碼"
+                required
+              />
+            </div>
+            <p class="note font-body bold">
+              請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。
+            </p>
+          </form>
+        </section>
+        <hr />
+        <section class="payment">
+          <div class="payment-title font-btn bold">信用卡付款資訊</div>
+          <form class="payment-form">
+            <div class="form-group">
+              <label for="booking-ccn" class="font-body medium"
+                >卡片號碼：</label
+              >
+              <input
+                id="booking-ccn"
+                type="tel"
+                inputmode="numeric"
+                pattern="[0-9\s]{13,19}"
+                autocomplete="cc-number"
+                maxlength="19"
+                placeholder="xxxx xxxx xxxx xxxx"
+                required
+              />
+            </div>
+            <div class="form-group font-body medium">
+              <label for="booking-time">過期時間：</label>
+              <span class="expiration-date">
+                <input
+                  autocomplete="cc-exp"
+                  class="exp"
+                  id="booking-time"
+                  maxlength="2"
+                  pattern="[0-9]*"
+                  inputmode="numeric"
+                  placeholder="MM/YY"
+                  type="text"
+                  required
+                />
+              </span>
+            </div>
+            <div class="form-group font-body">
+              <label for="booking-cvv" class="medium">驗證密碼：</label>
+              <input
+                id="booking-cvv"
+                type="number"
+                max="999"
+                pattern="[0-9]{3,4}"
+                name="cvv"
+                placeholder="CVV"
+                required
+              />
+            </div>
+          </form>
+        </section>
+        <hr />
+        <div class="confirm">
+          <div class="total-price">總價：新台幣 2000 元</div>
+          <button
+            type="submit"
+            form="contact-form payment-form"
+            class="confirm-btn font-btn medium"
+          >
+            確認訂購並付款
+          </button>
+        </div>
+      </div>
     </main>
     <footer class="footerr font-body bold">
       <p>COPYRIGHT © 2021 台北一日遊</p>

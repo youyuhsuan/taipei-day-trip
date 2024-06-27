@@ -6,25 +6,25 @@ import os
 
 app = FastAPI()
 
-dbconfig = {
-    "database": "taipei_attractions",
-    "user": "root",
-    "password": "betty520",
-}
+# dbconfig = {
+#     "database": "taipei_attractions",
+#     "user": "root",
+#     "password": "betty520",
+# }
 
 
-SECRET_KEY = os.environ["JWT_SECRET"]
+SECRET_KEY = os.environ["SECRET_KEY"]
 ALGORITHM = os.environ["ALGORITHM"]
 ACCESS_TOKEN_EXPIRE_DAYS = 7
 
 
-# dbconfig = {
-#     "host": os.environ["DB_HOST"],
-#     "port": os.environ["DB_PORT"],
-#     "database": os.environ["DB_DATABASE"],
-#     "user": os.environ["DB_USER"],
-#     "password": os.environ["DB_PASSWORD"],
-# }
+dbconfig = {
+    # "host": os.environ["DB_HOST"],
+    # "port": os.environ["DB_PORT"],
+    "database": os.environ["DB_DATABASE"],
+    "user": os.environ["DB_USER"],
+    "password": os.environ["DB_PASSWORD"],
+}
 
 cnxpool = mysql.connector.pooling.MySQLConnectionPool(
     pool_name="mypool", pool_size=5, **dbconfig

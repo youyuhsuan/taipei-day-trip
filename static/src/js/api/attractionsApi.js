@@ -75,7 +75,9 @@ function keywordSearch() {
 }
 
 attractionsApi();
+
 export { attractionsApi, keywordSearch };
+
 document.addEventListener("DOMContentLoaded", () => {
   const searchForm = document.getElementById("search-form");
   const searchInput = document.getElementById("search-input");
