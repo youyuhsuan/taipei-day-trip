@@ -1,42 +1,18 @@
-import {
-  openSigninDialog,
-  closeSigninDialog,
-} from "./components/auth/signinDialog";
-import {
-  openSignupDialog,
-  closeSignupDialog,
-} from "./components/auth/signinDialog";
-import {
-  updateAuthButton,
-  handleLogout,
-} from "./components/shared/updateAuthButton";
+// variables
+import "./variables.js";
 
-const openDialogButton = document.querySelector(".open-dialog");
-const closeDialogButton = document.querySelectorAll(".close-dialog");
-const signinLink = document.querySelector(".signin-link");
-const signupLink = document.querySelector(".signup-link");
+// api
+import "./api/attractionsGetApi.js";
+import "./api/mrtGetApi.js";
+import "./api/userAuthPutApi.js";
+// import "./api/tokenApi.js";
+import "./api/userAuthGetApi.js";
 
-openDialogButton.addEventListener("click", openSigninDialog);
+// components
+import "./components/bookingBtn.js";
+import "./components/dialog.js";
+import "./components/authForm.js";
+import "./components/listBar.js";
 
-closeDialogButton.forEach((button) => {
-  button.addEventListener("click", () => {
-    closeSigninDialog();
-    closeSignupDialog();
-  });
-});
-
-signupLink.addEventListener("click", () => {
-  closeSigninDialog();
-  openSignupDialog();
-});
-
-signinLink.addEventListener("click", () => {
-  closeSignupDialog();
-  openSigninDialog();
-});
-
-document.addEventListener("DOMContentLoaded", async function () {
-  updateAuthButton();
-  let logoutBtn = document.querySelector(".logout-btn");
-  logoutBtn.addEventListener("click", handleLogout);
-});
+// utils
+import "./utils/createCookie.js";

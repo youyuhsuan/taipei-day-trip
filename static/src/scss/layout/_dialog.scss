@@ -8,6 +8,10 @@
   input {
     padding: 0.938rem; // 15px
     color: $secondary-50;
+    &:focus,
+    &:active {
+      color: $black;
+    }
   }
 
   .submit {
