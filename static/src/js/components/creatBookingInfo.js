@@ -67,7 +67,7 @@ async function creatBookingInfo(name, address, image, date, time, price) {
 
   let infoPrice = document.createElement("span");
   infoPrice.className = "booking-price";
-  infoPrice.textContent = "新台幣" + price + "元";
+  infoPrice.textContent = `新台幣${price}元`;
 
   let bookingAddress = document.createElement("div");
   bookingAddress.className = "booking-price";

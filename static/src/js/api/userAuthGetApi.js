@@ -19,7 +19,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       if (response) {
         const responseData = await response.json();
         glbalToken = responseData;
-        // console.log(glbalToken);
         if (typeof window.tokenDataCallBack === "function") {
           window.tokenDataCallBack(responseData);
         }
@@ -42,5 +41,4 @@ document.addEventListener("DOMContentLoaded", async function () {
     updateAuthButton(loginBtn, logoutBtn, true);
   }
 });
-// console.log("3", glbalToken);
 export { glbalToken };

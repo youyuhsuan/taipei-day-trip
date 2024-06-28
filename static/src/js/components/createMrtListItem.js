@@ -1,4 +1,4 @@
-import { attractionsApi } from "../api/attractionsApi.js";
+import { attractionsApi } from "../api/attractionsGetApi.js";
 
 export function createMrtListItem(mrt) {
   const listBar = document.querySelector(".list-bar");

@@ -2,11 +2,10 @@
 import "./variables.js";
 
 // api
-import "./api/attractionApi.js";
+import "./api/attractionGetApi.js";
 import "./api/bookingPostApi.js";
-import "./api/authApi.js";
-// import "./api/tokenApi.js";
-import "./utils/bookingHandleLogout.js";
+import "./api/userAuthPutApi.js";
+import "./api/userAuthGetApi.js";
 
 // components
 import "./components/bookingBtn.js";

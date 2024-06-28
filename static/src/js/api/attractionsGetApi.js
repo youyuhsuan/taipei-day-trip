@@ -5,7 +5,6 @@ let loading = false;
 let page = 0;
 let current_spot = "";
 
-// FIXME:keyword
 async function attractionsApi(keyword = "") {
   if (loading) return;
   loading = true;
@@ -58,8 +57,6 @@ const lastCardObserver = new IntersectionObserver(
   },
   { threshold: 0.5 }
 );
-
-// TODO:分檔
 
 const listItem = document.querySelectorAll(".list-item");
 

@@ -2,7 +2,7 @@ import { token, booking } from "../variables.js";
 import { creatBookingInfo } from "../components/creatBookingInfo.js";
 import { handleLogoutAndRedirect } from "../utils/handleLogout.js";
 // import { renderUser } from "../page/renderUser.js";
-// import { glbalToken } from "../utils/bookingHandleLogout.js";
+// import { glbalToken } from "../api/userAuthGetApi.js";
 
 let bookInfo = document.querySelector(".book-info");
 let bookingEmail = document.getElementById("booking-email");

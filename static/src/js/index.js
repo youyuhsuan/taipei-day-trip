@@ -2,11 +2,11 @@
 import "./variables.js";
 
 // api
-import "./api/attractionsApi.js";
-import "./api/mrtApi.js";
-import "./api/authApi.js";
+import "./api/attractionsGetApi.js";
+import "./api/mrtGetApi.js";
+import "./api/userAuthPutApi.js";
 // import "./api/tokenApi.js";
-import "./utils/bookingHandleLogout.js";
+import "./api/userAuthGetApi.js";
 
 // components
 import "./components/bookingBtn.js";

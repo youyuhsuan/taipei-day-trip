@@ -6,7 +6,7 @@ import {
 } from "../variables.js";
 import { removePreviousMessage } from "../utils/removePreviousMessage.js";
 import { displayMessage } from "../utils/displayMessage.js";
-import { signinData, signupData } from "../api/authApi.js";
+import { signinData, signupData } from "../api/userAuthPutApi.js";
 
 // TODO:密碼格式不正確
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

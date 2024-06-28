@@ -926,7 +926,6 @@ dialog a {
 
 .booking-content {
   position: relative;
-  max-width: 43.75rem;
   width: 100%;
   margin-bottom: 2.5rem;
 }
@@ -968,11 +967,13 @@ dialog a {
 }
 .contact-form input,
 .payment-form input {
-  color: #757575;
+  color: #000000;
   border: 1px solid #e8e8e8;
   width: 12.5rem;
+  height: 2.375rem;
   border-radius: 5px;
   font-size: 16px;
+  padding: 0.625rem;
 }
 .contact-form input:focus, .contact-form input:active,
 .payment-form input:focus,
@@ -981,6 +982,7 @@ dialog a {
 }
 .contact-form input::placeholder,
 .payment-form input::placeholder {
+  color: #757575;
   line-height: 1.125rem;
 }
 .contact-form .expiration-date,

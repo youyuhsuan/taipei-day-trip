@@ -1,7 +1,8 @@
 import { token, signinDialog } from "../variables.js";
-import {glbalToken} from "../utils/bookingHandleLogout.js"
+import { glbalToken } from "./userAuthGetApi.js";
+
 async function bookingPostApi(attractionId, date, time, price) {
-  if(glbalToken===null){
+  if (glbalToken === null) {
     signinDialog.showModal();
     return;
   }
@@ -26,7 +27,6 @@ async function bookingPostApi(attractionId, date, time, price) {
     signinDialog.showModal();
 
     console.error("bookingPostApi error:", e);
-    
   }
 }
 

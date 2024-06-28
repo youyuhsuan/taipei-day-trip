@@ -47,7 +47,7 @@
 
 .booking-content {
   position: relative;
-  max-width: 43.75rem; // 700px
+  // max-width: 43.75rem; // 700px
   width: 100%;
   margin-bottom: 2.5rem; // 40px
   @include breakpoint(md) {
@@ -86,17 +86,20 @@
   margin-bottom: 2.5rem; //40px
 
   input {
-    color: $secondary-50;
+    color: $black;
     border: 1px solid $secondary-20;
     width: 12.5rem; // 200px
+    height: 2.375rem; // 38px
     border-radius: 5px;
     font-size: 16px;
+    padding: 0.625rem; // 10px
 
     &:focus,
     &:active {
       color: $black;
     }
     &::placeholder {
+      color: $secondary-50;
       line-height: 1.125rem; // 18px
     }
   }
