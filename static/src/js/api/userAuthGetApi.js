@@ -1,11 +1,11 @@
 import { loginBtn, logoutBtn, token } from "../variables.js";
-import { handleLogoutAndRedirect } from "../utils/handleLogout.js";
-import { updateAuthButton } from "../page/updateAuthButton.js";
+import { switchLogoutAndRedirect } from "../utils/switchLogout.js";
+import { switchAuthButton } from "../utils/switchAuthButton.js";
 
 let glbalToken = null;
 
 document.addEventListener("DOMContentLoaded", async function () {
-  logoutBtn.addEventListener("click", handleLogoutAndRedirect);
+  logoutBtn.addEventListener("click", switchLogoutAndRedirect);
   if (token) {
     try {
       const response = await fetch("/api/user/auth", {
@@ -23,14 +23,14 @@ document.addEventListener("DOMContentLoaded", async function () {
           window.tokenDataCallBack(responseData);
         }
         responseData
-          ? updateAuthButton(loginBtn, logoutBtn, false)
-          : handleLogoutAndRedirect();
+          ? switchAuthButton(loginBtn, logoutBtn, false)
+          : switchLogoutAndRedirect();
       } else {
-        handleLogoutAndRedirect();
+        switchLogoutAndRedirect();
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
-      handleLogoutAndRedirect();
+      switchLogoutAndRedirect();
     }
   } else {
     if (typeof window.tokenDataCallBack === "function") {
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
     console.log("TOKEN NONE");
     localStorage.removeItem("authToken");
-    updateAuthButton(loginBtn, logoutBtn, true);
+    switchAuthButton(loginBtn, logoutBtn, true);
   }
 });
 export { glbalToken };

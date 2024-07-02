@@ -966,7 +966,9 @@ dialog a {
   margin-bottom: 2.5rem;
 }
 .contact-form input,
-.payment-form input {
+.contact-form .tpfield,
+.payment-form input,
+.payment-form .tpfield {
   color: #000000;
   border: 1px solid #e8e8e8;
   width: 12.5rem;
@@ -976,12 +978,18 @@ dialog a {
   padding: 0.625rem;
 }
 .contact-form input:focus, .contact-form input:active,
+.contact-form .tpfield:focus,
+.contact-form .tpfield:active,
 .payment-form input:focus,
-.payment-form input:active {
+.payment-form input:active,
+.payment-form .tpfield:focus,
+.payment-form .tpfield:active {
   color: #000000;
 }
 .contact-form input::placeholder,
-.payment-form input::placeholder {
+.contact-form .tpfield::placeholder,
+.payment-form input::placeholder,
+.payment-form .tpfield::placeholder {
   color: #757575;
   line-height: 1.125rem;
 }
@@ -1011,6 +1019,13 @@ dialog a {
 
 .note {
   line-height: 1.5rem;
+}
+
+.booking-tpfield {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 0.938rem;
 }
 
 /*# sourceMappingURL=all.css.map */

@@ -85,7 +85,8 @@
 .payment-form {
   margin-bottom: 2.5rem; //40px
 
-  input {
+  input,
+  .tpfield {
     color: $black;
     border: 1px solid $secondary-20;
     width: 12.5rem; // 200px
@@ -130,4 +131,11 @@
 
 .note {
   line-height: 1.5rem; // 24px
+}
+
+.booking-tpfield {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 0.938rem;
 }

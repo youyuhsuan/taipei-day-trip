@@ -1,6 +1,6 @@
 from fastapi import *
 from fastapi.responses import JSONResponse
-from routers import attractions, mrts, static_pages, booking, user
+from routers import attractions, mrts, static_pages, booking, user, orders
 from fastapi.staticfiles import StaticFiles
 import mysql.connector.pooling
 import os
@@ -59,3 +59,4 @@ app.include_router(mrts.router)
 app.include_router(static_pages.router)
 app.include_router(booking.router)
 app.include_router(user.router)
+app.include_router(orders.router)

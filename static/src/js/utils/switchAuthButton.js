@@ -1,6 +1,6 @@
-function updateAuthButton(loginBtn, logoutBtn, isLoggedIn) {
+function switchAuthButton(loginBtn, logoutBtn, isLoggedIn) {
   loginBtn.classList.toggle("active", isLoggedIn);
   logoutBtn.classList.toggle("active", !isLoggedIn);
 }
 
-export { updateAuthButton };
+export { switchAuthButton };

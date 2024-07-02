@@ -1,6 +1,6 @@
 import { createAttraction } from "../components/createAttraction.js";
-import { setPrice } from "../components/priceForm.js";
-import { carousel } from "../components/carousel.js";
+import { setPrice } from "../components/switchPriceForm.js";
+import { animationCarousel } from "../components/animationCarousel.js";
 
 const currentUrl = window.location.href;
 
@@ -39,7 +39,7 @@ async function attractionApi(attractionId) {
         mrtInfo,
         imagesInfo
       );
-      carousel();
+      animationCarousel();
       setPrice();
     }
   } catch (error) {

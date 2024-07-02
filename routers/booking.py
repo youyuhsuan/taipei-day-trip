@@ -1,4 +1,3 @@
-from decimal import Decimal
 from enum import Enum
 from datetime import date, datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, Request
@@ -17,24 +16,6 @@ router = APIRouter()
 SECRET_KEY = os.environ["SECRET_KEY"]
 ALGORITHM = os.environ["ALGORITHM"]
 ACCESS_TOKEN_EXPIRE_DAYS = 7
-
-
-from fastapi import HTTPException, Request
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from datetime import datetime, timezone
-import jwt
-
-from fastapi import Request
-from fastapi.responses import JSONResponse
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from datetime import datetime, timezone
-import jwt
-
-
-from fastapi import HTTPException, Request
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from datetime import datetime, timezone
-import jwt
 
 
 class CustomHTTPException(HTTPException):

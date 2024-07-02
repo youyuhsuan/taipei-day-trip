@@ -5,7 +5,7 @@ import {
   signinLink,
 } from "../variables.js";
 import { removePreviousMessage } from "../utils/removePreviousMessage.js";
-import { displayMessage } from "../utils/displayMessage.js";
+import { renderAuthMessage } from "../utils/renderMessage.js";
 import { signinData, signupData } from "../api/userAuthPutApi.js";
 
 // TODO:密碼格式不正確
@@ -19,16 +19,16 @@ signinForm.addEventListener("submit", async function (event) {
   removePreviousMessage();
 
   if (signinEmail === "" || signinPassword === "") {
-    displayMessage("帳號或密碼不能為空值", signinForm, signupLink);
+    renderAuthMessage("帳號或密碼不能為空值", signinForm, signupLink);
     return;
   }
 
   if (!emailRegex.test(signinEmail)) {
-    displayMessage("帳號格式不正確", signinForm, signupLink);
+    renderAuthMessage("帳號格式不正確", signinForm, signupLink);
     return;
   }
   // if (!passwordRegex.test(signinPassword)) {
-  //   displayMessage("密碼格式不正確", signinForm, signupLink);
+  //   renderAuthMessage("密碼格式不正確", signinForm, signupLink);
   //   return;
   // }
 
@@ -43,16 +43,16 @@ signupForm.addEventListener("submit", async function (event) {
   removePreviousMessage();
 
   if (signupName === "" || signupEmail === "" || signupPassword === "") {
-    displayMessage("姓名, 電子郵件或密碼不能為空值", signupForm, signinLink);
+    renderAuthMessage("姓名, 電子郵件或密碼不能為空值", signupForm, signinLink);
     return;
   }
 
   if (!emailRegex.test(signupEmail)) {
-    displayMessage("帳號格式不正確", signinForm, signupLink);
+    renderAuthMessage("帳號格式不正確", signinForm, signupLink);
     return;
   }
   // if (!passwordRegex.test(signinPassword)) {
-  //   displayMessage("密碼格式不正確", signinForm, signupLink);
+  //   renderAuthMessage("密碼格式不正確", signinForm, signupLink);
   //   return;
   // }
 

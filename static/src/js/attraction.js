@@ -9,10 +9,10 @@ import "./api/userAuthGetApi.js";
 
 // components
 import "./components/bookingBtn.js";
-import "./components/dialog.js";
+import "./components/switchDialog.js";
 import "./components/authForm.js";
-import "./components/carousel.js";
-import "./components/priceForm.js";
+import "./components/animationCarousel.js";
+import "./components/switchPriceForm.js";
 import "./components/bookingForm.js";
 
 // utils

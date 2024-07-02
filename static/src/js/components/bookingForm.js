@@ -2,14 +2,12 @@ import { bookingPostApi } from "../api/bookingPostApi.js";
 import { getCookie } from "../utils/getCookie.js";
 
 let attractionId = getCookie("selectedAttractionId");
-
 const bookingForm = document.querySelector(".booking-form");
 
 bookingForm.addEventListener("submit", async function (event) {
   let date = document.getElementById("date").value;
   let time = document.querySelector('input[name="time"]:checked').value;
-  const priceAmount = document.querySelector(".price-amount");
-  let price = parseFloat(priceAmount.getAttribute("data-price")).toFixed(2);
+  const price = document.querySelector(".price-amount");
 
   event.preventDefault();
   if (!attractionId) {

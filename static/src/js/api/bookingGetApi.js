@@ -1,13 +1,13 @@
 import { token, booking } from "../variables.js";
-import { creatBookingInfo } from "../components/creatBookingInfo.js";
-import { handleLogoutAndRedirect } from "../utils/handleLogout.js";
-// import { renderUser } from "../page/renderUser.js";
-// import { glbalToken } from "../api/userAuthGetApi.js";
+import { createBookingInfo } from "../components/createBookingInfo.js";
+import { switchLogoutAndRedirect } from "../utils/switchLogout.js";
 
 let bookInfo = document.querySelector(".book-info");
 let bookingEmail = document.getElementById("booking-email");
 let bookingName = document.getElementById("booking-name");
 let userName = document.querySelector(".user");
+
+let bookingData = null;
 
 window.tokenDataCallBack = function (tokenData) {
   let name = tokenData["data"]["name"];
@@ -30,10 +30,10 @@ async function bookingGetApi() {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(response);
+    // console.log(response);
     const responseData = await response.json();
-    console.log(responseData);
     if (responseData && responseData.data) {
+      bookingData = responseData.data;
       let data = responseData.data;
       let name = data.attraction.name;
       let address = data.attraction.address;
@@ -42,9 +42,10 @@ async function bookingGetApi() {
       let time = data.time;
       let price = data.price;
       bookInfo.classList.toggle("active");
-      creatBookingInfo(name, address, image, date, time, price);
+      createBookingInfo(name, address, image, date, time, price);
+      return bookingData;
     } else if (responseData && responseData.error) {
-      handleLogoutAndRedirect();
+      switchLogoutAndRedirect();
     } else {
       let bookingContent = document.createElement("div");
       bookingContent.className = "booking-info";
@@ -58,6 +59,10 @@ async function bookingGetApi() {
   }
 }
 
+function getBookingData() {
+  return bookingData;
+}
+
 bookingGetApi();
 
-export { bookingGetApi };
+export { bookingGetApi, getBookingData };
