@@ -1,85 +1,10 @@
-from enum import Enum
-from datetime import date, datetime, timezone
-from fastapi import APIRouter, Depends, HTTPException, Request
-from typing import Annotated
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-import jwt
-from pydantic import BaseModel, EmailStr, Field
+from fastapi import APIRouter, Request, Depends
 from fastapi.responses import JSONResponse
 from routers import user
-import os
-
+from model.booking import BookAttraction
+from model.JWTAuthenticator import JWTBearer, CustomHTTPException
 
 router = APIRouter()
-
-
-SECRET_KEY = os.environ["SECRET_KEY"]
-ALGORITHM = os.environ["ALGORITHM"]
-ACCESS_TOKEN_EXPIRE_DAYS = 7
-
-
-class CustomHTTPException(HTTPException):
-    def __init__(self, status_code: int, error: bool, message: str):
-        self.status_code = status_code
-        self.error = error
-        self.message = message
-
-
-class JWTBearer(HTTPBearer):
-    def __init__(self, auto_error: bool = True):
-        super(JWTBearer, self).__init__(auto_error=auto_error)
-
-    async def __call__(self, request: Request):
-        credentials: HTTPAuthorizationCredentials = await super(
-            JWTBearer, self
-        ).__call__(request)
-        if credentials:
-            if credentials.scheme != "Bearer":
-                raise CustomHTTPException(
-                    status_code=403, error=True, message="Invalid authentication scheme"
-                )
-            if not self.verify_jwt(credentials.credentials):
-                raise CustomHTTPException(
-                    status_code=403,
-                    error=True,
-                    message="Invalid token or expired token",
-                )
-            return credentials.credentials
-        else:
-            raise CustomHTTPException(
-                status_code=403, error=True, message="Invalid authorization code"
-            )
-
-    def verify_jwt(self, jwt_token: str) -> bool:
-        try:
-            payload = jwt.decode(jwt_token, SECRET_KEY, algorithms=[ALGORITHM])
-            return payload["exp"] >= datetime.now(timezone.utc).timestamp()
-        except:
-            return False
-
-
-class TimeOfDay(str, Enum):
-    morning = "morning"
-    afternoon = "afternoon"
-
-
-class Price(int, Enum):
-    morning_price = 2000
-    afternoon_price = 2500
-
-
-class BookAttraction(BaseModel):
-    attractionId: Annotated[
-        int, Field(description="Unique identifier for the attraction")
-    ]
-    date: Annotated[date, Field(description="Date of the booking (YYYY-MM-DD")]
-    time: Annotated[TimeOfDay, Field(description="Time slot for the booking")]
-    price: Annotated[
-        Price,
-        Field(
-            description="Price of the bookingPrice of the booking",
-        ),
-    ]
 
 
 @router.get("/api/booking", tags=["Booking"])

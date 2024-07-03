@@ -4,6 +4,11 @@ from datetime import date
 from pydantic import BaseModel, EmailStr, Field
 
 
+class Status(str, Enum):
+    PAID = "1"
+    UNPAID = "0"
+
+
 class TimeOfDay(str, Enum):
     morning = "morning"
     afternoon = "afternoon"
@@ -62,7 +67,7 @@ class Order(BaseModel):
     ]
 
 
-class OrderInfo(BaseModel):
+class OrderPostInfo(BaseModel):
     prime: Annotated[
         str,
         Field(
@@ -74,4 +79,31 @@ class OrderInfo(BaseModel):
         Field(
             description="Transaction code obtained from TapPay for payment processing"
         ),
+    ]
+
+
+class OrderGetInfo(BaseModel):
+    number: Annotated[
+        str,
+        Field(description="Order number"),
+    ]
+    price: Annotated[
+        Price,
+        Field(
+            description="Price of the bookingPrice of the booking",
+        ),
+    ]
+    trip: Annotated[
+        Trip,
+        Field(
+            description="Details of the trip including date, time, attraction information (id, name, address, image)"
+        ),
+    ]
+    contact: Annotated[
+        Contact,
+        Field(description="Contact information of the person placing the order"),
+    ]
+    status: Annotated[
+        Status,
+        Field(description="Transaction code"),
     ]

@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Request, Depends
+from typing import Annotated
+from fastapi import APIRouter, Query, Request, Depends
 from fastapi.responses import JSONResponse
 import json
 import requests
 from routers import user
 from model.JWTAuthenticator import JWTBearer
-from model.orders import OrderInfo
+from model.orders import OrderPostInfo
 
 
 router = APIRouter()
@@ -16,7 +17,7 @@ MERCHANT_ID = "merchantA"
 
 @router.post("/api/orders", tags=["Order"])
 async def post_orders(
-    request: Request, OrderInfo: OrderInfo, token: str = Depends(JWTBearer())
+    request: Request, OrderPostInfo: OrderPostInfo, token: str = Depends(JWTBearer())
 ) -> dict:
     if not token:
         content = {
@@ -37,11 +38,11 @@ async def post_orders(
                 cursor.execute(
                     query,
                     (
-                        OrderInfo.order.trip.attraction.id,
+                        OrderPostInfo.order.trip.attraction.id,
                         credentials["id"],
-                        OrderInfo.order.trip.date,
-                        OrderInfo.order.trip.time,
-                        OrderInfo.order.price.value,
+                        OrderPostInfo.order.trip.date,
+                        OrderPostInfo.order.trip.time,
+                        OrderPostInfo.order.price.value,
                     ),
                 )
                 match_booking = cursor.fetchone()
@@ -60,13 +61,22 @@ async def post_orders(
                     insert_new_order,
                     (
                         match_booking["id"],
-                        OrderInfo.order.contact.name,
-                        OrderInfo.order.contact.email,
-                        OrderInfo.order.contact.phone,
+                        OrderPostInfo.order.contact.name,
+                        OrderPostInfo.order.contact.email,
+                        OrderPostInfo.order.contact.phone,
                     ),
                 )
                 order_id = cursor.lastrowid
-                payment_result = await process_payment(OrderInfo)
+                payment_result = await process_payment(OrderPostInfo)
+                if payment_result["status"] != 0:
+                    error_msg = payment_result["msg"]
+                    return JSONResponse(
+                        status_code=400,
+                        content=error_msg,
+                        media_type="application/json",
+                    )
+                delete_query = "DELETE FROM booking WHERE user_id = %s"
+                cursor.execute(delete_query, (credentials["id"],))
                 update_order = """
                     UPDATE booking_order
                     SET paid = %s,
@@ -115,42 +125,32 @@ async def post_orders(
         )
 
 
-async def process_payment(OrderInfo: OrderInfo):
+async def process_payment(OrderPostInfo: OrderPostInfo) -> dict:
     url = "https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime"
     headers = {"Content-Type": "application/json", "x-api-key": PARTNER_KEY}
     order_info = {
-        "prime": OrderInfo.prime,
+        "prime": OrderPostInfo.prime,
         "partner_key": PARTNER_KEY,
         "merchant_id": "tppf_stella0118_GP_POS_1",
-        "amount": OrderInfo.order.price.value,
+        "amount": OrderPostInfo.order.price.value,
         "details": json.dumps(
             [
                 {
-                    "item_id": OrderInfo.order.trip.attraction.id,
-                    "item_name": OrderInfo.order.trip.attraction.name,
-                    "item_price": OrderInfo.order.price.value,
+                    "item_id": OrderPostInfo.order.trip.attraction.id,
+                    "item_name": OrderPostInfo.order.trip.attraction.name,
+                    "item_price": OrderPostInfo.order.price.value,
                 }
             ]
         ),
         "cardholder": {
-            "phone_number": OrderInfo.order.contact.phone,
-            "name": OrderInfo.order.contact.name,
-            "email": OrderInfo.order.contact.email,
+            "phone_number": OrderPostInfo.order.contact.phone,
+            "name": OrderPostInfo.order.contact.name,
+            "email": OrderPostInfo.order.contact.email,
         },
         "remember": True,
     }
     try:
         response = requests.post(url, headers=headers, json=order_info)
-        if response.status_code == 404:
-            content = {
-                "error": True,
-                "message": "Payment service not available",
-            }
-            return JSONResponse(
-                status_code=404,
-                content=content,
-                media_type="application/json",
-            )
         response.raise_for_status()
         return response.json()
     except requests.RequestException as e:
@@ -161,5 +161,41 @@ async def process_payment(OrderInfo: OrderInfo):
         return JSONResponse(
             status_code=500,
             content=content,
+            media_type="application/json",
+        )
+
+
+@router.get("/api/orders", tags=["Order"])
+async def get_orders(
+    request: Request,
+    orderNumber: Annotated[int, Query(description="訂單編號")],
+    token: str = Depends(JWTBearer()),
+):
+    db_pool = request.state.db_pool
+    try:
+        with db_pool.get_connection() as con:
+            with con.cursor(dictionary=True) as cursor:
+                query = """SELECT booking_order.booking_id, booking_order.name, booking_order.email, booking_order.phone, booking_order.paid, 
+                        FROM booking_order
+                        JOIN booking ON booking.id = booking_order.booking_id
+                        WHERE order_number = %s"""
+                cursor.execute(query, (orderNumber,))
+                match_order = cursor.fetchone()
+                if not match_order:
+                    return None
+                # query = """SELECT attractions.id, attractions.name, attractions.address, attractions_images.images AS image
+                #         FROM attractions
+                #         JOIN attractions_images ON attractions.id = attractions_images.attractions_id
+                #         WHERE attractions.id = %s"""
+                # cursor.execute(query, (match_order["booking_id"],))
+                # match_attraction = cursor.fetchone()
+                # if not match_attraction:
+                #     return None
+                # print(match_order, match_attraction)
+                return {"data": "data"}
+    except Exception as e:
+        return JSONResponse(
+            status_code=500,
+            content="Internal server error",
             media_type="application/json",
         )
