@@ -28,8 +28,8 @@ async def get_attractions(
                 )
                 results = cursor.fetchall()
                 results_count = len(results)
-
-                query = """SELECT attractions.*,imgs.imgs 
+                query = """
+                SELECT attractions.*,imgs.imgs 
                 FROM attractions 
                 JOIN(SELECT attractions_id,group_concat(images) AS imgs 
                 FROM attractions_images GROUP BY attractions_id) AS imgs 

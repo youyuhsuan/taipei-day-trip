@@ -6,6 +6,7 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - mydb
+        # condition:service_healthy
     environment:
       - MYSQL_PASSWORD=si23322907
       - DB_USER=root

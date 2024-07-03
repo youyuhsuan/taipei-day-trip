@@ -6,7 +6,7 @@ import os
 con = mysql.connector.connect(
     database="taipei_attractions",
     user="root",
-    password=os.environ["MYSQL_PASSWORD"],
+    password=os.environ["DB_PASSWORD"],
     host="localhost",
 )
 
@@ -40,8 +40,8 @@ with open("data/taipei-attractions.json", "r") as taipei_attractions:
                 name,
                 category,
                 description,
-                transport,
                 address,
+                transport,
                 mrt,
                 lat,
                 lng,

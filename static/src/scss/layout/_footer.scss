@@ -9,3 +9,9 @@ footer {
   justify-content: center;
   color: $white;
 }
+
+.booking-footer {
+  align-items: unset;
+  padding-top: 2.5rem; // 40px
+  height: 100dvh;
+}

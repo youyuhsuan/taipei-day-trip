@@ -1,25 +1,65 @@
+@charset "UTF-8";
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap");
 * {
   box-sizing: border-box;
 }
 
+@font-face {
+  font-family: "Noto Sans TC";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/notosanstc/v35/-nF7OG829Oofr2wohFbTp9iFOisNA_cTyNromxqQuEMQ2wHYwbnmy1R1jDujLebozBXCo2qYhRo.119.woff2) format("woff2");
+  unicode-range: U+20-22, U+27-2a, U+2c-3b, U+3f, U+41-5d, U+61-7b, U+7d, U+a0, U+ab, U+ae, U+b2-b3, U+b7, U+bb, U+bf, U+c9, U+cd, U+d6, U+e0-ef, U+f1-f4, U+f6, U+f9-fa, U+fc-fd, U+101, U+103, U+110-111, U+113, U+12b, U+14d, U+16b, U+1a1, U+1b0, U+1ce, U+300-301, U+1ea1, U+1ea3, U+1ebf, U+1ec7, U+2013-2014, U+2039-203a, U+203c, U+2122, U+3001-3002, U+4e00, U+4e0a-4e0b, U+4e0d, U+4e2d, U+4eba, U+4ee5, U+4f5c, U+4f86, U+500b, U+5011, U+5165, U+5168, U+516c, U+51fa, U+5206, U+5230, U+52d5, U+53ef-53f0, U+570b, U+5728, U+5730, U+591a, U+5927, U+5929, U+597d, U+5b50, U+5bb6, U+5c0f, U+5e73-5e74, U+5fc3, U+6210-6211, U+6240, U+6587, U+65b0, U+65b9, U+65bc, U+65e5, U+660e, U+662f, U+6642, U+66f4, U+6700, U+6703, U+6708-6709, U+672c, U+6b63, U+6cbb, U+70b9-70ba, U+751f, U+7528, U+767c, U+7684, U+76f8, U+7db2, U+7f8e, U+80fd, U+81ea, U+884c, U+8981, U+958b, U+95dc, U+96fb, U+9801, U+9996, U+ff0c, U+ff1a;
+}
+@font-face {
+  font-family: "Noto Sans TC";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/notosanstc/v35/-nF7OG829Oofr2wohFbTp9iFOisNA_cTyNromxqQuEMQ2wHYwbnmy1R1jDujLebozBXCo2qYhRo.119.woff2) format("woff2");
+  unicode-range: U+20-22, U+27-2a, U+2c-3b, U+3f, U+41-5d, U+61-7b, U+7d, U+a0, U+ab, U+ae, U+b2-b3, U+b7, U+bb, U+bf, U+c9, U+cd, U+d6, U+e0-ef, U+f1-f4, U+f6, U+f9-fa, U+fc-fd, U+101, U+103, U+110-111, U+113, U+12b, U+14d, U+16b, U+1a1, U+1b0, U+1ce, U+300-301, U+1ea1, U+1ea3, U+1ebf, U+1ec7, U+2013-2014, U+2039-203a, U+203c, U+2122, U+3001-3002, U+4e00, U+4e0a-4e0b, U+4e0d, U+4e2d, U+4eba, U+4ee5, U+4f5c, U+4f86, U+500b, U+5011, U+5165, U+5168, U+516c, U+51fa, U+5206, U+5230, U+52d5, U+53ef-53f0, U+570b, U+5728, U+5730, U+591a, U+5927, U+5929, U+597d, U+5b50, U+5bb6, U+5c0f, U+5e73-5e74, U+5fc3, U+6210-6211, U+6240, U+6587, U+65b0, U+65b9, U+65bc, U+65e5, U+660e, U+662f, U+6642, U+66f4, U+6700, U+6703, U+6708-6709, U+672c, U+6b63, U+6cbb, U+70b9-70ba, U+751f, U+7528, U+767c, U+7684, U+76f8, U+7db2, U+7f8e, U+80fd, U+81ea, U+884c, U+8981, U+958b, U+95dc, U+96fb, U+9801, U+9996, U+ff0c, U+ff1a;
+}
+@font-face {
+  font-family: "Noto Sans TC";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/notosanstc/v35/-nF7OG829Oofr2wohFbTp9iFOisNA_cTyNromxqQuEMQ2wHYwbnmy1R1jDujLebozBXCo2qYhRo.119.woff2) format("woff2");
+  unicode-range: U+20-22, U+27-2a, U+2c-3b, U+3f, U+41-5d, U+61-7b, U+7d, U+a0, U+ab, U+ae, U+b2-b3, U+b7, U+bb, U+bf, U+c9, U+cd, U+d6, U+e0-ef, U+f1-f4, U+f6, U+f9-fa, U+fc-fd, U+101, U+103, U+110-111, U+113, U+12b, U+14d, U+16b, U+1a1, U+1b0, U+1ce, U+300-301, U+1ea1, U+1ea3, U+1ebf, U+1ec7, U+2013-2014, U+2039-203a, U+203c, U+2122, U+3001-3002, U+4e00, U+4e0a-4e0b, U+4e0d, U+4e2d, U+4eba, U+4ee5, U+4f5c, U+4f86, U+500b, U+5011, U+5165, U+5168, U+516c, U+51fa, U+5206, U+5230, U+52d5, U+53ef-53f0, U+570b, U+5728, U+5730, U+591a, U+5927, U+5929, U+597d, U+5b50, U+5bb6, U+5c0f, U+5e73-5e74, U+5fc3, U+6210-6211, U+6240, U+6587, U+65b0, U+65b9, U+65bc, U+65e5, U+660e, U+662f, U+6642, U+66f4, U+6700, U+6703, U+6708-6709, U+672c, U+6b63, U+6cbb, U+70b9-70ba, U+751f, U+7528, U+767c, U+7684, U+76f8, U+7db2, U+7f8e, U+80fd, U+81ea, U+884c, U+8981, U+958b, U+95dc, U+96fb, U+9801, U+9996, U+ff0c, U+ff1a;
+}
+* {
+  font-family: "Noto Sans TC", "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
+  font-optical-sizing: auto;
+  font-display: swap;
+}
+
 h1 {
+  font-family: "Noto Sans TC", "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
   font-weight: 700;
   font-size: 1.75rem;
   line-height: 1.5rem;
 }
 
 h2 {
+  font-family: "Noto Sans TC", "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
   font-weight: 700;
   font-size: 1.875rem;
   line-height: 2.125rem;
 }
 
 h3 {
+  font-family: "Noto Sans TC", "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
   font-size: 1.5rem;
   line-height: 1.5rem;
 }
 
+button {
+  font-family: "Noto Sans TC", "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
+}
+
 .font-btn {
+  font-family: "Noto Sans TC", "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
   font-size: 1.188rem;
 }
 .font-btn.bold {
@@ -30,15 +70,18 @@ h3 {
 }
 
 .font-content {
+  font-family: "Noto Sans TC", "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
   font-size: 1rem;
 }
 
 .font-body {
+  font-family: "Noto Sans TC", "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
   font-size: 1rem;
   line-height: 0.831rem;
 }
 
 .font-category-list {
+  font-family: "Noto Sans TC", "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
   font-weight: 500;
   font-size: 0.875rem;
   font-weight: 500;
@@ -57,8 +100,14 @@ h3 {
 }
 
 body {
-  font-family: "Noto Sans TC", sans-serif;
+  font-family: "Noto Sans TC", "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
   overflow-x: clip;
+}
+
+main {
+  max-width: 75rem;
+  width: 100%;
+  margin: 0 auto;
 }
 
 button {
@@ -166,6 +215,34 @@ button {
   border: 1px solid #ffffff;
 }
 
+.delete-icon {
+  all: unset;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1.875rem;
+  height: 1.875rem;
+}
+@media (max-width: 576px) {
+  .delete-icon {
+    top: unset;
+    bottom: 0;
+  }
+}
+.delete-icon img {
+  width: 100%;
+  height: 100%;
+}
+
+.confirm-btn {
+  width: 10.813rem;
+  height: 2.25rem;
+  background-color: #448899;
+  color: #ffffff;
+  text-wrap: nowrap;
+  border-radius: 5px;
+}
+
 .search-bar {
   display: flex;
   width: 28.75rem;
@@ -192,7 +269,7 @@ button {
   color: #000000;
   border-radius: 5px 0px 0px 5px;
 }
-.search-bar .search-input:focus {
+.search-bar .search-input:focus, .search-bar .search-input:active {
   color: #000000;
 }
 @media (max-width: 576px) {
@@ -232,7 +309,7 @@ button {
   flex: 1;
   width: 100%;
   padding: 0.813rem 0.625rem;
-  overflow-x: clip;
+  overflow: hidden;
 }
 
 .list-items {
@@ -307,8 +384,8 @@ button {
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 2.5rem;
-  padding: 0.625rem;
+  line-height: 2.5rem;
+  padding: 0 0.625rem;
   background-color: rgba(0, 0, 0, 0.6);
   color: #ffffff;
   overflow: hidden;
@@ -335,9 +412,19 @@ hr {
 hr:first-of-type {
   margin-top: 3.375rem;
 }
-hr:nth-of-type(2) {
+
+#attraction-container:nth-of-type(2) {
   max-width: 1200px;
   width: 100%;
+}
+
+#booking-container hr {
+  margin-top: 0rem;
+  margin-bottom: 2.5rem;
+}
+#booking-container hr:first-of-type {
+  margin-top: 0rem;
+  margin-bottom: 2.5rem;
 }
 
 .carousel {
@@ -462,6 +549,12 @@ footer {
   color: #ffffff;
 }
 
+.booking-footer {
+  align-items: unset;
+  padding-top: 2.5rem;
+  height: 100dvh;
+}
+
 .signin-dialog,
 .signup-dialog {
   width: 21.25rem;
@@ -472,6 +565,11 @@ footer {
 .signup-dialog input {
   padding: 0.938rem;
   color: #757575;
+}
+.signin-dialog input:focus, .signin-dialog input:active,
+.signup-dialog input:focus,
+.signup-dialog input:active {
+  color: #000000;
 }
 .signin-dialog .submit,
 .signup-dialog .submit {
@@ -534,15 +632,12 @@ dialog a {
   margin-bottom: 0.625rem;
 }
 
-.index-container {
+#index-container {
   width: 100%;
   padding: 0 2.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 @media (max-width: 576px) {
-  .index-container {
+  #index-container {
     padding: 0 0.938rem;
   }
 }
@@ -689,6 +784,8 @@ dialog a {
 }
 .booking-form input[type=radio] {
   appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
   margin: 0 0.25rem 0 0.313rem;
   width: 1.375rem;
   height: 1.375rem;
@@ -703,7 +800,6 @@ dialog a {
   display: none;
   background-color: #448899;
   border-radius: 50%;
-  border: 2px solid #ffffff;
 }
 .booking-form input[type=radio]:checked::before, .booking-form input[type=radio]:focus::before {
   display: block;
@@ -715,7 +811,7 @@ dialog a {
   background-color: #448899;
   color: #ffffff;
 }
-.booking-form .submit-button {
+.booking-form .submit {
   margin-bottom: 0;
 }
 
@@ -766,6 +862,170 @@ dialog a {
 .address-label,
 .transport-label {
   line-height: 2rem;
+}
+
+.price::before {
+  content: attr(data-currency) "  ";
+}
+
+.price::after {
+  content: "元";
+}
+
+#booking-container {
+  color: #666666;
+  margin-bottom: 2.5rem;
+}
+@media (max-width: 1200px) {
+  #booking-container {
+    padding: 0 2.5rem;
+  }
+}
+
+.headline {
+  margin: 2.5rem 0 1.875rem;
+  line-height: 1.688rem;
+}
+
+.booking {
+  max-width: 75rem;
+  width: 100%;
+  display: flex;
+  gap: 1.875rem;
+  margin-bottom: 2.5rem;
+}
+@media (max-width: 768px) {
+  .booking {
+    flex-direction: column;
+  }
+}
+@media (max-width: 576px) {
+  .booking {
+    padding: 0;
+    margin: 0;
+    gap: 1.25rem;
+  }
+}
+
+.booking-image {
+  max-width: 15.625rem;
+  height: 12.5rem;
+  width: 100%;
+  overflow: clip;
+}
+@media (max-width: 768px) {
+  .booking-image {
+    max-width: 43.75rem;
+  }
+}
+.booking-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.booking-content {
+  position: relative;
+  width: 100%;
+  margin-bottom: 2.5rem;
+}
+@media (max-width: 768px) {
+  .booking-content {
+    margin-bottom: 1.875rem;
+  }
+}
+
+.booking-name {
+  color: #448899;
+  margin-bottom: 1.25rem;
+}
+
+.booking-info {
+  display: flex;
+  flex-direction: column;
+}
+.booking-info > div {
+  margin-bottom: 0.625rem;
+  line-height: 1.5rem;
+}
+.booking-info > div:nth-child(4) {
+  margin-bottom: 1.875rem;
+}
+
+.form-group {
+  margin-bottom: 0.938rem;
+}
+
+.contact-title,
+.payment-title {
+  margin-bottom: 1.25rem;
+}
+
+.contact-form,
+.payment-form {
+  margin-bottom: 2.5rem;
+}
+.contact-form input,
+.contact-form .tpfield,
+.payment-form input,
+.payment-form .tpfield {
+  color: #000000;
+  border: 1px solid #e8e8e8;
+  width: 12.5rem;
+  height: 2.375rem;
+  border-radius: 5px;
+  font-size: 16px;
+  padding: 0.625rem;
+}
+.contact-form input:focus, .contact-form input:active,
+.contact-form .tpfield:focus,
+.contact-form .tpfield:active,
+.payment-form input:focus,
+.payment-form input:active,
+.payment-form .tpfield:focus,
+.payment-form .tpfield:active {
+  color: #000000;
+}
+.contact-form input::placeholder,
+.contact-form .tpfield::placeholder,
+.payment-form input::placeholder,
+.payment-form .tpfield::placeholder {
+  color: #757575;
+  line-height: 1.125rem;
+}
+.contact-form .expiration-date,
+.payment-form .expiration-date {
+  border: 1px solid #e8e8e8;
+  border-radius: 5px;
+}
+
+.confirm {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2.5rem;
+}
+
+.confirm > * {
+  margin: 0 0 1.375rem auto;
+}
+
+.book-info {
+  display: none;
+}
+.book-info.active {
+  display: block;
+}
+
+.note {
+  line-height: 1.5rem;
+}
+
+.booking-tpfield {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 0.938rem;
 }
 
 /*# sourceMappingURL=all.css.map */
