@@ -1,7 +1,8 @@
 import { getPrime } from "../components/tappay.js";
 import { getBookingData } from "../api/bookingGetApi.js";
+import { token } from "../variables.js";
 
-async function orderPostApi() {
+async function orderPostApi(bookingName, bookingEmail, bookingPhone) {
   const bookingData = getBookingData();
   const prime = await getPrime();
   console.log(bookingData, prime);
@@ -11,7 +12,6 @@ async function orderPostApi() {
   if (!prime) {
     throw new Error("Prime 尚未生成");
   }
-
   try {
     const response = await fetch("/api/orders", {
       method: "POST",
@@ -22,26 +22,27 @@ async function orderPostApi() {
       body: JSON.stringify({
         prime: prime,
         order: {
-          price: price,
+          price: bookingData.price,
           trip: {
             attraction: {
-              id: 10,
-              name: name,
-              address: address,
-              image: image,
+              id: bookingData.attraction.id,
+              name: bookingData.attraction.name,
+              address: bookingData.attraction.address,
+              image: bookingData.attraction.image,
             },
-            date: date,
-            time: time,
+            date: bookingData.date,
+            time: bookingData.time,
           },
           contact: {
-            name: "彭彭彭",
-            email: "ply@ply.com",
-            phone: "0912345678",
+            name: bookingName,
+            email: bookingEmail,
+            phone: bookingPhone,
           },
         },
       }),
     });
     if (response.ok) {
+      console.log("ok");
     } else {
     }
   } catch (e) {}

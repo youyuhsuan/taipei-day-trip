@@ -1,5 +1,6 @@
 from enum import Enum
 from datetime import date, datetime, timezone
+import json
 from fastapi import APIRouter, Depends, HTTPException, Request
 from typing import Annotated
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -7,7 +8,6 @@ import jwt
 from pydantic import BaseModel, EmailStr, Field
 from fastapi.responses import JSONResponse
 import requests
-from requests import get
 from routers.booking import ALGORITHM, SECRET_KEY, CustomHTTPException
 
 router = APIRouter()
@@ -146,34 +146,47 @@ async def post_orders(
             content=content,
             media_type="application/json",
         )
+    db_pool = request.state.db_pool
     try:
-        url = "https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime"
-        headers = {"Content-Type": "application/json", "x-api-key": PARTNER_KEY}
-        order_info = {
-            "prime": OrderInfo.prime,
-            "partner_key": "partner_my6Z83zgO0FyIusd1ZjWVEyVYWgYbWsFwP4rgS6XdqO5HRIKhi2Kih7U",
-            "merchant_id": "merchantA",
-            "details": "TapPay Test",
-            "amount": OrderInfo.order.price,
-            "cardholder": {
-                "phone_number": OrderInfo.order.contact.phone,
-                "name": OrderInfo.order.contact.name,
-                "email": OrderInfo.order.contact.email,
-                # "zip_code": "100",
-                # "address": "台北市天龍區芝麻街1號1樓",
-                # "national_id": "A123456789",
-            },
-            "remember": True,
-        }
-        try:
-            response = requests.post(url, json=order_info, headers=headers)
-            response.raise_for_status()
-            return response.json()
-        except requests.RequestException as e:
-            raise HTTPException(
-                status_code=500, detail=f"Payment request failed: {str(e)}"
-            )
-
+        with db_pool.get_connection() as con:
+            with con.cursor(dictionary=True) as cursor:
+                query = "SELECT * FROM booking_order WHERE order_number = %s"
+                cursor.execute(query, (order_number,))
+                match_order = cursor.fetchone()
+                if not match_order:
+                    return None
+                url = "https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime"
+                headers = {"Content-Type": "application/json", "x-api-key": PARTNER_KEY}
+                order_info = {
+                    "prime": OrderInfo.prime,
+                    "partner_key": PARTNER_KEY,
+                    "merchant_id": "tppf_stella0118_GP_POS_1",
+                    "amount": OrderInfo.order.price.value,
+                    "details": json.dumps(
+                        [
+                            {
+                                "item_id": OrderInfo.order.trip.attraction.id,
+                                "item_name": OrderInfo.order.trip.attraction.name,
+                                "item_quantity": 1,
+                                "item_price": OrderInfo.order.price.value,
+                            }
+                        ]
+                    ),
+                    "cardholder": {
+                        "phone_number": OrderInfo.order.contact.phone,
+                        "name": OrderInfo.order.contact.name,
+                        "email": OrderInfo.order.contact.email,
+                    },
+                    "remember": True,
+                }
+                try:
+                    response = requests.post(url, headers=headers, json=order_info)
+                    response.raise_for_status()
+                    return response.json()
+                except requests.RequestException as e:
+                    raise HTTPException(
+                        status_code=500, detail=f"Payment request failed: {str(e)}"
+                    )
     except Exception as e:
         print(e)
         content = {
