@@ -7,7 +7,9 @@ const bookingForm = document.querySelector(".booking-form");
 bookingForm.addEventListener("submit", async function (event) {
   let date = document.getElementById("date").value;
   let time = document.querySelector('input[name="time"]:checked').value;
-  const price = document.querySelector(".price-amount");
+  const price = document
+    .querySelector(".price-amount")
+    .getAttribute("data-price");
 
   event.preventDefault();
   if (!attractionId) {

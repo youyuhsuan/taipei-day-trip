@@ -42,6 +42,7 @@ async function orderPostApi(bookingName, bookingEmail, bookingPhone) {
       }),
     });
     if (response.ok) {
+      window.location.href("/");
       console.log("ok");
     } else {
     }

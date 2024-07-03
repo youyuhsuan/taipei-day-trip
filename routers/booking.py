@@ -20,15 +20,6 @@ ACCESS_TOKEN_EXPIRE_DAYS = 7
 
 class CustomHTTPException(HTTPException):
     def __init__(self, status_code: int, error: bool, message: str):
-        super().__init__(
-            status_code=status_code, detail={"error": error, "message": message}
-        )
-        self.error = error
-        self.message = message
-
-
-class CustomHTTPException(HTTPException):
-    def __init__(self, status_code: int, error: bool, message: str):
         self.status_code = status_code
         self.error = error
         self.message = message
