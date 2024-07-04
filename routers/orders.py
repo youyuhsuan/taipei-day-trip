@@ -2,7 +2,7 @@ from typing import Annotated
 from fastapi import APIRouter, Query, Request, Depends
 from fastapi.responses import JSONResponse
 import json
-import requests
+import httpx
 from routers import user
 from model.JWTAuthenticator import JWTBearer
 from model.orders import OrderPostInfo
@@ -183,20 +183,21 @@ async def process_payment(OrderPostInfo: OrderPostInfo) -> dict:
         },
         "remember": True,
     }
-    try:
-        response = requests.post(url, headers=headers, json=order_info)
-        response.raise_for_status()
-        return response.json()
-    except requests.RequestException as e:
-        content = {
-            "error": True,
-            "message": e,
-        }
-        return JSONResponse(
-            status_code=500,
-            content=content,
-            media_type="application/json",
-        )
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.post(url, headers=headers, json=order_info)
+            response.raise_for_status()
+            return response.json()
+        except httpx.RequestError as e:
+            content = {
+                "error": True,
+                "message": str(e),
+            }
+            return JSONResponse(
+                status_code=500,
+                content=content,
+                media_type="application/json",
+            )
 
 
 @router.get("/api/orders", tags=["Order"])

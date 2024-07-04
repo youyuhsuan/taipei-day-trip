@@ -113,7 +113,6 @@ async def post_booking(
                             BookAttraction.date,
                             BookAttraction.time,
                             BookAttraction.price.value,
-                            # Assuming Price enum has 'value' attribute for database insert
                         ),
                     )
                     con.commit()
