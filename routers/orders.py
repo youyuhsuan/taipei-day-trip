@@ -56,11 +56,26 @@ async def post_orders(
                         content=content,
                         media_type="application/json",
                     )
-                insert_new_order = "INSERT INTO booking_order (booking_id, name, email, phone) VALUES (%s, %s, %s, %s)"
+                insert_new_order = """
+                    INSERT INTO `orders` (
+                        booking_id, user_id, price, attraction_id, attraction_name, 
+                        attraction_address, attraction_image, trip_date, trip_time, 
+                        contact_name, contact_email, contact_phone
+                    ) 
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """
                 cursor.execute(
                     insert_new_order,
                     (
                         match_booking["id"],
+                        credentials["id"],
+                        OrderPostInfo.order.price.value,
+                        OrderPostInfo.order.trip.attraction.id,
+                        OrderPostInfo.order.trip.attraction.name,
+                        OrderPostInfo.order.trip.attraction.address,
+                        OrderPostInfo.order.trip.attraction.image,
+                        OrderPostInfo.order.trip.date,
+                        OrderPostInfo.order.trip.time,
                         OrderPostInfo.order.contact.name,
                         OrderPostInfo.order.contact.email,
                         OrderPostInfo.order.contact.phone,
@@ -69,37 +84,56 @@ async def post_orders(
                 order_id = cursor.lastrowid
                 payment_result = await process_payment(OrderPostInfo)
                 if payment_result["status"] != 0:
-                    error_msg = payment_result["msg"]
+                    update_order = """
+                    UPDATE `orders`
+                    SET status = %s,
+                        order_number = %s,
+                        rec_trade_id = %s
+                    WHERE id = %s
+                    """
+                    cursor.execute(
+                        update_order,
+                        (
+                            "FAILED",
+                            payment_result["rec_trade_id"],
+                            payment_result["rec_trade_id"],
+                            order_id,
+                        ),
+                    )
+                    content = {
+                        "data": {
+                            "number": payment_result["rec_trade_id"],
+                            "payment": {
+                                "status": payment_result["status"],
+                                "message": "付款失敗",
+                            },
+                        }
+                    }
+                    con.commit()
                     return JSONResponse(
                         status_code=400,
-                        content=error_msg,
+                        content=content,
                         media_type="application/json",
                     )
-                delete_query = "DELETE FROM booking WHERE user_id = %s"
-                cursor.execute(delete_query, (credentials["id"],))
                 update_order = """
-                    UPDATE booking_order
-                    SET paid = %s,
+                    UPDATE `orders`
+                    SET status = %s,
                         order_number = %s,
                         acquirer = %s,
                         card_secret = %s,
                         rec_trade_id = %s,
-                        bank_transaction_id = %s,
-                        transaction_time_millis = %s,
-                        bank_transaction_time = %s
+                        bank_transaction_id = %s
                     WHERE id = %s
                 """
                 cursor.execute(
                     update_order,
                     (
-                        1,
+                        "PAID",
                         payment_result["rec_trade_id"],
                         payment_result["acquirer"],
                         json.dumps(payment_result["card_secret"]),
                         payment_result["rec_trade_id"],
                         payment_result["bank_transaction_id"],
-                        payment_result["transaction_time_millis"],
-                        json.dumps(payment_result["bank_transaction_time"]),
                         order_id,
                     ),
                 )
@@ -168,31 +202,51 @@ async def process_payment(OrderPostInfo: OrderPostInfo) -> dict:
 @router.get("/api/orders", tags=["Order"])
 async def get_orders(
     request: Request,
-    orderNumber: Annotated[int, Query(description="訂單編號")],
+    number: Annotated[str, Query(description="訂單編號")],
     token: str = Depends(JWTBearer()),
 ):
+    if not token:
+        content = {
+            "error": True,
+            "message": "Unauthorized access",
+        }
+        return JSONResponse(
+            status_code=403,
+            content=content,
+            media_type="application/json",
+        )
     db_pool = request.state.db_pool
     try:
         with db_pool.get_connection() as con:
             with con.cursor(dictionary=True) as cursor:
-                query = """SELECT booking_order.booking_id, booking_order.name, booking_order.email, booking_order.phone, booking_order.paid, 
-                        FROM booking_order
-                        JOIN booking ON booking.id = booking_order.booking_id
-                        WHERE order_number = %s"""
-                cursor.execute(query, (orderNumber,))
+                query = "SELECT * FROM `orders` WHERE order_number = %s"
+                cursor.execute(query, (number,))
                 match_order = cursor.fetchone()
                 if not match_order:
                     return None
-                # query = """SELECT attractions.id, attractions.name, attractions.address, attractions_images.images AS image
-                #         FROM attractions
-                #         JOIN attractions_images ON attractions.id = attractions_images.attractions_id
-                #         WHERE attractions.id = %s"""
-                # cursor.execute(query, (match_order["booking_id"],))
-                # match_attraction = cursor.fetchone()
-                # if not match_attraction:
-                #     return None
-                # print(match_order, match_attraction)
-                return {"data": "data"}
+                order_status = match_order["status"]
+                status = 1 if order_status == "PAID" else 0
+                data = {
+                    "number": match_order["order_number"],
+                    "price": match_order["price"],
+                    "trip": {
+                        "attraction": {
+                            "id": match_order["attraction_id"],
+                            "name": match_order["attraction_name"],
+                            "address": match_order["attraction_address"],
+                            "image": match_order["attraction_image"],
+                        },
+                        "date": match_order["trip_date"],
+                        "time": match_order["trip_time"],
+                    },
+                    "contact": {
+                        "name": match_order["contact_name"],
+                        "email": match_order["contact_email"],
+                        "phone": match_order["contact_phone"],
+                    },
+                    "status": status,
+                }
+                return {"data": data}
     except Exception as e:
         return JSONResponse(
             status_code=500,

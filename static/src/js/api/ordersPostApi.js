@@ -43,8 +43,11 @@ async function orderPostApi(bookingName, bookingEmail, bookingPhone) {
         },
       }),
     });
-    if (response.ok) {
+    if (response.ok || response.status === 400) {
       const responseData = await response.json();
+      bookingDeleteApi(false);
+      sessionStorage.setItem("bookingData", JSON.stringify(bookingData));
+      sessionStorage.setItem("orderData", JSON.stringify(responseData.data));
       window.location.href = `/thankyou?number=${responseData.data.number}`;
     }
   } catch (e) {

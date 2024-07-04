@@ -33,7 +33,7 @@ async function createBookingInfo(name, address, image, date, time, price) {
   const icon = document.createElement("img");
   icon.src = "static/src/image/icon/delete.png";
   deleteIcon.appendChild(icon);
-  deleteIcon.addEventListener("click", bookingDeleteApi);
+  deleteIcon.addEventListener("click", () => bookingDeleteApi(true));
 
   const timeText =
     time === "afternoon" ? "下午2點至晚上8點" : "上午9點至中午12點";

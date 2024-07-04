@@ -8,16 +8,24 @@ submitButton.addEventListener("click", async (event) => {
     const bookingName = document.getElementById("booking-name").value.trim();
     const bookingEmail = document.getElementById("booking-email").value.trim();
     const bookingPhone = document.getElementById("booking-phone").value.trim();
-    console.log(bookingName, bookingEmail, bookingPhone);
-    if (!bookingName || !bookingEmail || !bookingPhone) {
-      console.error("Please fill in all required fields.");
-      return;
+    if (!bookingName) {
+      showError("姓名");
+    }
+    if (!bookingEmail) {
+      showError("電子郵件");
+    }
+    if (!bookingPhone) {
+      showError("手機號碼");
     }
     await onSubmit(event);
-    console.log("Prime 已更新:", getPrime());
     orderPostApi(bookingName, bookingEmail, bookingPhone);
   } catch (error) {
-    console.error("獲取 Prime 失敗:", error);
-    alert(error.message);
+    console.error("submitButton Prime", error);
+    // alert(error.message);
   }
 });
+
+function showError(message) {
+  alert(`${message}不能為空`);
+  return;
+}

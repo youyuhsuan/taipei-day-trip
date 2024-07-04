@@ -25,7 +25,6 @@ class JWTBearer(HTTPBearer):
             JWTBearer, self
         ).__call__(request)
         if credentials:
-            print(credentials)
             if not credentials.scheme == "Bearer":
                 return None
             if not self.verify_jwt(credentials.credentials):
