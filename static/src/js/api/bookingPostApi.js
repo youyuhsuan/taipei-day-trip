@@ -25,7 +25,6 @@ async function bookingPostApi(attractionId, date, time, price) {
     }
   } catch (e) {
     signinDialog.showModal();
-
     console.error("bookingPostApi error:", e);
   }
 }

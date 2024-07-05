@@ -1,5 +1,6 @@
 import { getPrime } from "../components/tappay.js";
 import { getBookingData } from "../api/bookingGetApi.js";
+import { bookingDeleteApi } from "../api/bookingDeleteApi.js";
 import { token } from "../variables.js";
 
 async function orderPostApi(bookingName, bookingEmail, bookingPhone) {
@@ -7,10 +8,11 @@ async function orderPostApi(bookingName, bookingEmail, bookingPhone) {
   const prime = await getPrime();
   console.log(bookingData, prime);
   if (!bookingData) {
-    throw new Error("bookingData 尚未生成");
+    throw new Error("Booking data is not available");
   }
+
   if (!prime) {
-    throw new Error("Prime 尚未生成");
+    throw new Error("Failed to generate Prime");
   }
   try {
     const response = await fetch("/api/orders", {
@@ -41,11 +43,16 @@ async function orderPostApi(bookingName, bookingEmail, bookingPhone) {
         },
       }),
     });
-    if (response.ok) {
-      console.log("ok");
-    } else {
+    if (response.ok || response.status === 400) {
+      const responseData = await response.json();
+      bookingDeleteApi(false);
+      sessionStorage.setItem("bookingData", JSON.stringify(bookingData));
+      sessionStorage.setItem("orderData", JSON.stringify(responseData.data));
+      window.location.href = `/thankyou?number=${responseData.data.number}`;
     }
-  } catch (e) {}
+  } catch (e) {
+    console.error("orderPostApi error:", e);
+  }
 }
 
 export { orderPostApi };

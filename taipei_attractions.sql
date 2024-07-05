@@ -27,12 +27,14 @@ CREATE TABLE `attractions` (
   `name` varchar(255) NOT NULL,
   `category` varchar(255) NOT NULL,
   `description` text NOT NULL,
-  `address` text,
+  `address` text NOT NULL,
   `transport` text NOT NULL,
   `mrt` varchar(255) DEFAULT NULL,
   `lat` double NOT NULL,
   `lng` double NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `idx_name` (`name`),
+  KEY `idx_mrt` (`mrt`)
 ) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -94,7 +96,7 @@ CREATE TABLE `booking` (
   UNIQUE KEY `unique_user` (`user_id`),
   KEY `idx_attraction_id` (`attraction_id`),
   KEY `idx_user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=121 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -103,47 +105,59 @@ CREATE TABLE `booking` (
 
 LOCK TABLES `booking` WRITE;
 /*!40000 ALTER TABLE `booking` DISABLE KEYS */;
-INSERT INTO `booking` VALUES (32,1,13,'2024-06-11','morning',2000,'2024-07-03 02:35:49','2024-07-03 02:35:49'),(55,3,1,'2024-06-05','morning',2000,'2024-07-03 02:35:49','2024-07-03 02:35:49');
+INSERT INTO `booking` VALUES (32,1,13,'2024-06-11','morning',2000,'2024-07-03 02:35:49','2024-07-03 02:35:49'),(60,0,2,'2024-07-03','morning',2000,'2024-07-03 06:28:38','2024-07-03 06:28:38');
 /*!40000 ALTER TABLE `booking` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `booking_order`
+-- Table structure for table `orders`
 --
 
-DROP TABLE IF EXISTS `booking_order`;
+DROP TABLE IF EXISTS `orders`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `booking_order` (
+CREATE TABLE `orders` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `booking_id` bigint NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `phone` varchar(20) NOT NULL,
-  `paid` tinyint(1) NOT NULL DEFAULT '0',
+  `booking_id` bigint DEFAULT NULL,
+  `user_id` bigint NOT NULL,
+  `price` int NOT NULL,
+  `attraction_id` bigint NOT NULL,
+  `attraction_name` varchar(255) NOT NULL,
+  `attraction_address` text NOT NULL,
+  `attraction_image` longtext NOT NULL,
+  `trip_date` date NOT NULL,
+  `trip_time` enum('morning','afternoon') NOT NULL,
+  `contact_name` varchar(255) NOT NULL,
+  `contact_email` varchar(255) NOT NULL,
+  `contact_phone` varchar(20) NOT NULL,
+  `status` enum('UNPAID','PAID','FAILED','REFUNDED','CANCELLED') NOT NULL DEFAULT 'UNPAID',
   `order_number` varchar(50) DEFAULT NULL,
   `acquirer` varchar(255) DEFAULT NULL,
   `card_secret` json DEFAULT NULL,
   `rec_trade_id` varchar(50) DEFAULT NULL,
   `bank_transaction_id` varchar(40) DEFAULT NULL,
-  `transaction_time_millis` longtext,
-  `bank_transaction_time` json DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `paid_at` timestamp NULL DEFAULT NULL,
+  `cancelled_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `idx_rec_trade_id` (`rec_trade_id`),
-  UNIQUE KEY `idx_bank_transaction_id` (`bank_transaction_id`),
-  UNIQUE KEY `idx_order_number` (`order_number`),
+  UNIQUE KEY `unique_order_number` (`order_number`),
+  UNIQUE KEY `unique_rec_trade_id` (`rec_trade_id`),
+  UNIQUE KEY `unique_bank_transaction_id` (`bank_transaction_id`),
+  KEY `idx_order_number` (`order_number`),
   KEY `booking_id` (`booking_id`),
-  CONSTRAINT `booking_order_ibfk_1` FOREIGN KEY (`booking_id`) REFERENCES `booking` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`booking_id`) REFERENCES `booking` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `booking_order`
+-- Dumping data for table `orders`
 --
 
-LOCK TABLES `booking_order` WRITE;
-/*!40000 ALTER TABLE `booking_order` DISABLE KEYS */;
-/*!40000 ALTER TABLE `booking_order` ENABLE KEYS */;
+LOCK TABLES `orders` WRITE;
+/*!40000 ALTER TABLE `orders` DISABLE KEYS */;
+INSERT INTO `orders` VALUES (1,NULL,1,2000,2,'大稻埕碼頭','臺北市大同區環河北路一段','https://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000340.jpg','2024-07-08','morning','you yu hsuan','stellayou0118@gmail.com','0933305155','PAID','D20240704uOyKJi','TW_TAPPAY_GLOBAL_PAYMENTS','{\"card_key\": \"e79847a8345c798bf41d50416b866c4f802f37978af85881e97ad24bd8f492ff\", \"card_token\": \"d38b13f0ecdbadaa5a2a7ca24c2a7a07a4d998c5f48ae436e8288b92ecffa0c0\"}','D20240704uOyKJi','TP20240704uOyKJi','2024-07-03 19:06:07','2024-07-03 19:06:08',NULL,NULL),(2,NULL,1,2000,2,'大稻埕碼頭','臺北市大同區環河北路一段','https://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000340.jpg','2024-07-22','morning','you yu hsuan','stellayou0118@gmail.com','0933305155','PAID','D20240704V5uYj1','TW_TAPPAY_GLOBAL_PAYMENTS','{\"card_key\": \"0323c68a67654942c2032a6f95757314081159fdfebc5208b6fd1e754c9bb14a\", \"card_token\": \"e6d7d1927df38b0797a00d691c505f62543dadaf7029954d98100c94d4660421\"}','D20240704V5uYj1','TP20240704V5uYj1','2024-07-03 19:28:20','2024-07-03 19:28:24',NULL,NULL),(3,NULL,1,2500,2,'大稻埕碼頭','臺北市大同區環河北路一段','https://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000340.jpg','2024-07-31','afternoon','you yu hsuan','stellayou0118@gmail.com','0933305155','PAID','D202407043tstMj','TW_TAPPAY_GLOBAL_PAYMENTS','{\"card_key\": \"a290ecf85a4ab6797b34b6d02cf13873913483d7021826f6de360ffa6670d1fc\", \"card_token\": \"e2d0fee6986dbca3b7cb9332a7115c13462f719b3dc1b0322130e544c0b7e0d1\"}','D202407043tstMj','TP202407043tstMj','2024-07-03 19:48:50','2024-07-03 19:48:54',NULL,NULL),(4,NULL,1,2500,2,'大稻埕碼頭','臺北市大同區環河北路一段','https://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000340.jpg','2024-07-31','afternoon','you yu hsuan','stellayou0118@gmail.com','0933305155','PAID','D20240704qgts8A','TW_TAPPAY_GLOBAL_PAYMENTS','{\"card_key\": \"455fbfdc7014f96b55c42e5e6bf971aff61aa04bcacad7685d7c25153234da9d\", \"card_token\": \"a68cd5f286a99bd9b7fb23ca51e12bcb790c33e6cec28870c399fed26d171ccc\"}','D20240704qgts8A','TP20240704qgts8A','2024-07-03 19:48:54','2024-07-03 19:48:56',NULL,NULL),(5,NULL,1,2000,2,'大稻埕碼頭','臺北市大同區環河北路一段','https://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000340.jpg','2024-07-29','morning','you yu hsuan','stellayou0118@gmail.com','0933305155','PAID','D20240704e6atXW','TW_TAPPAY_GLOBAL_PAYMENTS','{\"card_key\": \"d4c49047841d88b3e80b77c2e260d5fc77a95427499b238d39312bfa954fa5d3\", \"card_token\": \"c8a60f7b4005d1faf500e7f946144dc78f4e1b4d0f0af1cf75c664cd97a8162b\"}','D20240704e6atXW','TP20240704e6atXW','2024-07-04 02:31:05','2024-07-04 02:31:06',NULL,NULL),(6,NULL,1,2000,2,'大稻埕碼頭','臺北市大同區環河北路一段','https://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000340.jpg','2024-08-07','morning','you yu hsuan','stellayou0118@gmail.com','0933305155','PAID','D20240704V48RUv','TW_TAPPAY_GLOBAL_PAYMENTS','{\"card_key\": \"bda7a5cf39ca9daf2dd0c26ecdce1476bfde261eb387f71c049e3ebb647a4dff\", \"card_token\": \"3ecbda5a679af5c8448bfc4f67534fb7d870642bbf96d1d50a83d5b27fe60b31\"}','D20240704V48RUv','TP20240704V48RUv','2024-07-04 02:32:07','2024-07-04 02:32:08',NULL,NULL),(7,NULL,1,2000,2,'大稻埕碼頭','臺北市大同區環河北路一段','https://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000340.jpg','2024-07-18','morning','you yu hsuan','stellayou0118@gmail.com','0933305155','PAID','D20240704EmbY5G','TW_TAPPAY_GLOBAL_PAYMENTS','{\"card_key\": \"b9ef80a1e611a25a9d70b0fd11839977ed0e32eef376256255c36f218ace37bb\", \"card_token\": \"cf053879dc5b5dc89e298e8d5ae777538a0c9a6c6b51fc4606101d4ec31d6f6a\"}','D20240704EmbY5G','TP20240704EmbY5G','2024-07-04 02:32:48','2024-07-04 02:32:49',NULL,NULL),(8,NULL,1,2000,1,'新北投溫泉區','臺北市北投區中山路、光明路沿線','https://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000848.jpg','2024-07-24','morning','you yu hsuan','stellayou0118@gmail.com','0933305155','PAID','D20240704n6aA4q','TW_TAPPAY_GLOBAL_PAYMENTS','{\"card_key\": \"5db3027f059b1a64732d27ed888e16023bce7d4cdad3485b83bab53cb7881874\", \"card_token\": \"c995f4afd9f709edc4172a11c205484822030a26f33d6524ec5a4c66d181fdcf\"}','D20240704n6aA4q','TP20240704n6aA4q','2024-07-04 02:33:53','2024-07-04 02:33:54',NULL,NULL),(9,NULL,1,2000,2,'大稻埕碼頭','臺北市大同區環河北路一段','https://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000340.jpg','2024-07-10','morning','you yu hsuan','stellayou0118@gmail.com','0933305155','PAID','D20240704PO3Vd2','TW_TAPPAY_GLOBAL_PAYMENTS','{\"card_key\": \"ed372f06c6b00d42ade19e32915c564466bd3cfadc8e107c87223abc38dcb47e\", \"card_token\": \"5c3dee30c8638d7cbd8d6e0541978fc6b6252780050e1dac773166b313b134b5\"}','D20240704PO3Vd2','TP20240704PO3Vd2','2024-07-04 02:36:39','2024-07-04 02:36:41',NULL,NULL),(10,NULL,1,2000,2,'大稻埕碼頭','臺北市大同區環河北路一段','https://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000340.jpg','2024-07-10','morning','you yu hsuan','stellayou0118@gmail.com','0933305155','PAID','D20240704VZSgEv','TW_TAPPAY_GLOBAL_PAYMENTS','{\"card_key\": \"564377ba82314e54c7922fb2dcab8de2e0dace471c2b813f58da79829cbea174\", \"card_token\": \"13554c4f639a99cb3da120c4e7e5c6ad147f9f099dffa630ee4456c019111409\"}','D20240704VZSgEv','TP20240704VZSgEv','2024-07-04 02:49:31','2024-07-04 02:49:33',NULL,NULL),(11,NULL,1,2500,3,'士林官邸','臺北市士林區福林路60號','https://www.travel.taipei/d_upload_ttn/sceneadmin/image/a0/b0/c0/d7/e150/f719/71eb4b56-f771-43bc-856c-2fb265a5cc6e.jpg','2024-07-15','afternoon','you yu hsuan','stellayou0118@gmail.com','0933305155','PAID','D20240704tvZfcD','TW_TAPPAY_GLOBAL_PAYMENTS','{\"card_key\": \"4227b46ca082df0af90a2be81bc57d2f9bd9c6359a5ed5f494f206ac13488b7a\", \"card_token\": \"d45d5f2bf4afe4d84bb97d4c3101dfeb33824933796dc789cee1319c3ef6ebf6\"}','D20240704tvZfcD','TP20240704tvZfcD','2024-07-04 02:50:33','2024-07-04 02:50:35',NULL,NULL),(12,NULL,1,2000,2,'大稻埕碼頭','臺北市大同區環河北路一段','https://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000340.jpg','2024-07-10','morning','you yu hsuan','stellayou0118@gmail.com','0933305155','PAID','D20240704DAxsqe','TW_TAPPAY_GLOBAL_PAYMENTS','{\"card_key\": \"085c5dd6025e63702337f695bcbca81cd09006ad7abde64e21dea7d2eea91fca\", \"card_token\": \"4d9dbff7bde90ef992c45d56911f2967cad0589c5daa174f7cfbda977081d243\"}','D20240704DAxsqe','TP20240704DAxsqe','2024-07-04 02:51:16','2024-07-04 02:51:17',NULL,NULL),(36,NULL,1,2000,2,'大稻埕碼頭','臺北市大同區環河北路一段','https://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000340.jpg','2024-07-08','morning','you yu hsuan','stellayou0118@gmail.com','0933305155','FAILED','D202407047WLEqs',NULL,NULL,'D202407047WLEqs',NULL,'2024-07-04 03:23:55','2024-07-04 03:23:56',NULL,NULL),(37,NULL,1,2000,2,'大稻埕碼頭','臺北市大同區環河北路一段','https://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000340.jpg','2024-07-08','morning','you yu hsuan','stellayou0118@gmail.com','0933305155','FAILED','D20240704Sjvo6U',NULL,NULL,'D20240704Sjvo6U',NULL,'2024-07-04 03:27:57','2024-07-04 03:27:58',NULL,NULL),(38,NULL,1,2000,2,'大稻埕碼頭','臺北市大同區環河北路一段','https://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000340.jpg','2024-07-10','morning','you yu hsuan','stellayou0118@gmail.com','0933305155','FAILED','D202407049k9Owm',NULL,NULL,'D202407049k9Owm',NULL,'2024-07-04 03:28:45','2024-07-04 03:28:46',NULL,NULL),(39,NULL,14,2000,1,'新北投溫泉區','臺北市北投區中山路、光明路沿線','https://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000848.jpg','2024-07-01','morning','you yu hsuan','stellayou0118@gmail.com','0933305155','PAID','D20240704zR5T5J','TW_TAPPAY_GLOBAL_PAYMENTS','{\"card_key\": \"537f3cafbb571ba7299c4d2b0652016f4970c18623f10fca68614e6341da025a\", \"card_token\": \"847061f1d114a02c9ab12dce394acd0ded23a5f4f7c86bbb4ab9cac5f814fb87\"}','D20240704zR5T5J','TP20240704zR5T5J','2024-07-04 03:33:54','2024-07-04 03:33:55',NULL,NULL),(40,NULL,1,2500,2,'大稻埕碼頭','臺北市大同區環河北路一段','https://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000340.jpg','2024-07-02','afternoon','you yu hsuan','stellayou0118@gmail.com','0933305155','PAID','D20240704WS0m4P','TW_TAPPAY_GLOBAL_PAYMENTS','{\"card_key\": \"c3c9c049bb01f31891fc2f0c9b23ad63b9c3803858d7b465655afa04c80ffa89\", \"card_token\": \"c3e6af654581fc948c454e0340e6b7a2ade565a94f0d81effb60a0b918adda5d\"}','D20240704WS0m4P','TP20240704WS0m4P','2024-07-04 03:44:58','2024-07-04 03:45:00',NULL,NULL),(41,NULL,1,2500,2,'大稻埕碼頭','臺北市大同區環河北路一段','https://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000340.jpg','2024-07-02','afternoon','you yu hsuan','stellayou0118@gmail.com','0933305155','PAID','D20240704XqTRgi','TW_TAPPAY_GLOBAL_PAYMENTS','{\"card_key\": \"941addeb2e048ad0fb9ed884a1bd85e43d8e3e0ddf9291794e330df7ac5ce95c\", \"card_token\": \"4fac4d16fc56bbe365b1167dcfab4458c7b8efeaf2fe0f41fd7bf1701644d5e2\"}','D20240704XqTRgi','TP20240704XqTRgi','2024-07-04 03:45:00','2024-07-04 03:45:01',NULL,NULL),(42,NULL,1,2000,3,'士林官邸','臺北市士林區福林路60號','https://www.travel.taipei/d_upload_ttn/sceneadmin/image/a0/b0/c0/d7/e150/f719/71eb4b56-f771-43bc-856c-2fb265a5cc6e.jpg','2024-08-06','morning','you yu hsuan','stellayou0118@gmail.com','0933305155','PAID','D20240704ON6ZZn','TW_TAPPAY_GLOBAL_PAYMENTS','{\"card_key\": \"35719f110d86dd07a1db1667d48c12ef8f2bbb6b6607e580b607ca824577f9e5\", \"card_token\": \"69054dfb22cc2c8519ab73707fa579a5f593fc6de1b71bad8278cbbabed38652\"}','D20240704ON6ZZn','TP20240704ON6ZZn','2024-07-04 03:45:57','2024-07-04 03:45:58',NULL,NULL),(43,NULL,1,2000,2,'大稻埕碼頭','臺北市大同區環河北路一段','https://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000340.jpg','2024-07-30','morning','you yu hsuan','stellayou0118@gmail.com','0933305155','PAID','D20240704QT4Hpr','TW_TAPPAY_GLOBAL_PAYMENTS','{\"card_key\": \"29996643bad8014613ded8a92436a533a5f035af943421ecc14da3e3c760f642\", \"card_token\": \"f0bd253051ff2d8b1c4183f645af8fb7af524d3326a4c8b6226871786ae78e3a\"}','D20240704QT4Hpr','TP20240704QT4Hpr','2024-07-04 03:49:07','2024-07-04 03:49:08',NULL,NULL),(44,NULL,1,2000,2,'大稻埕碼頭','臺北市大同區環河北路一段','https://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000340.jpg','2024-07-03','morning','you yu hsuan','stellayou0118@gmail.com','0933305155','PAID','D20240704ngfuz4','TW_TAPPAY_GLOBAL_PAYMENTS','{\"card_key\": \"02162bc3d22bb76ffb6e2129895a12cbf74f33980693b4377f42524490f6275b\", \"card_token\": \"799d13b9a2eaa877a262d30a93ae074f2eaa5d68b9c56ff2bfb9a9cc1a48a011\"}','D20240704ngfuz4','TP20240704ngfuz4','2024-07-04 04:06:31','2024-07-04 04:06:32',NULL,NULL),(45,NULL,1,2000,4,'國立故宮博物院','臺北市士林區至善路二段221號','https://www.travel.taipei/d_upload_ttn/sceneadmin/image/a0/b0/c0/d14/e810/f21/48d66fbd-1ba3-4efd-837a-3767db5f52e0.jpg','2024-07-15','morning','you yu hsuan','stellayou0118@gmail.com','0933305155','PAID','D20240704JC7f5T','TW_TAPPAY_GLOBAL_PAYMENTS','{\"card_key\": \"bf521703361d7af9771a3696772b20050f16855ffed5a5df968f0eb4f61fedf0\", \"card_token\": \"428eec692f56aee59773de43673979fb8a6a61cbfcae74a30027a6f6cded30bd\"}','D20240704JC7f5T','TP20240704JC7f5T','2024-07-04 04:17:09','2024-07-04 04:17:10',NULL,NULL),(46,NULL,1,2000,4,'國立故宮博物院','臺北市士林區至善路二段221號','https://www.travel.taipei/d_upload_ttn/sceneadmin/image/a0/b0/c0/d14/e810/f21/48d66fbd-1ba3-4efd-837a-3767db5f52e0.jpg','2024-07-15','morning','you yu hsuan','stellayou0118@gmail.com','0933305155','PAID','D202407047XvjZI','TW_TAPPAY_GLOBAL_PAYMENTS','{\"card_key\": \"1edc3e502a0ae3f37ec166573d79066afb89cfafcdcff9c82278f74c53cd536b\", \"card_token\": \"c3572e61daae0d4952dd3503953afb5ba71310bf59ec3dfd476525cb9f65bf4c\"}','D202407047XvjZI','TP202407047XvjZI','2024-07-04 04:17:10','2024-07-04 04:17:12',NULL,NULL),(47,NULL,1,2000,2,'大稻埕碼頭','臺北市大同區環河北路一段','https://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000340.jpg','2024-07-23','morning','you yu hsuan','stellayou0118@gmail.com','0933305155','PAID','D20240704aktqf4','TW_TAPPAY_GLOBAL_PAYMENTS','{\"card_key\": \"268f78a9b270fa0eec5c4d6c3208637499ce2903d8b2dbe6e2da2e4cd728a0ff\", \"card_token\": \"07f64d053a587158ccb06b9f19c5c796c13d804d0239a34da1746f7d6d8e2379\"}','D20240704aktqf4','TP20240704aktqf4','2024-07-04 05:04:49','2024-07-04 05:04:51',NULL,NULL),(48,NULL,1,2000,2,'大稻埕碼頭','臺北市大同區環河北路一段','https://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000340.jpg','2024-07-23','morning','you yu hsuan','stellayou0118@gmail.com','0933305155','PAID','D202407044EqECG','TW_TAPPAY_GLOBAL_PAYMENTS','{\"card_key\": \"6bc6ee4f9270baa52889069de02c663605a3ed0d8caa561833c96850482bc4a4\", \"card_token\": \"0e7167f86f04fabb08b12fe01eb6c017d060d243e48c472dbed80706e27a43b8\"}','D202407044EqECG','TP202407044EqECG','2024-07-04 05:04:51','2024-07-04 05:04:52',NULL,NULL),(49,NULL,1,2000,3,'士林官邸','臺北市士林區福林路60號','https://www.travel.taipei/d_upload_ttn/sceneadmin/image/a0/b0/c0/d7/e150/f719/71eb4b56-f771-43bc-856c-2fb265a5cc6e.jpg','2024-07-16','morning','you yu hsuan','stellayou0118@gmail.com','0933305155','PAID','D2024070480AkQM','TW_TAPPAY_GLOBAL_PAYMENTS','{\"card_key\": \"70ff140a1549c6080af1d6441ca4d884c8abd96d482c1bdf19adbbf3c10f5853\", \"card_token\": \"addc478eeb27497dd52cbf534530c6ba552a5305ab897f7829819051c4d7f43b\"}','D2024070480AkQM','TP2024070480AkQM','2024-07-04 05:06:27','2024-07-04 05:06:29',NULL,NULL),(50,NULL,1,2000,1,'新北投溫泉區','臺北市北投區中山路、光明路沿線','https://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000848.jpg','2024-07-22','morning','彭彭彭','ply@ply.com','2423423','FAILED','D20240704rjqFzX',NULL,NULL,'D20240704rjqFzX',NULL,'2024-07-04 05:25:50','2024-07-04 05:25:51',NULL,NULL),(51,NULL,1,2000,2,'大稻埕碼頭','臺北市大同區環河北路一段','https://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000340.jpg','2024-07-15','morning','you yu hsuan','stellayou0118@gmail.com','0933305155','FAILED','D20240704serD95',NULL,NULL,'D20240704serD95',NULL,'2024-07-04 05:26:56','2024-07-04 05:26:57',NULL,NULL),(52,NULL,1,2000,3,'士林官邸','臺北市士林區福林路60號','https://www.travel.taipei/d_upload_ttn/sceneadmin/image/a0/b0/c0/d7/e150/f719/71eb4b56-f771-43bc-856c-2fb265a5cc6e.jpg','2024-07-22','morning','you yu hsuan','stellayou0118@gmail.com','0933305155','FAILED','D20240704veFGfh',NULL,NULL,'D20240704veFGfh',NULL,'2024-07-04 05:27:24','2024-07-04 05:27:26',NULL,NULL),(53,NULL,1,2000,2,'大稻埕碼頭','臺北市大同區環河北路一段','https://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000340.jpg','2024-07-22','morning','you yu hsuan','stellayou0118@gmail.com','0933305155','FAILED','D20240704fmrDPQ',NULL,NULL,'D20240704fmrDPQ',NULL,'2024-07-04 05:27:56','2024-07-04 05:27:57',NULL,NULL),(54,NULL,1,2000,2,'大稻埕碼頭','臺北市大同區環河北路一段','https://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000340.jpg','2024-07-08','morning','you yu hsuan','stellayou0118@gmail.com','0933305155','FAILED','D20240704Oh4KME',NULL,NULL,'D20240704Oh4KME',NULL,'2024-07-04 05:28:55','2024-07-04 05:28:56',NULL,NULL),(55,NULL,1,2000,3,'士林官邸','臺北市士林區福林路60號','https://www.travel.taipei/d_upload_ttn/sceneadmin/image/a0/b0/c0/d7/e150/f719/71eb4b56-f771-43bc-856c-2fb265a5cc6e.jpg','2024-07-26','morning','you yu hsuan','stellayou0118@gmail.com','0933305155','PAID','D20240704UJ0fBC','TW_TAPPAY_GLOBAL_PAYMENTS','{\"card_key\": \"805078be070066a13a4c10c08ceadd7145c2cbde82b90a8ccf07afdc1782a13c\", \"card_token\": \"8c5f9e38bc33b19fb75eece3653c247d17e77f3f523381bc095631b0fd8a5312\"}','D20240704UJ0fBC','TP20240704UJ0fBC','2024-07-04 06:25:42','2024-07-04 06:25:44',NULL,NULL),(56,NULL,1,2000,2,'大稻埕碼頭','臺北市大同區環河北路一段','https://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000340.jpg','2024-07-02','morning','you yu hsuan','stellayou0118@gmail.com','0933305155','FAILED','D20240704HztL1w',NULL,NULL,'D20240704HztL1w',NULL,'2024-07-04 06:26:18','2024-07-04 06:26:19',NULL,NULL),(57,NULL,1,2000,4,'國立故宮博物院','臺北市士林區至善路二段221號','https://www.travel.taipei/d_upload_ttn/sceneadmin/image/a0/b0/c0/d14/e810/f21/48d66fbd-1ba3-4efd-837a-3767db5f52e0.jpg','2024-07-04','morning','you yu hsuan','stellayou0118@gmail.com','0933305155','PAID','D20240704HZsxWz','TW_TAPPAY_GLOBAL_PAYMENTS','{\"card_key\": \"c9d00f4ab3f5802a7500318f98dadef5573be29c7eef37013915d516d920065d\", \"card_token\": \"d177dcfaa953033701c166e019e7134d87aecd5f30a89ddb3830332e40948bee\"}','D20240704HZsxWz','TP20240704HZsxWz','2024-07-04 07:38:23','2024-07-04 07:38:24',NULL,NULL);
+/*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -161,7 +175,7 @@ CREATE TABLE `users` (
   `registration_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -170,7 +184,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'彭彭彭','ply@ply.com','$2b$12$X9JW5.BnHp5gk6wvlX81FeIscQCvPsjFQsSxqkcSdfql52GR6XRmi','2024-06-24 01:35:32'),(2,'string','user@example.com','$2b$12$ltqlnTtZOeZXBxpUmoFqJuWbckafaVHwaTibIJpsBWi1nOn0A3rJ2','2024-06-24 01:35:32'),(3,'string','21312@example.com','$2b$12$El75/VWkETPrWLLRbQlQ7.qCDDSG5yYWG.7l1L.ayuxWqTYp1Xr3q','2024-06-24 01:35:32'),(4,'彭彭彭','plewrwery@ply.com','$2b$12$dZS/irzyfUxvf/AnL7aP2OgsTrmnGA6Brzd8aylH0poXY0iVRztoW','2024-06-24 01:35:32'),(5,'eqwe','sherryyou.tw@gmail.com','$2b$12$NUaNI.G9Uv4AUpHQLKyM0Ocn7ri2Kj.VRkN9i0QobUtXfisOTJfd.','2024-06-24 01:35:32'),(6,'fewfew','fewfwefwef@gmail.com','$2b$12$6rtW7TPHvjTFY0cGC.QtT.V07P.gnwsG97JxwN3.4UaHr2iY.yagy','2024-06-24 01:35:32'),(7,'ffsdfsd','sherdsadasdry-yu@live.com','$2b$12$Yjr3L0dFGEZ0BQgHrZVSquXocH/t4Xn3Lx4W77OwXHPcV0ZTctuee','2024-06-24 01:35:32'),(8,'321321','fgkdfojgdfjo@gmail.com','$2b$12$/Yn37ddB5nlNNVEgDdHC4eckms2pDhMYG2aw0kbGxOEj2pBONxYCq','2024-06-24 01:35:32'),(9,'彭彭彭','dsdsadasdasdply@ply.com','$2b$12$T2fpcK.gyrhokYUjAAHWCOl9kltFPgSESt1Qj0Gln6yzUdcH0gXRi','2024-06-24 01:35:32'),(10,'fdsfsd','fdsfsd@gmial.ocom','$2b$12$hznPgwgFAB5h9lYMTgln2ecbddn.TTRsW4ual/YUzk5Jsnp9XN1ei','2024-06-24 01:35:32'),(11,'you yu hsuan','sherry-u@live.com','$2b$12$WzY0VSmqadbPgncbusPlZOJCKfvvjFf0wxxdBRekn/rYy99Xn7Emu','2024-06-26 14:16:42'),(12,'you yu hsuan','sherryyou.tmai@l.comdssd','$2b$12$rI9C6bjW6xJoUA6n7LU/VOkiaJPFrNRHTQrxUfwQxvIvLShxlNXH6','2024-06-26 15:04:44'),(13,'ruru','ruru@gmail.com','$2b$12$.OHETw6WXzHPLqJe1SP4TuH/OXHNp4973ly.EPSN.Y3P/5uFcvvle','2024-06-27 05:30:25');
+INSERT INTO `users` VALUES (1,'彭彭彭','ply@ply.com','$2b$12$X9JW5.BnHp5gk6wvlX81FeIscQCvPsjFQsSxqkcSdfql52GR6XRmi','2024-06-24 01:35:32'),(2,'string','user@example.com','$2b$12$ltqlnTtZOeZXBxpUmoFqJuWbckafaVHwaTibIJpsBWi1nOn0A3rJ2','2024-06-24 01:35:32'),(3,'string','21312@example.com','$2b$12$El75/VWkETPrWLLRbQlQ7.qCDDSG5yYWG.7l1L.ayuxWqTYp1Xr3q','2024-06-24 01:35:32'),(4,'彭彭彭','plewrwery@ply.com','$2b$12$dZS/irzyfUxvf/AnL7aP2OgsTrmnGA6Brzd8aylH0poXY0iVRztoW','2024-06-24 01:35:32'),(5,'eqwe','sherryyou.tw@gmail.com','$2b$12$NUaNI.G9Uv4AUpHQLKyM0Ocn7ri2Kj.VRkN9i0QobUtXfisOTJfd.','2024-06-24 01:35:32'),(6,'fewfew','fewfwefwef@gmail.com','$2b$12$6rtW7TPHvjTFY0cGC.QtT.V07P.gnwsG97JxwN3.4UaHr2iY.yagy','2024-06-24 01:35:32'),(7,'ffsdfsd','sherdsadasdry-yu@live.com','$2b$12$Yjr3L0dFGEZ0BQgHrZVSquXocH/t4Xn3Lx4W77OwXHPcV0ZTctuee','2024-06-24 01:35:32'),(8,'321321','fgkdfojgdfjo@gmail.com','$2b$12$/Yn37ddB5nlNNVEgDdHC4eckms2pDhMYG2aw0kbGxOEj2pBONxYCq','2024-06-24 01:35:32'),(9,'彭彭彭','dsdsadasdasdply@ply.com','$2b$12$T2fpcK.gyrhokYUjAAHWCOl9kltFPgSESt1Qj0Gln6yzUdcH0gXRi','2024-06-24 01:35:32'),(10,'fdsfsd','fdsfsd@gmial.ocom','$2b$12$hznPgwgFAB5h9lYMTgln2ecbddn.TTRsW4ual/YUzk5Jsnp9XN1ei','2024-06-24 01:35:32'),(11,'you yu hsuan','sherry-u@live.com','$2b$12$WzY0VSmqadbPgncbusPlZOJCKfvvjFf0wxxdBRekn/rYy99Xn7Emu','2024-06-26 14:16:42'),(12,'you yu hsuan','sherryyou.tmai@l.comdssd','$2b$12$rI9C6bjW6xJoUA6n7LU/VOkiaJPFrNRHTQrxUfwQxvIvLShxlNXH6','2024-06-26 15:04:44'),(13,'ruru','ruru@gmail.com','$2b$12$.OHETw6WXzHPLqJe1SP4TuH/OXHNp4973ly.EPSN.Y3P/5uFcvvle','2024-06-27 05:30:25'),(14,'you yu hsuan','stellayou0118@gmail.com','$2b$12$iT4HIEmyvhR6GySZRkcHNuz1h5Njq8g3/ih.ysrosuKpOxU5Xfmgq','2024-07-03 06:35:15');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -183,4 +197,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-03 10:46:03
+-- Dump completed on 2024-07-04 15:45:39

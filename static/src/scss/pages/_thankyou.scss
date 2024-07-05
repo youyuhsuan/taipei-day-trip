@@ -1,0 +1,43 @@
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+#thankyou-container {
+  width: 100%;
+  padding: 0 2.5rem; // 0px 40px
+  @include breakpoint(sm) {
+    padding: 0 0.938rem; // 0px 15px
+  }
+}
+
+.thankyou-image {
+  position: relative;
+  max-width: 33.75rem; // 540px
+  min-width: 22.5rem; // 360px
+  width: 100%;
+  height: 25rem; // 400px
+  border-radius: 5px;
+  overflow: hidden;
+  @include breakpoint(md) {
+    max-width: none;
+  }
+  @include breakpoint(sm) {
+    height: 21.875rem;
+  }
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+.thankyou-name {
+  margin-bottom: 1.2194rem;
+}
+
+.thankyou-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.thankyou-content > * {
+  margin-bottom: 0.938rem;
+}

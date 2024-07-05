@@ -56,65 +56,37 @@ TPDirect.card.setup({
   },
 });
 
-// TPDirect.card.onUpdate(function (update) {
-//   // update.canGetPrime === true;
-//   // --> you can call TPDirect.card.getPrime()
-//   if (update.canGetPrime) {
-//     // Enable submit Button to get prime.
-//     // submitButton.removeAttribute("disabled");
-//   } else {
-//     // Disable submit Button to get prime.
-//     // submitButton.setAttribute("disabled", true);
-//   }
-
-//   // cardTypes = ['mastercard', 'visa', 'jcb', 'amex', 'unionpay','unknown']
-//   if (update.cardType === "visa") {
-//     // Handle card type visa.
-//   }
-
-//   // number 欄位是錯誤的
-//   if (update.status.number === 2) {
-//     // setNumberFormGroupToError()
-//   } else if (update.status.number === 0) {
-//     // setNumberFormGroupToSuccess()
-//   } else {
-//     // setNumberFormGroupToNormal()
-//   }
-
-//   if (update.status.expiry === 2) {
-//     // setNumberFormGroupToError()
-//   } else if (update.status.expiry === 0) {
-//     // setNumberFormGroupToSuccess()
-//   } else {
-//     // setNumberFormGroupToNormal()
-//   }
-
-//   if (update.status.ccv === 2) {
-//     // setNumberFormGroupToError()
-//   } else if (update.status.ccv === 0) {
-//     // setNumberFormGroupToSuccess()
-//   } else {
-//     // setNumberFormGroupToNormal()
-//   }
-// });
-
 function onSubmit(event) {
   event.preventDefault();
   return new Promise((resolve, reject) => {
     const tappayStatus = TPDirect.card.getTappayFieldsStatus();
-    if (tappayStatus.canGetPrime === false) {
-      reject(new Error("can not get prime"));
-      return;
-    }
-
-    TPDirect.card.getPrime((result) => {
-      if (result.status !== 0) {
-        reject(new Error("get prime error " + result.msg));
-        return;
+    console.log(tappayStatus);
+    if (tappayStatus.canGetPrime) {
+      TPDirect.card.getPrime((result) => {
+        if (result.status !== 0) {
+          reject(new Error("獲取 Prime 失敗: " + result.msg));
+        } else {
+          setPrime(result.card.prime);
+          resolve(result.card.prime);
+        }
+      });
+    } else {
+      if (tappayStatus.status.number === 2) {
+        alert("卡片號碼錯誤");
+      } else if (tappayStatus.status.number === 1) {
+        alert("卡片號碼不能為空");
       }
-      setPrime(result.card.prime);
-      resolve(result.card.prime);
-    });
+      if (tappayStatus.status.expiry === 2) {
+        alert("過期時間錯誤");
+      } else if (tappayStatus.status.expiry === 1) {
+        alert("過期時間不能為空");
+      }
+      if (tappayStatus.status.ccv === 2) {
+        alert("驗證密碼錯誤");
+      } else if (tappayStatus.status.ccv === 1) {
+        alert("驗證密碼不能為空");
+      }
+    }
   });
 }
 

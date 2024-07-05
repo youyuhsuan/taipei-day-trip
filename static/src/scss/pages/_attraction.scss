@@ -1,7 +1,8 @@
 @use "../abstracts/variables" as *;
 @use "../abstracts/mixins" as *;
 
-.attraction {
+.attraction,
+.thankyou {
   color: $secondary-70;
   max-width: 75rem; // 1200px
   width: 100%;
@@ -11,7 +12,7 @@
   gap: 1.875rem; // 30px
   // justify-content: space-between;
   .attraction-name,
-  .attraction-description {
+  .attraction-description .thankyou-name {
     margin-bottom: 0.938rem; // 15px
   }
   @include breakpoint(md) {

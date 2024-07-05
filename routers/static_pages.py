@@ -7,7 +7,6 @@ router = APIRouter()
 # Static Pages (Never Modify Code in this Block)
 @router.get("/", include_in_schema=False)
 async def index(request: Request):
-    print("index")
     return FileResponse("./static/index.html", media_type="text/html")
 
 

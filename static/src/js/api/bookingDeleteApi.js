@@ -1,7 +1,7 @@
 import { booking } from "../variables.js";
 import { token } from "../variables.js";
 
-async function bookingDeleteApi() {
+async function bookingDeleteApi(shouldReload = false) {
   try {
     const response = await fetch("/api/booking", {
       method: "DELETE",
@@ -12,7 +12,9 @@ async function bookingDeleteApi() {
     });
     if (response) {
       booking.remove();
-      location.reload();
+      if (shouldReload) {
+        location.reload();
+      }
     }
   } catch (error) {
     console.error("bookingDeleteApi error:", error);

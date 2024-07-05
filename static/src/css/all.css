@@ -707,7 +707,8 @@ dialog a {
   text-shadow: 0 0 1.875rem #aabbcc;
 }
 
-.attraction {
+.attraction,
+.thankyou {
   color: #666666;
   max-width: 75rem;
   width: 100%;
@@ -717,16 +718,20 @@ dialog a {
   gap: 1.875rem;
 }
 .attraction .attraction-name,
-.attraction .attraction-description {
+.attraction .attraction-description .thankyou-name,
+.thankyou .attraction-name,
+.thankyou .attraction-description .thankyou-name {
   margin-bottom: 0.938rem;
 }
 @media (max-width: 768px) {
-  .attraction {
+  .attraction,
+  .thankyou {
     flex-direction: column;
   }
 }
 @media (max-width: 576px) {
-  .attraction {
+  .attraction,
+  .thankyou {
     padding: 0;
     margin: 0;
     gap: 1.25rem;
@@ -1025,6 +1030,55 @@ dialog a {
   display: flex;
   flex-direction: row;
   align-items: center;
+  margin-bottom: 0.938rem;
+}
+
+#thankyou-container {
+  width: 100%;
+  padding: 0 2.5rem;
+}
+@media (max-width: 576px) {
+  #thankyou-container {
+    padding: 0 0.938rem;
+  }
+}
+
+.thankyou-image {
+  position: relative;
+  max-width: 33.75rem;
+  min-width: 22.5rem;
+  width: 100%;
+  height: 25rem;
+  border-radius: 5px;
+  overflow: hidden;
+}
+@media (max-width: 768px) {
+  .thankyou-image {
+    max-width: none;
+  }
+}
+@media (max-width: 576px) {
+  .thankyou-image {
+    height: 21.875rem;
+  }
+}
+.thankyou-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thankyou-name {
+  margin-bottom: 1.2194rem;
+}
+
+.thankyou-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.thankyou-content > * {
   margin-bottom: 0.938rem;
 }
 
