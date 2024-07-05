@@ -1,6 +1,7 @@
 from fastapi import HTTPException, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from datetime import datetime, timezone
+from passlib.context import CryptContext
 import jwt
 import os
 
@@ -49,3 +50,14 @@ class JWTBearer(HTTPBearer):
             return payload["exp"] >= datetime.now(timezone.utc).timestamp()
         except:
             return False
+
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+
+def get_password_hash(plain_password: str) -> str:
+    return pwd_context.hash(plain_password)
+
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return pwd_context.verify(plain_password, hashed_password)
