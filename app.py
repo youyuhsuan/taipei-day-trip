@@ -1,34 +1,24 @@
 from fastapi import *
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
-from routers import attractions, mrts, static_pages, booking, user, orders
+from config import settings
 import mysql.connector.pooling
-import os
+from routers import attractions, mrts, static_pages, booking, user, orders
+
 
 app = FastAPI()
 
-# dbconfig = {
-#     "database": "taipei_attractions",
-#     "user": "root",
-#     "password": "betty520",
-# }
 
-
-SECRET_KEY = os.environ["SECRET_KEY"]
-ALGORITHM = os.environ["ALGORITHM"]
-ACCESS_TOKEN_EXPIRE_DAYS = 7
-
-
-dbconfig = {
-    # "host": os.environ["DB_HOST"],
-    # "port": os.environ["DB_PORT"],
-    "database": os.environ["DB_DATABASE"],
-    "user": os.environ["DB_USER"],
-    "password": os.environ["DB_PASSWORD"],
+db_config = {
+    "host": settings.DB_HOST,
+    "port": settings.DB_PORT,
+    "database": settings.DB_DATABASE,
+    "user": settings.DB_USER,
+    "password": settings.DB_PASSWORD,
 }
 
 cnxpool = mysql.connector.pooling.MySQLConnectionPool(
-    pool_name="mypool", pool_size=5, **dbconfig
+    pool_name="mypool", pool_size=5, **db_config
 )
 
 

@@ -15,7 +15,12 @@ pyjwt = "^2.8.0"
 passlib = "^1.7.4"
 python-jose = "^3.3.0"
 httpx = "^0.27.0"
+python-dotenv = "^1.0.1"
+pydantic-settings = "^2.6.0"
 
+
+[tool.poetry.group.dev.dependencies]
+poetry-plugin-export = "^1.8.0"
 
 [build-system]
 requires = ["poetry-core"]

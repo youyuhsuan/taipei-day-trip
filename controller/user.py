@@ -1,7 +1,11 @@
-from config import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_DAYS
+from config import settings
 from datetime import datetime, timedelta, timezone
 from passlib.context import CryptContext
 import jwt
+
+SECRET_KEY = settings.SECRET_KEY
+ALGORITHM = settings.ALGORITHM
+ACCESS_TOKEN_EXPIRE_DAYS = settings.ACCESS_TOKEN_EXPIRE_DAYS
 
 
 def create_access_token(data: dict):

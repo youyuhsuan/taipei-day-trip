@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request, Query, Path
-from typing import Annotated, Optional
 from fastapi.responses import JSONResponse
+from typing import Annotated, Optional
 
 router = APIRouter()
 

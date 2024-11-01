@@ -1,10 +1,13 @@
 from datetime import datetime, timezone
-from fastapi import HTTPException, Request
+from fastapi import Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, EmailStr, Field
 from typing import Annotated
 import jwt
-from config import SECRET_KEY, ALGORITHM
+from config import settings
+
+SECRET_KEY = settings.SECRET_KEY
+ALGORITHM = settings.ALGORITHM
 
 
 class JWTBearer(HTTPBearer):

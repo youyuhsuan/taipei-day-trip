@@ -1,23 +1,14 @@
-import json
 import re
-import mysql.connector
-import os
+import json
+from config import settings
 
-con = mysql.connector.connect(
-    database="taipei_attractions",
-    user="root",
-    password=os.environ["DB_PASSWORD"],
-    host="localhost",
-)
-
-# con = mysql.connector.connect(
-#     host=os.environ["DB_HOST"],
-#     port=os.environ["DB_PORT"],
-#     database=os.environ["DB_DATABASE"],
-#     user=os.environ["DB_USER"],
-#     password=os.environ["DB_PASSWORD"],
-#       host="3307",
-# )
+db_config = {
+    "host": settings.DB_HOST,
+    "port": settings.DB_PORT,
+    "database": settings.DB_DATABASE,
+    "user": settings.DB_USER,
+    "password": settings.DB_PASSWORD,
+}
 
 with open("data/taipei-attractions.json", "r") as taipei_attractions:
     file = json.load(taipei_attractions)
@@ -34,7 +25,7 @@ with open("data/taipei-attractions.json", "r") as taipei_attractions:
         lng = float(attraction["longitude"])
         file = attraction["file"].lower()
         clear_file = re.findall(r"https?://[^\s]+?\.jpg", file)
-        with con.cursor() as cursor:
+        with db_config.cursor() as cursor:
             insert_attractions = "INSERT INTO attractions (name, category, description, address, transport, mrt, lat, lng) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
             insert_attractions_values = (
                 name,
@@ -47,11 +38,11 @@ with open("data/taipei-attractions.json", "r") as taipei_attractions:
                 lng,
             )
             cursor.execute(insert_attractions, insert_attractions_values)
-            con.commit()
+            db_config.commit()
             current_id = cursor.lastrowid
             insert_attractions_images = (
                 "INSERT INTO attractions_images (attractions_id,images) VALUES (%s,%s)"
             )
             for file in clear_file:
                 cursor.execute(insert_attractions_images, (current_id, file))
-                con.commit()
+                db_config.commit()

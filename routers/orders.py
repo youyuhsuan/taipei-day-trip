@@ -6,13 +6,14 @@ import httpx
 from routers import user
 from model.JWTAuthenticator import JWTBearer
 from model.orders import OrderPostInfo
+from config import settings
 
 
 router = APIRouter()
 
-TAPPAY_SANDBOX_URL = "https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime"
-PARTNER_KEY = "partner_my6Z83zgO0FyIusd1ZjWVEyVYWgYbWsFwP4rgS6XdqO5HRIKhi2Kih7U"
-MERCHANT_ID = "merchantA"
+TAPPAY_SANDBOX_URL = settings.TAPPAY_SANDBOX_URL
+PARTNER_KEY = settings.PARTNER_KEY
+MERCHANT_ID = settings.MERCHANT_ID
 
 
 @router.post("/api/orders", tags=["Order"])
