@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, EmailStr
 from typing import Annotated, List, Optional
 from enum import Enum
 from datetime import date
@@ -68,4 +68,100 @@ class BookAttraction(BaseModel):
         Field(
             description="Price of the bookingPrice of the booking",
         ),
+    ]
+
+
+# Order
+class OrderStatus(str, Enum):
+    PAID = "1"
+    UNPAID = "0"
+
+
+class AttractionSummary(BaseModel):
+    id: Annotated[int, Field(description="Unique identifier for the attraction")]
+    name: str
+    address: str
+    image: str
+
+
+class TripDetails(BaseModel):
+    date: Annotated[date, Field(description="Date of the booking (YYYY-MM-DD")]
+    time: Annotated[TimeOfDay, Field(description="Time slot for the booking")]
+    attraction: Annotated[
+        AttractionSummary, Field(description="attraction(id,name,address,image)")
+    ]
+
+
+class ContactInfo(BaseModel):
+    name: Annotated[str, Field(description="Name of the person placing the order")]
+    email: Annotated[
+        EmailStr, Field(description="Email of the person placing the order")
+    ]
+    phone: Annotated[
+        str,
+        Field(
+            description="Phone number of the person placing the order",
+            max_length=10,
+        ),
+    ]
+
+
+class OrderBase(BaseModel):
+    price: Annotated[
+        Price,
+        Field(
+            description="Price of the bookingPrice of the booking",
+        ),
+    ]
+    trip: Annotated[
+        TripDetails,
+        Field(
+            description="Details of the trip including date, time, attraction information (id, name, address, image)"
+        ),
+    ]
+    contact: Annotated[
+        ContactInfo,
+        Field(description="Contact information of the person placing the order"),
+    ]
+
+
+class OrderCreate(BaseModel):
+    prime: Annotated[
+        str,
+        Field(
+            description="Transaction code obtained from TapPay for payment processing"
+        ),
+    ]
+    order: Annotated[
+        OrderBase,
+        Field(
+            description="Transaction code obtained from TapPay for payment processing"
+        ),
+    ]
+
+
+class OrderResponse(BaseModel):
+    number: Annotated[
+        str,
+        Field(description="Order number"),
+    ]
+    price: Annotated[
+        Price,
+        Field(
+            description="Price of the bookingPrice of the booking",
+        ),
+    ]
+    trip: Annotated[
+        TripDetails,
+        Field(
+            description="Details of the trip including date, time, attraction information (id, name, address, image)"
+        ),
+    ]
+    contact: Annotated[
+        ContactInfo,
+        Field(description="Contact information of the person placing the order"),
+    ]
+    status: Annotated[
+        OrderStatus,
+        Field(description="Transaction code"),
     ]

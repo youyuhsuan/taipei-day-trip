@@ -1,16 +1,14 @@
 from fastapi import APIRouter, Query, Request, Depends
-from fastapi.responses import JSONResponse
 from typing import Annotated
 import json
 
-from routers import user
 from models.JWTAuthenticator import JWTBearer
-from models.orders import OrderPostInfo
+from models.schemas import OrderCreate
 from views.orders import (
     format_create_order_response,
     format_get_order_by_number_response,
 )
-from controllers.orders import process_payment
+from controllers.orders import post_create_order
 
 router = APIRouter()
 
@@ -85,120 +83,9 @@ router = APIRouter()
     },
 )
 async def create_order(
-    request: Request, OrderPostInfo: OrderPostInfo, token: str = Depends(JWTBearer())
+    request: Request, OrderCreate: OrderCreate, token: str = Depends(JWTBearer())
 ) -> dict:
-    if not token:
-        return format_create_order_response(status="unauthorized")
-    db_pool = request.state.db_pool
-    try:
-        with db_pool.get_connection() as con:
-            with con.cursor(dictionary=True) as cursor:
-                credentials = user.decodeJWT(token)
-                query = "SELECT id FROM booking WHERE attraction_id = %s AND user_id = %s AND date = %s AND time = %s AND price = %s"
-                cursor.execute(
-                    query,
-                    (
-                        OrderPostInfo.order.trip.attraction.id,
-                        credentials["id"],
-                        OrderPostInfo.order.trip.date,
-                        OrderPostInfo.order.trip.time.value,
-                        OrderPostInfo.order.price.value,
-                    ),
-                )
-                match_booking = cursor.fetchone()
-                if not match_booking:
-                    return format_create_order_response(status="invalid_booking")
-                insert_new_order = """
-                    INSERT INTO `orders` (
-                        booking_id, user_id, price, attraction_id, attraction_name, 
-                        attraction_address, attraction_image, trip_date, trip_time, 
-                        contact_name, contact_email, contact_phone
-                    ) 
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                """
-                cursor.execute(
-                    insert_new_order,
-                    (
-                        match_booking["id"],
-                        credentials["id"],
-                        OrderPostInfo.order.price.value,
-                        OrderPostInfo.order.trip.attraction.id,
-                        OrderPostInfo.order.trip.attraction.name,
-                        OrderPostInfo.order.trip.attraction.address,
-                        OrderPostInfo.order.trip.attraction.image,
-                        OrderPostInfo.order.trip.date,
-                        OrderPostInfo.order.trip.time.value,
-                        OrderPostInfo.order.contact.name,
-                        OrderPostInfo.order.contact.email,
-                        OrderPostInfo.order.contact.phone,
-                    ),
-                )
-                order_id = cursor.lastrowid
-                payment_result = await process_payment(OrderPostInfo)
-                if payment_result["status"] != 0:
-                    update_order = """
-                    UPDATE `orders`
-                    SET status = %s,
-                        order_number = %s,
-                        rec_trade_id = %s
-                    WHERE id = %s
-                    """
-                    cursor.execute(
-                        update_order,
-                        (
-                            "FAILED",
-                            payment_result["rec_trade_id"],
-                            payment_result["rec_trade_id"],
-                            order_id,
-                        ),
-                    )
-                    data = {
-                        "number": payment_result["rec_trade_id"],
-                        "payment": {
-                            "status": payment_result["status"],
-                            "message": "付款失敗",
-                        },
-                    }
-                    con.commit()
-                    return format_create_order_response(
-                        status="payment_failure", data=data
-                    )
-                update_order = """
-                    UPDATE `orders`
-                    SET status = %s,
-                        order_number = %s,
-                        acquirer = %s,
-                        card_secret = %s,
-                        rec_trade_id = %s,
-                        bank_transaction_id = %s
-                    WHERE id = %s
-                """
-                cursor.execute(
-                    update_order,
-                    (
-                        "PAID",
-                        payment_result["rec_trade_id"],
-                        payment_result["acquirer"],
-                        json.dumps(payment_result["card_secret"]),
-                        payment_result["rec_trade_id"],
-                        payment_result["bank_transaction_id"],
-                        order_id,
-                    ),
-                )
-                con.commit()
-                data = (
-                    {
-                        "number": payment_result["rec_trade_id"],
-                        "payment": {
-                            "status": payment_result["status"],
-                            "message": "付款成功",
-                        },
-                    },
-                )
-                return format_create_order_response(data=data)
-    except Exception as e:
-        print(f"Error in creating order: {str(e)}")
-        return format_create_order_response(status="server_error")
+    return await post_create_order(request, OrderCreate, token)
 
 
 @router.get(

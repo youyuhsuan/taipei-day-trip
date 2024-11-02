@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Request
-from fastapi.responses import JSONResponse
 from views.mrts import format_mrt_stations_response
 from controllers.mrts import get_mrt
 

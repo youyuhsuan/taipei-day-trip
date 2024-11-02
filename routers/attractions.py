@@ -1,9 +1,7 @@
 from fastapi import APIRouter, Request, Query, Path
 from typing import Annotated, Optional
 
-
 from controllers.attractions import get_attractions_list, get_single_attraction
-
 from views.attractions import (
     format_attractions_response,
     format_single_attraction_response,

@@ -1,109 +1,106 @@
-from enum import Enum
-from typing import Annotated
-from datetime import date
-from pydantic import BaseModel, EmailStr, Field
+import json
+import httpx
+from config import settings
+from fastapi.responses import JSONResponse
+
+# Config
+TAPPAY_SANDBOX_URL = settings.TAPPAY_SANDBOX_URL
+PARTNER_KEY = settings.PARTNER_KEY
 
 
-class Status(str, Enum):
-    PAID = "1"
-    UNPAID = "0"
+# POST
+async def find_matching_booking(con, order_info, user_id):
+    query = """
+    SELECT id FROM booking 
+    WHERE attraction_id = %s AND user_id = %s AND date = %s AND time = %s AND price = %s
+    """
+    with con.cursor(dictionary=True) as cursor:
+        cursor.execute(
+            query,
+            (
+                order_info.order.trip.attraction.id,
+                user_id,
+                order_info.order.trip.date,
+                order_info.order.trip.time.value,
+                order_info.order.price.value,
+            ),
+        )
+        return cursor.fetchone()
 
 
-class TimeOfDay(str, Enum):
-    morning = "morning"
-    afternoon = "afternoon"
+async def insert_order(con, order_info, user_id, booking_id):
+    insert_new_order = """
+    INSERT INTO `orders` (
+        booking_id, user_id, price, attraction_id, attraction_name, 
+        attraction_address, attraction_image, trip_date, trip_time, 
+        contact_name, contact_email, contact_phone
+    ) 
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    """
+    with con.cursor() as cursor:
+        cursor.execute(
+            insert_new_order,
+            (
+                booking_id,
+                user_id,
+                order_info.order.price.value,
+                order_info.order.trip.attraction.id,
+                order_info.order.trip.attraction.name,
+                order_info.order.trip.attraction.address,
+                order_info.order.trip.attraction.image,
+                order_info.order.trip.date,
+                order_info.order.trip.time.value,
+                order_info.order.contact.name,
+                order_info.order.contact.email,
+                order_info.order.contact.phone,
+            ),
+        )
+        return cursor.lastrowid
 
 
-class Price(int, Enum):
-    morning_price = 2000
-    afternoon_price = 2500
+async def update_order_status(con, order_id, status, payment_result):
+    update_order = """
+    UPDATE `orders`
+    SET status = %s,
+        order_number = %s,
+        acquirer = %s,
+        card_secret = %s,
+        rec_trade_id = %s,
+        bank_transaction_id = %s
+    WHERE id = %s
+    """
+    with con.cursor() as cursor:
+        cursor.execute(
+            update_order,
+            (
+                status,
+                payment_result["rec_trade_id"],
+                payment_result["acquirer"],
+                json.dumps(payment_result["card_secret"]),
+                payment_result["rec_trade_id"],
+                payment_result["bank_transaction_id"],
+                order_id,
+            ),
+        )
 
 
-class Attraction(BaseModel):
-    id: Annotated[int, Field(description="Unique identifier for the attraction")]
-    name: str
-    address: str
-    image: str
+# GET
+async def get_order_by_number(con, order_number):
+    query = "SELECT * FROM `orders` WHERE order_number = %s"
+    with con.cursor(dictionary=True) as cursor:
+        cursor.execute(query, (order_number,))
+        return cursor.fetchone()
 
 
-class Trip(BaseModel):
-    date: Annotated[date, Field(description="Date of the booking (YYYY-MM-DD")]
-    time: Annotated[TimeOfDay, Field(description="Time slot for the booking")]
-    attraction: Annotated[
-        Attraction, Field(description="attraction(id,name,address,image)")
-    ]
+# PROCESS PAYMENT API
+async def process_payment_api(order_info) -> dict:
+    url = TAPPAY_SANDBOX_URL
+    headers = {"Content-Type": "application/json", "x-api-key": PARTNER_KEY}
 
-
-class Contact(BaseModel):
-    name: Annotated[str, Field(description="Name of the person placing the order")]
-    email: Annotated[
-        EmailStr, Field(description="Email of the person placing the order")
-    ]
-    phone: Annotated[
-        str,
-        Field(
-            description="Phone number of the person placing the order",
-            max_length=10,
-        ),
-    ]
-
-
-class Order(BaseModel):
-    price: Annotated[
-        Price,
-        Field(
-            description="Price of the bookingPrice of the booking",
-        ),
-    ]
-    trip: Annotated[
-        Trip,
-        Field(
-            description="Details of the trip including date, time, attraction information (id, name, address, image)"
-        ),
-    ]
-    contact: Annotated[
-        Contact,
-        Field(description="Contact information of the person placing the order"),
-    ]
-
-
-class OrderPostInfo(BaseModel):
-    prime: Annotated[
-        str,
-        Field(
-            description="Transaction code obtained from TapPay for payment processing"
-        ),
-    ]
-    order: Annotated[
-        Order,
-        Field(
-            description="Transaction code obtained from TapPay for payment processing"
-        ),
-    ]
-
-
-class OrderGetInfo(BaseModel):
-    number: Annotated[
-        str,
-        Field(description="Order number"),
-    ]
-    price: Annotated[
-        Price,
-        Field(
-            description="Price of the bookingPrice of the booking",
-        ),
-    ]
-    trip: Annotated[
-        Trip,
-        Field(
-            description="Details of the trip including date, time, attraction information (id, name, address, image)"
-        ),
-    ]
-    contact: Annotated[
-        Contact,
-        Field(description="Contact information of the person placing the order"),
-    ]
-    status: Annotated[
-        Status,
-        Field(description="Transaction code"),
-    ]
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.post(url, headers=headers, json=order_info)
+            response.raise_for_status()
+            return response.json()
+        except httpx.RequestError as e:
+            return {"error": True, "message": str(e)}
