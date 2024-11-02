@@ -1,13 +1,14 @@
 from fastapi import APIRouter, Request, Depends
-from fastapi.responses import JSONResponse
 from routers import user
-from models.booking import BookAttraction
-from models.JWTAuthenticator import JWTBearer, CustomHTTPException
+from models.schemas import BookAttraction
+from models.JWTAuthenticator import JWTBearer
+
 from views.booking import (
     format_booking_response,
     format_create_booking_response,
     format_delete_booking_response,
 )
+from controllers.booking import get_booking, post_booking, delete_booking
 
 router = APIRouter()
 
@@ -74,43 +75,7 @@ router = APIRouter()
 async def get_booking_with_attraction(
     request: Request, token: str = Depends(JWTBearer())
 ):
-    if not token:
-        return format_booking_response(status="unauthorized")
-    db_pool = request.state.db_pool
-    try:
-        with db_pool.get_connection() as con:
-            with con.cursor(dictionary=True) as cursor:
-                credentials = user.decodeJWT(token)
-                query = "SELECT * FROM booking WHERE user_id = %s"
-                cursor.execute(query, (credentials["id"],))
-                match_booking = cursor.fetchone()
-                if not match_booking:
-                    return format_booking_response(status="not_found_booking")
-                query = """
-                SELECT attractions.id, attractions.name, attractions.address, attractions_images.images AS image
-                FROM attractions
-                JOIN attractions_images ON attractions.id = attractions_images.attractions_id
-                WHERE attractions.id = %s
-                LIMIT 1;"""
-                cursor.execute(query, (match_booking["attraction_id"],))
-                match_attraction = cursor.fetchone()
-                if not match_attraction:
-                    return format_booking_response(status="not_found_attraction")
-                data = {
-                    "attraction": {
-                        "id": match_attraction["id"],
-                        "name": match_attraction["name"],
-                        "address": match_attraction["address"],
-                        "image": match_attraction["image"],
-                    },
-                    "date": match_booking["date"],
-                    "time": match_booking["time"],
-                    "price": match_booking["price"],
-                }
-                return format_booking_response(data=data)
-    except Exception as e:
-        print(f"Error in getting booking with attraction: {str(e)}")
-        return format_booking_response(status="server_error")
+    return await get_booking(request, token)
 
 
 @router.post(
@@ -154,59 +119,10 @@ async def get_booking_with_attraction(
         },
     },
 )
-async def create_booking(
+async def post_booking_with_attraction(
     request: Request, BookAttraction: BookAttraction, token: str = Depends(JWTBearer())
 ) -> dict:
-    if not token:
-        return format_create_booking_response(status="unauthorized")
-    db_pool = request.state.db_pool
-    try:
-        with db_pool.get_connection() as con:
-            with con.cursor(dictionary=True) as cursor:
-                query = "SELECT id FROM booking WHERE attraction_id = %s AND date = %s AND time = %s"
-                cursor.execute(
-                    query,
-                    (
-                        BookAttraction.attractionId,
-                        BookAttraction.date,
-                        BookAttraction.time.value,
-                    ),
-                )
-                match_book = cursor.fetchone()
-                if match_book:
-                    content = {
-                        "error": True,
-                        "message": f"Attraction already booked on {BookAttraction.date} at {BookAttraction.time}",
-                    }
-                    return format_create_booking_response(
-                        status="match_book", content=content
-                    )
-                else:
-                    credentials = user.decodeJWT(token)
-                    insert_new_book = """
-                        INSERT INTO booking (attraction_id, user_id, date, time, price) 
-                        VALUES (%s, %s, %s, %s, %s)
-                        ON DUPLICATE KEY UPDATE
-                        attraction_id = VALUES(attraction_id),
-                        date = VALUES(date),
-                        time = VALUES(time),
-                        price = VALUES(price)
-                    """
-                    cursor.execute(
-                        insert_new_book,
-                        (
-                            BookAttraction.attractionId,
-                            credentials["id"],
-                            BookAttraction.date,
-                            BookAttraction.time.value,
-                            BookAttraction.price.value,
-                        ),
-                    )
-                    con.commit()
-                    return format_create_booking_response()
-    except Exception as e:
-        print(f"Error in creating booking: {str(e)}")
-        return format_create_booking_response(status="server_error")
+    return await post_booking(request, BookAttraction, token)
 
 
 @router.delete(
@@ -238,17 +154,7 @@ async def create_booking(
         },
     },
 )
-async def delete_booking(request: Request, token: str = Depends(JWTBearer())):
-    if not token:
-        return format_delete_booking_response(status="unauthorized")
-    db_pool = request.state.db_pool
-    try:
-        with db_pool.get_connection() as con:
-            with con.cursor(dictionary=True) as cursor:
-                credentials = user.decodeJWT(token)
-                delete_query = "DELETE FROM booking WHERE user_id = %s"
-                cursor.execute(delete_query, (credentials["id"],))
-                con.commit()
-                return format_delete_booking_response()
-    except Exception as e:
-        return format_delete_booking_response(status="server_error")
+async def delete_booking_with_attraction(
+    request: Request, token: str = Depends(JWTBearer())
+):
+    return await delete_booking(request, token)

@@ -76,9 +76,23 @@ Copytaipei-day-trip/
 └── main.py            # FastAPI application
 ```
 
-# Test Account
+# Test Credentials
+
+## Test Account
 
 | Item     | Content          |
 | :------- | :--------------- |
 | Email    | user@example.com |
 | Password | string           |
+
+## Test Card
+
+For development and testing, please use the following test card:
+
+| Item        | Content             |
+| :---------- | :------------------ |
+| Card Number | 4242 4242 4242 4242 |
+| CVV         | 01/23               |
+| Expiry Date | 123                 |
+
+Note: Ensure the expiry date is always set to a future date for testing.

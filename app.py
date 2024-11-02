@@ -32,14 +32,14 @@ async def attach_db_connection(request: Request, call_next):
     return response
 
 
-@app.exception_handler(booking.CustomHTTPException)
-async def custom_http_exception_handler(
-    request: Request, exc: booking.CustomHTTPException
-):
-    return JSONResponse(
-        status_code=exc.status_code,
-        content={"error": exc.error, "message": exc.message},
-    )
+# @app.exception_handler(booking.CustomHTTPException)
+# async def custom_http_exception_handler(
+#     request: Request, exc: booking.CustomHTTPException
+# ):
+#     return JSONResponse(
+#         status_code=exc.status_code,
+#         content={"error": exc.error, "message": exc.message},
+#     )
 
 
 router = APIRouter()

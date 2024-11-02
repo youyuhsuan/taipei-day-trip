@@ -101,7 +101,7 @@ async def create_order(
                         OrderPostInfo.order.trip.attraction.id,
                         credentials["id"],
                         OrderPostInfo.order.trip.date,
-                        OrderPostInfo.order.trip.time,
+                        OrderPostInfo.order.trip.time.value,
                         OrderPostInfo.order.price.value,
                     ),
                 )
@@ -127,7 +127,7 @@ async def create_order(
                         OrderPostInfo.order.trip.attraction.address,
                         OrderPostInfo.order.trip.attraction.image,
                         OrderPostInfo.order.trip.date,
-                        OrderPostInfo.order.trip.time,
+                        OrderPostInfo.order.trip.time.value,
                         OrderPostInfo.order.contact.name,
                         OrderPostInfo.order.contact.email,
                         OrderPostInfo.order.contact.phone,

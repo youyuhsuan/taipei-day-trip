@@ -1,10 +1,13 @@
 from typing import Optional, Dict
 from fastapi.responses import JSONResponse
 from utils.render_response import render_response
+from models.schemas import BookAttraction
 
 
 # GET
-def format_booking_response(status: Optional[str] = None, data: Optional[Dict] = None):
+def format_booking_response(
+    status: Optional[str] = None, data: Optional[BookAttraction] = None
+):
     if status == "unauthorized":
         return None
     elif status == "not_found_booking":
