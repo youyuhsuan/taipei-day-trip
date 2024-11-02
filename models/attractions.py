@@ -24,6 +24,7 @@ async def count_attractions(con, keyword: str, start_index: int):
         return len(cursor.fetchall())
 
 
+#
 async def fetch_single_attraction(con, attraction_id: int):
     query = "SELECT * FROM attractions WHERE id = %s;"
     with con.cursor(dictionary=True) as cursor:

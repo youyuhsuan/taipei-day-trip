@@ -36,10 +36,10 @@ def format_attractions_response(
 
 # GET
 def format_single_attraction_response(
-    status: Optional[str] = None, data: Optional[Attraction] = None
+    status: Optional[str] = None, attraction: Optional[Attraction] = None
 ) -> JSONResponse:
     if status == "not_found":
         return render_response(400, {"error": True, "message": "No attractions found"})
     elif status == "server_error":
         return render_response(500, {"error": True, "message": "Internal server error"})
-    return render_response(200, {"data": data})
+    return render_response(200, {"data": attraction})

@@ -2,7 +2,7 @@ from fastapi import APIRouter, Request, Query, Path
 from typing import Annotated, Optional
 
 
-from controllers.attractions import get_attractions_list
+from controllers.attractions import get_attractions_list, get_single_attraction
 
 from views.attractions import (
     format_attractions_response,
@@ -142,30 +142,8 @@ async def attractions_list(
         },
     },
 )
-async def get_single_attraction(
+async def single_attraction(
     request: Request,
-    attractionId: Annotated[int, Path(description="景點編號")],
+    attractionId: Annotated[int, Path(description="Attraction ID")],
 ):
-    db_pool = request.state.db_pool
-    try:
-        with db_pool.get_connection() as con:
-            with con.cursor(dictionary=True) as cursor:
-                query = "select * from attractions where attractions.id = %s;"
-                cursor.execute(query, (attractionId,))
-                data = cursor.fetchone()
-                query = (
-                    "SELECT images FROM attractions_images WHERE attractions_id = %s;"
-                )
-                cursor.execute(query, (attractionId,))
-                image_data = cursor.fetchall()
-                if data:
-                    img_urls = [img["images"] for img in image_data]
-                    data["images"] = img_urls
-                    return format_single_attraction_response(data=data)
-                else:
-                    return format_single_attraction_response(status="not_found")
-    except Exception as e:
-        print(
-            f"Error getting single attraction, attraction ID {attractionId}: {str(e)}"
-        )
-        return format_single_attraction_response(status="server_error")
+    return await get_single_attraction(request, attractionId)

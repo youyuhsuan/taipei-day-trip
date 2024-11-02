@@ -45,9 +45,11 @@ async def get_single_attraction(request: Request, attraction_id: int):
             if not attraction:
                 return format_single_attraction_response(status="not_found")
             image_data = await fetch_single_attraction_images(con, attraction_id)
-            img_urls = [img["images"] for img in image_data]
+            if not image_data:
+                return format_single_attraction_response(status="not_found")
+            img_urls = [img[0] for img in image_data]
             attraction["images"] = img_urls
-            return format_single_attraction_response(data=attraction)
+            return format_single_attraction_response(attraction=attraction)
     except Exception as e:
         print(f"Error getting single attraction, ID {attraction_id}: {str(e)}")
         return format_single_attraction_response(status="server_error")
