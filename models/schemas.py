@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field
 from typing import Annotated, List, Optional
 
 
-class Attraction(BaseModel):
+class AttractionBase(BaseModel):
     id: Annotated[int, Field(description="Unique identifier for the attraction")]
     name: str
     category: str
@@ -12,9 +12,11 @@ class Attraction(BaseModel):
     mrt: Optional[str]
     lat: float
     lng: float
-    images: List[str]
 
 
-class AttractionResponse(BaseModel):
-    nextPage: Optional[int]
-    data: List[Attraction]
+class AttractionDB(AttractionBase):
+    imgs: str
+
+
+class Attraction(AttractionBase):
+    images: str

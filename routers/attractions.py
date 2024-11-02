@@ -1,7 +1,10 @@
 from fastapi import APIRouter, Request, Query, Path
 from typing import Annotated, Optional
 
-from view.attractions import (
+
+from controllers.attractions import get_attractions_list
+
+from views.attractions import (
     format_attractions_response,
     format_single_attraction_response,
 )
@@ -76,7 +79,7 @@ router = APIRouter()
         },
     },
 )
-async def get_attractions_list(
+async def attractions_list(
     request: Request,
     page: Annotated[int, Query(description="Page number, 12 items per page", ge=0)] = 0,
     keyword: Annotated[
@@ -86,56 +89,7 @@ async def get_attractions_list(
         ),
     ] = "",
 ):
-    db_pool = request.state.db_pool
-    try:
-        with db_pool.get_connection() as con:
-            with con.cursor(dictionary=True) as cursor:
-                offset = 12
-                start_index = page * offset
-                query_next_page = "SELECT id FROM attractions WHERE (mrt = %s OR name LIKE %s) LIMIT %s,13"
-                cursor.execute(
-                    query_next_page, (keyword, "%" + keyword + "%", start_index)
-                )
-                results = cursor.fetchall()
-                results_count = len(results)
-                query = """
-                SELECT attractions.*,imgs.imgs 
-                FROM attractions 
-                JOIN(SELECT attractions_id,group_concat(images) AS imgs 
-                FROM attractions_images GROUP BY attractions_id) AS imgs 
-                ON attractions.id=imgs.attractions_id 
-                WHERE (attractions.mrt = %s OR attractions.name LIKE %s) LIMIT %s,%s"""
-                cursor.execute(
-                    query, (keyword, "%" + keyword + "%", start_index, offset)
-                )
-                results = cursor.fetchall()
-                nextpage = page + 1 if results_count == 13 else None
-
-                if results:
-                    attractions = []
-                    for result in results:
-                        img_url = result["imgs"].split(",") if result["imgs"] else []
-                        attraction = {
-                            "id": result["id"],
-                            "name": result["name"],
-                            "category": result["category"],
-                            "description": result["description"],
-                            "address": result["address"],
-                            "transport": result["transport"],
-                            "mrt": result["mrt"],
-                            "lat": result["lat"],
-                            "lng": result["lng"],
-                            "images": img_url,
-                        }
-                        attractions.append(attraction)
-                    return format_attractions_response(
-                        nextpage=nextpage, attractions=attractions
-                    )
-                else:
-                    return format_attractions_response(status="not_found")
-    except Exception as e:
-        print(f"Error in getting attractions list: {str(e)}")
-        return format_attractions_response(status="server_error")
+    return await get_attractions_list(request, page, keyword)
 
 
 @router.get(

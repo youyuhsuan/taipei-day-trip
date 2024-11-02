@@ -1,6 +1,6 @@
 from fastapi.responses import JSONResponse
 from typing import Optional
-from model.user import UserCredentials
+from models.user import UserCredentials
 from utils.render_response import render_response
 
 

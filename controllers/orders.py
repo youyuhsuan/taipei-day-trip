@@ -1,5 +1,5 @@
 from fastapi.responses import JSONResponse
-from model.orders import OrderPostInfo
+from models.orders import OrderPostInfo
 from typing import Annotated
 import json
 import httpx

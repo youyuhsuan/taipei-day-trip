@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request, Depends
-from model.user import JWTBearer, UserAuth, User
-from view.user import (
+from models.user import JWTBearer, UserAuth, User
+from views.user import (
     format_signup_response,
     format_user_response,
     format_signin_response,

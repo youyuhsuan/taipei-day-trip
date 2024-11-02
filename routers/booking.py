@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Request, Depends
 from fastapi.responses import JSONResponse
 from routers import user
-from model.booking import BookAttraction
-from model.JWTAuthenticator import JWTBearer, CustomHTTPException
-from view.booking import (
+from models.booking import BookAttraction
+from models.JWTAuthenticator import JWTBearer, CustomHTTPException
+from views.booking import (
     format_booking_response,
     format_create_booking_response,
     format_delete_booking_response,

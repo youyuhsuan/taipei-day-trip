@@ -4,9 +4,9 @@ from typing import Annotated
 import json
 
 from routers import user
-from model.JWTAuthenticator import JWTBearer
-from model.orders import OrderPostInfo
-from view.orders import (
+from models.JWTAuthenticator import JWTBearer
+from models.orders import OrderPostInfo
+from views.orders import (
     format_create_order_response,
     format_get_order_by_number_response,
 )
