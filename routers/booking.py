@@ -1,8 +1,7 @@
 from fastapi import APIRouter, Request, Depends
-from routers import user
+
 from models.schemas import BookAttraction
 from models.JWTAuthenticator import JWTBearer
-
 from views.booking import (
     format_booking_response,
     format_create_booking_response,

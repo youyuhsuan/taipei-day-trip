@@ -1,6 +1,5 @@
 from fastapi.responses import JSONResponse
 from models.orders import OrderPostInfo
-from typing import Annotated
 import json
 import httpx
 

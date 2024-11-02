@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 from views.mrts import format_mrt_stations_response
+from controllers.mrts import get_mrt
 
 router = APIRouter()
 
@@ -31,23 +32,7 @@ router = APIRouter()
         },
     },
 )
-async def get_attractions_mrt(
+async def get_mrt_with_attractions(
     request: Request,
 ):
-    db_pool = request.state.db_pool
-    try:
-        with db_pool.get_connection() as con:
-            with con.cursor(dictionary=True) as cursor:
-                query = """SELECT attractions.mrt
-                FROM attractions
-                WHERE attractions.mrt IS NOT NULL
-                GROUP BY attractions.mrt
-                ORDER BY COUNT(*) DESC;
-                """
-                cursor.execute(query)
-                results = cursor.fetchall()
-                data = [result["mrt"] for result in results]
-                return format_mrt_stations_response(data=data)
-    except Exception as e:
-        print(f"Error in getting attractions MRT stations: {str(e)}")
-        format_mrt_stations_response(status="server_error")
+    return await get_mrt(request)
