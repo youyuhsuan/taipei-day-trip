@@ -1,8 +1,9 @@
-from config import settings
 from datetime import datetime, timedelta, timezone
 from passlib.context import CryptContext
 import jwt
+from config import settings
 
+# Config
 SECRET_KEY = settings.SECRET_KEY
 ALGORITHM = settings.ALGORITHM
 ACCESS_TOKEN_EXPIRE_DAYS = settings.ACCESS_TOKEN_EXPIRE_DAYS

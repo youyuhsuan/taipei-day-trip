@@ -3,14 +3,79 @@ from fastapi.responses import JSONResponse
 from routers import user
 from model.booking import BookAttraction
 from model.JWTAuthenticator import JWTBearer, CustomHTTPException
+from view.booking import (
+    format_booking_response,
+    format_create_booking_response,
+    format_delete_booking_response,
+)
 
 router = APIRouter()
 
 
-@router.get("/api/booking", tags=["Booking"])
-async def get_booking(request: Request, token: str = Depends(JWTBearer())):
+@router.get(
+    "/api/booking",
+    tags=["Booking"],
+    responses={
+        200: {
+            "model": format_booking_response,
+            "description": "Successfully retrieved booking information",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "data": {
+                            "attraction": {
+                                "id": 1,
+                                "name": "台北 101",
+                                "address": "台北市信義區信義路五段7號",
+                                "image": "https://example.com/taipei101.jpg",
+                            },
+                            "date": "2024-02-01",
+                            "time": "morning",
+                            "price": 2000,
+                        }
+                    }
+                }
+            },
+        },
+        403: {
+            "model": format_booking_response,
+            "description": "Unauthorized access",
+            "content": {"application/json": {"example": None}},
+        },
+        404: {
+            "model": format_booking_response,
+            "description": "Resource not found",
+            "content": {
+                "application/json": {
+                    "examples": {
+                        "booking_not_found": {
+                            "summary": "Booking not found",
+                            "value": None,
+                        },
+                        "attraction_not_found": {
+                            "summary": "Attraction not found",
+                            "value": None,
+                        },
+                    }
+                }
+            },
+        },
+        500: {
+            "model": format_booking_response,
+            "description": "Internal server error",
+            "content": {
+                "application/json": {
+                    "example": {"error": True, "message": "Internal server error"}
+                }
+            },
+        },
+    },
+)
+async def get_booking_with_attraction(
+    request: Request, token: str = Depends(JWTBearer())
+):
     if not token:
-        return None
+        return format_booking_response(status="unauthorized")
     db_pool = request.state.db_pool
     try:
         with db_pool.get_connection() as con:
@@ -20,7 +85,7 @@ async def get_booking(request: Request, token: str = Depends(JWTBearer())):
                 cursor.execute(query, (credentials["id"],))
                 match_booking = cursor.fetchone()
                 if not match_booking:
-                    return None
+                    return format_booking_response(status="not_found_booking")
                 query = """
                 SELECT attractions.id, attractions.name, attractions.address, attractions_images.images AS image
                 FROM attractions
@@ -30,7 +95,7 @@ async def get_booking(request: Request, token: str = Depends(JWTBearer())):
                 cursor.execute(query, (match_booking["attraction_id"],))
                 match_attraction = cursor.fetchone()
                 if not match_attraction:
-                    return None
+                    return format_booking_response(status="not_found_attraction")
                 data = {
                     "attraction": {
                         "id": match_attraction["id"],
@@ -42,34 +107,58 @@ async def get_booking(request: Request, token: str = Depends(JWTBearer())):
                     "time": match_booking["time"],
                     "price": match_booking["price"],
                 }
-                return {"data": data}
-
+                return format_booking_response(data=data)
     except Exception as e:
-        content = {
-            "error": True,
-            "message": "Internal server error",
-        }
-        return JSONResponse(
-            status_code=500,
-            content=content,
-            media_type="application/json",
-        )
+        print(f"Error in getting booking with attraction: {str(e)}")
+        return format_booking_response(status="server_error")
 
 
-@router.post("/api/booking", tags=["Booking"])
-async def post_booking(
+@router.post(
+    "/api/booking",
+    tags=["Booking"],
+    responses={
+        200: {
+            "model": format_create_booking_response,
+            "description": "Booking created successfully",
+            "content": {"application/json": {"example": {"ok": True}}},
+        },
+        400: {
+            "model": format_create_booking_response,
+            "description": "Booking creation failed due to conflict",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "error": True,
+                        "message": "Attraction already booked on 2024-02-01 at morning",
+                    }
+                }
+            },
+        },
+        403: {
+            "model": format_create_booking_response,
+            "description": "Unauthorized access",
+            "content": {
+                "application/json": {
+                    "example": {"error": True, "message": "Unauthorized access"}
+                }
+            },
+        },
+        500: {
+            "model": format_create_booking_response,
+            "description": "Internal server error",
+            "content": {
+                "application/json": {
+                    "example": {"error": True, "message": "Internal server error"}
+                }
+            },
+        },
+    },
+)
+async def create_booking(
     request: Request, BookAttraction: BookAttraction, token: str = Depends(JWTBearer())
 ) -> dict:
     if not token:
-        content = {
-            "error": True,
-            "message": "Unauthorized access",
-        }
-        return JSONResponse(
-            status_code=403,
-            content=content,
-            media_type="application/json",
-        )
+        return format_create_booking_response(status="unauthorized")
     db_pool = request.state.db_pool
     try:
         with db_pool.get_connection() as con:
@@ -80,7 +169,7 @@ async def post_booking(
                     (
                         BookAttraction.attractionId,
                         BookAttraction.date,
-                        BookAttraction.time,
+                        BookAttraction.time.value,
                     ),
                 )
                 match_book = cursor.fetchone()
@@ -89,10 +178,8 @@ async def post_booking(
                         "error": True,
                         "message": f"Attraction already booked on {BookAttraction.date} at {BookAttraction.time}",
                     }
-                    return JSONResponse(
-                        status_code=400,
-                        content=content,
-                        media_type="application/json",
+                    return format_create_booking_response(
+                        status="match_book", content=content
                     )
                 else:
                     credentials = user.decodeJWT(token)
@@ -111,37 +198,49 @@ async def post_booking(
                             BookAttraction.attractionId,
                             credentials["id"],
                             BookAttraction.date,
-                            BookAttraction.time,
+                            BookAttraction.time.value,
                             BookAttraction.price.value,
                         ),
                     )
                     con.commit()
-                    data = {"ok": True}
-                    return JSONResponse(content=data, media_type="application/json")
+                    return format_create_booking_response()
     except Exception as e:
-        content = {
-            "error": True,
-            "message": "Internal server error",
-        }
-        return JSONResponse(
-            status_code=500,
-            content=content,
-            media_type="application/json",
-        )
+        print(f"Error in creating booking: {str(e)}")
+        return format_create_booking_response(status="server_error")
 
 
-@router.delete("/api/booking", tags=["Booking"])
+@router.delete(
+    "/api/booking",
+    tags=["Booking"],
+    responses={
+        200: {
+            "model": format_delete_booking_response,
+            "description": "Booking deleted successfully",
+            "content": {"application/json": {"example": {"ok": True}}},
+        },
+        403: {
+            "model": format_delete_booking_response,
+            "description": "Unauthorized access",
+            "content": {
+                "application/json": {
+                    "example": {"error": True, "message": "Unauthorized access"}
+                }
+            },
+        },
+        500: {
+            "model": format_delete_booking_response,
+            "description": "Internal server error",
+            "content": {
+                "application/json": {
+                    "example": {"error": True, "message": "Internal server error"}
+                }
+            },
+        },
+    },
+)
 async def delete_booking(request: Request, token: str = Depends(JWTBearer())):
     if not token:
-        content = {
-            "error": True,
-            "message": "Unauthorized access",
-        }
-        return JSONResponse(
-            status_code=403,
-            content=content,
-            media_type="application/json",
-        )
+        return format_delete_booking_response(status="unauthorized")
     db_pool = request.state.db_pool
     try:
         with db_pool.get_connection() as con:
@@ -150,16 +249,6 @@ async def delete_booking(request: Request, token: str = Depends(JWTBearer())):
                 delete_query = "DELETE FROM booking WHERE user_id = %s"
                 cursor.execute(delete_query, (credentials["id"],))
                 con.commit()
-                return {
-                    "ok": True,
-                }
+                return format_delete_booking_response()
     except Exception as e:
-        content = {
-            "error": True,
-            "message": "Internal server error",
-        }
-        return JSONResponse(
-            status_code=500,
-            content=content,
-            media_type="application/json",
-        )
+        return format_delete_booking_response(status="server_error")

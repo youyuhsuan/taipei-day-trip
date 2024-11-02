@@ -76,6 +76,9 @@ Copytaipei-day-trip/
 └── main.py            # FastAPI application
 ```
 
-```
+# Test Account
 
-```
+| Item     | Content          |
+| :------- | :--------------- |
+| Email    | user@example.com |
+| Password | string           |

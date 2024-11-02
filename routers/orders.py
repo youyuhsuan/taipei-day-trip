@@ -1,35 +1,94 @@
-from typing import Annotated
 from fastapi import APIRouter, Query, Request, Depends
 from fastapi.responses import JSONResponse
+from typing import Annotated
 import json
-import httpx
+
 from routers import user
 from model.JWTAuthenticator import JWTBearer
 from model.orders import OrderPostInfo
-from config import settings
-
+from view.orders import (
+    format_create_order_response,
+    format_get_order_by_number_response,
+)
+from controllers.orders import process_payment
 
 router = APIRouter()
 
-TAPPAY_SANDBOX_URL = settings.TAPPAY_SANDBOX_URL
-PARTNER_KEY = settings.PARTNER_KEY
-MERCHANT_ID = settings.MERCHANT_ID
 
-
-@router.post("/api/orders", tags=["Order"])
-async def post_orders(
+@router.post(
+    "/api/orders",
+    tags=["Order"],
+    responses={
+        200: {
+            "model": format_create_order_response,
+            "description": "Order creation successful",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "data": {
+                            "order_number": "2024020001",
+                            "amount": 2000,
+                            "status": "paid",
+                        }
+                    }
+                },
+            },
+        },
+        400: {
+            "model": format_create_order_response,
+            "description": "Order creation failed",
+            "content": {
+                "application/json": {
+                    "examples": {
+                        "booking_not_found": {
+                            "summary": "Matching booking not found",
+                            "value": {
+                                "error": True,
+                                "message": "Matching booking not found",
+                            },
+                        },
+                        "payment_failure": {
+                            "summary": "Payment processing failed",
+                            "value": {
+                                "data": {
+                                    "error": True,
+                                    "message": "Payment processing failed",
+                                    "details": {
+                                        "status": "failed",
+                                        "reason": "Invalid card information",
+                                    },
+                                }
+                            },
+                        },
+                    }
+                }
+            },
+        },
+        403: {
+            "model": format_create_order_response,
+            "description": "Unauthorized access",
+            "content": {
+                "application/json": {
+                    "example": {"error": True, "message": "Unauthorized access"}
+                }
+            },
+        },
+        500: {
+            "model": format_create_order_response,
+            "description": "Internal server error",
+            "content": {
+                "application/json": {
+                    "example": {"error": True, "message": "Internal server error"}
+                }
+            },
+        },
+    },
+)
+async def create_order(
     request: Request, OrderPostInfo: OrderPostInfo, token: str = Depends(JWTBearer())
 ) -> dict:
     if not token:
-        content = {
-            "error": True,
-            "message": "Unauthorized access",
-        }
-        return JSONResponse(
-            status_code=403,
-            content=content,
-            media_type="application/json",
-        )
+        return format_create_order_response(status="unauthorized")
     db_pool = request.state.db_pool
     try:
         with db_pool.get_connection() as con:
@@ -48,15 +107,7 @@ async def post_orders(
                 )
                 match_booking = cursor.fetchone()
                 if not match_booking:
-                    content = {
-                        "error": True,
-                        "message": "Matching booking not found",
-                    }
-                    return JSONResponse(
-                        status_code=400,
-                        content=content,
-                        media_type="application/json",
-                    )
+                    return format_create_order_response(status="invalid_booking")
                 insert_new_order = """
                     INSERT INTO `orders` (
                         booking_id, user_id, price, attraction_id, attraction_name, 
@@ -101,20 +152,16 @@ async def post_orders(
                             order_id,
                         ),
                     )
-                    content = {
-                        "data": {
-                            "number": payment_result["rec_trade_id"],
-                            "payment": {
-                                "status": payment_result["status"],
-                                "message": "付款失敗",
-                            },
-                        }
+                    data = {
+                        "number": payment_result["rec_trade_id"],
+                        "payment": {
+                            "status": payment_result["status"],
+                            "message": "付款失敗",
+                        },
                     }
                     con.commit()
-                    return JSONResponse(
-                        status_code=400,
-                        content=content,
-                        media_type="application/json",
+                    return format_create_order_response(
+                        status="payment_failure", data=data
                     )
                 update_order = """
                     UPDATE `orders`
@@ -139,84 +186,91 @@ async def post_orders(
                     ),
                 )
                 con.commit()
-                return {
-                    "data": {
+                data = (
+                    {
                         "number": payment_result["rec_trade_id"],
                         "payment": {
                             "status": payment_result["status"],
                             "message": "付款成功",
                         },
+                    },
+                )
+                return format_create_order_response(data=data)
+    except Exception as e:
+        print(f"Error in creating order: {str(e)}")
+        return format_create_order_response(status="server_error")
+
+
+@router.get(
+    "/api/orders",
+    tags=["Order"],
+    responses={
+        200: {
+            "model": format_get_order_by_number_response,
+            "description": "Order found successfully",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "data": {
+                            "number": "2024020001",
+                            "price": 2000,
+                            "trip": {
+                                "attraction": {
+                                    "id": 1,
+                                    "name": "台北 101",
+                                    "address": "台北市信義區信義路五段7號",
+                                    "image": "https://example.com/101.jpg",
+                                },
+                                "date": "2024-02-01",
+                                "time": "morning",
+                            },
+                            "contact": {
+                                "name": "王小明",
+                                "email": "test@example.com",
+                                "phone": "0912345678",
+                            },
+                            "status": 0,
+                        }
                     }
                 }
-    except Exception as e:
-        content = {
-            "error": True,
-            "message": e,
-        }
-        return JSONResponse(
-            status_code=500,
-            content=content,
-            media_type="application/json",
-        )
-
-
-async def process_payment(OrderPostInfo: OrderPostInfo) -> dict:
-    url = "https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime"
-    headers = {"Content-Type": "application/json", "x-api-key": PARTNER_KEY}
-    order_info = {
-        "prime": OrderPostInfo.prime,
-        "partner_key": PARTNER_KEY,
-        "merchant_id": "tppf_stella0118_GP_POS_1",
-        "amount": OrderPostInfo.order.price.value,
-        "details": json.dumps(
-            [
-                {
-                    "item_id": OrderPostInfo.order.trip.attraction.id,
-                    "item_name": OrderPostInfo.order.trip.attraction.name,
-                    "item_price": OrderPostInfo.order.price.value,
-                }
-            ]
-        ),
-        "cardholder": {
-            "phone_number": OrderPostInfo.order.contact.phone,
-            "name": OrderPostInfo.order.contact.name,
-            "email": OrderPostInfo.order.contact.email,
+            },
         },
-        "remember": True,
-    }
-    async with httpx.AsyncClient() as client:
-        try:
-            response = await client.post(url, headers=headers, json=order_info)
-            response.raise_for_status()
-            return response.json()
-        except httpx.RequestError as e:
-            content = {
-                "error": True,
-                "message": str(e),
-            }
-            return JSONResponse(
-                status_code=500,
-                content=content,
-                media_type="application/json",
-            )
-
-
-@router.get("/api/orders", tags=["Order"])
-async def get_orders(
+        400: {
+            "model": format_get_order_by_number_response,
+            "description": "Order retrieval failed",
+            "content": {
+                "application/json": {
+                    "example": {"error": True, "message": "Matching booking not found"}
+                }
+            },
+        },
+        403: {
+            "model": format_get_order_by_number_response,
+            "description": "Unauthorized access",
+            "content": {
+                "application/json": {
+                    "example": {"error": True, "message": "Unauthorized access"}
+                }
+            },
+        },
+        500: {
+            "model": format_get_order_by_number_response,
+            "description": "Internal server error",
+            "content": {
+                "application/json": {
+                    "example": {"error": True, "message": "Internal server error"}
+                }
+            },
+        },
+    },
+)
+async def get_order_by_number(
     request: Request,
     number: Annotated[str, Query(description="訂單編號")],
     token: str = Depends(JWTBearer()),
 ):
     if not token:
-        content = {
-            "error": True,
-            "message": "Unauthorized access",
-        }
-        return JSONResponse(
-            status_code=403,
-            content=content,
-            media_type="application/json",
-        )
+        return format_get_order_by_number_response(status="unauthorized")
     db_pool = request.state.db_pool
     try:
         with db_pool.get_connection() as con:
@@ -248,10 +302,7 @@ async def get_orders(
                     },
                     "status": status,
                 }
-                return {"data": data}
+                return format_get_order_by_number_response(data=data)
     except Exception as e:
-        return JSONResponse(
-            status_code=500,
-            content="Internal server error",
-            media_type="application/json",
-        )
+        print(f"Error in getting order by number: {str(e)}")
+        return format_get_order_by_number_response(status="server_error")

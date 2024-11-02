@@ -1,11 +1,12 @@
-from datetime import datetime, timezone
 from fastapi import Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, EmailStr, Field
 from typing import Annotated
+from datetime import datetime, timezone
 import jwt
 from config import settings
 
+# Config
 SECRET_KEY = settings.SECRET_KEY
 ALGORITHM = settings.ALGORITHM
 
