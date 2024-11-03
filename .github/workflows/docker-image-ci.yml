@@ -54,20 +54,6 @@ jobs:
         run: |
           docker push $IMAGE:${{ env.VERSION }}
 
-      - name: Login to AWS ECR
-        run: |
-          echo "${{ secrets.AWS_ACCESS_KEY_ID }}" > aws_access_key_id
-          echo "${{ secrets.AWS_SECRET_ACCESS_KEY }}" > aws_secret_access_key
-          aws configure set aws_access_key_id $(cat aws_access_key_id)
-          aws configure set aws_secret_access_key $(cat aws_secret_access_key)
-          aws configure set default.region your-region
-
-      - name: Build and Push Docker Image to ECR
-        run: |
-          $(aws ecr get-login --no-include-email --region your-region)
-          docker tag $IMAGE:${{ env.VERSION }} your-account-id.dkr.ecr.your-region.amazonaws.com/your-image-name:${{ env.VERSION }}
-          docker push your-account-id.dkr.ecr.your-region.amazonaws.com/your-image-name:${{ env.VERSION }}
-
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
