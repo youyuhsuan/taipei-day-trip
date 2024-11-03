@@ -36,7 +36,7 @@ jobs:
             
             if echo "$COMMIT_MSG" | grep -q "BREAKING CHANGE\|feat.*!:\|fix.*!:\|refactor.*!:"; then
               NEXT_TAG="v$((MAJOR + 1)).0.0"
-            elif echo "$COMMIT_MSG" | grep -q "feat(.*):"; then
+            elif echo "$COMMIT_MSG" | grep -q "feat[[:space:]]*(.*):"; then  # 修正了這裡的正則表達式
               NEXT_TAG="v${MAJOR}.$((MINOR + 1)).0"
             else
               NEXT_TAG="v${MAJOR}.${MINOR}.$((PATCH + 1))"
@@ -59,11 +59,6 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             docker pull stellayou/taipei-day-trip:${{ env.VERSION }}
-
-      - name: Debug Variables
-        run: |
-          echo "EC2_HOST=${{ secrets.EC2_HOST }}"
-          echo "EC2_SSH_KEY=${{ secrets.EC2_SSH_KEY }}"
 
       - name: Stop and Remove Existing Container
         uses: appleboy/ssh-action@master
