@@ -60,6 +60,11 @@ jobs:
           script: |
             docker pull stellayou/taipei-day-trip:${{ env.VERSION }}
 
+      - name: Debug Variables
+        run: |
+          echo "EC2_HOST=${{ secrets.EC2_HOST }}"
+          echo "EC2_SSH_KEY=${{ secrets.EC2_SSH_KEY }}"
+
       - name: Stop and Remove Existing Container
         uses: appleboy/ssh-action@master
         with:
