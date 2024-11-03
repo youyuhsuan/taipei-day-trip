@@ -16,9 +16,13 @@ _A travel e-commerce website that allows users to browse and book Taipei city to
 - Booking and payment integration
 - Booking management system
 
-## API
+## API Documentation
 
 [API Taipei Day Trip Docs](http://127.0.0.1:8000/docs)
+
+## Database Schema Documentation
+
+[Database Schema Taipei Day Trip Docs](https://dbdiagram.io/d/67271d9ab1b39dd85849dd13)
 
 ## Requirement
 
