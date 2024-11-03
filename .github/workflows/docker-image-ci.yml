@@ -61,7 +61,7 @@ jobs:
         run: |
           docker push $IMAGE:${{ env.VERSION }}
 
-      - name: Deploy to EC2
+      - name: Pull Docker Image
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -69,5 +69,29 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             docker pull stellayou/taipei-day-trip:${{ env.VERSION }}
+
+      - name: Stop and Remove Existing Container
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
             docker-compose down
-            docker-compose up -d
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            docker run -d --name taipei-day-trip \
+              -e MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }} \
+              -e MYSQL_USER=${{ secrets.MYSQL_USER }} \
+              -e MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }} \
+              -e SECRET_KEY=${{ secrets.SECRET_KEY }} \
+              -e TAPPAY_SANDBOX_URL=${{ secrets.TAPPAY_SANDBOX_URL }} \
+              -e PARTNER_KEY=${{ secrets.PARTNER_KEY }} \
+              -e MERCHANT_ID=${{ secrets.MERCHANT_ID }} \
+              stellayou/taipei-day-trip:${{ env.VERSION }}
