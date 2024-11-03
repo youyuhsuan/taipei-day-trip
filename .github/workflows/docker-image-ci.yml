@@ -21,12 +21,29 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Get Version and Date
+      - name: Get Next Version
         id: version
         run: |
-          VERSION=$(git describe --tags --abbrev=0)
+          LATEST_TAG=$(git tag --sort=-creatordate | head -n 1)
+          if [ -z "$LATEST_TAG" ]; then
+            NEXT_TAG="v1.0.0"
+          else
+            COMMIT_MSG=$(git log -1 --pretty=%B)
+            CURRENT_VERSION=$(echo $LATEST_TAG | sed 's/v//')
+            MAJOR=$(echo $CURRENT_VERSION | cut -d. -f1)
+            MINOR=$(echo $CURRENT_VERSION | cut -d. -f2)
+            PATCH=$(echo $CURRENT_VERSION | cut -d. -f3)
+            
+            if echo "$COMMIT_MSG" | grep -q "BREAKING CHANGE\|feat.*!:\|fix.*!:\|refactor.*!:"; then
+              NEXT_TAG="v$((MAJOR + 1)).0.0"
+            elif echo "$COMMIT_MSG" | grep -q "feat(.*):"; then
+              NEXT_TAG="v${MAJOR}.$((MINOR + 1)).0"
+            else
+              NEXT_TAG="v${MAJOR}.${MINOR}.$((PATCH + 1))"
+            fi
+          fi
           DATE=$(date +%Y%m%d)
-          echo "VERSION=${VERSION}-${DATE}" >> $GITHUB_ENV
+          echo "VERSION=${NEXT_TAG}-${DATE}" >> $GITHUB_ENV
 
       - name: Build and Push
         run: |
