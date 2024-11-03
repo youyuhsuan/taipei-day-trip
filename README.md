@@ -51,9 +51,9 @@ This project requires the following environment variables to be set in a `.env` 
 | Variable                 | Description              | Example                             |
 | ------------------------ | ------------------------ | ----------------------------------- |
 | **Database**             |
-| DB_USER                  | Database username        | `postgres`                          |
-| DB_DATABASE              | Database name            | `database_name`                     |
-| DB_PASSWORD              | Database password        | `your_password`                     |
+| MYSQL_USER               | Database username        | `postgres`                          |
+| MYSQL_DATABASE           | Database name            | `database_name`                     |
+| MYSQL_PASSWORD           | Database password        | `your_password`                     |
 | **TapPay Integration**   |
 | TAPPAY_SANDBOX_URL       | TapPay sandbox API URL   | `https://sandbox.tappaysdk.com/api` |
 | PARTNER_KEY              | TapPay partner key       | `your_partner_key`                  |
@@ -66,14 +66,42 @@ This project requires the following environment variables to be set in a `.env` 
 ### Project Structure
 
 ```bash
-Copytaipei-day-trip/
-├── app/
-│   ├── api/            # API endpoints
-│   ├── models/         # Database models
-│   ├── schemas/        # Pydantic models
-│   └── services/       # Business logic
-├── tests/              # Test files
-└── main.py            # FastAPI application
+taipei-day-trip/
+├── app/                         # Application core
+│   ├── api/                     # API layer
+│   │   ├── controllers/         # Business logic
+│   │   ├── models/              # Database models
+│   │   ├── views/               # Response formatting
+│   │   ├── schemas/             # Data validation
+│   │   └── routers/             # Route definitions
+│   │
+│   ├── core/                     # Core functionality
+│   │   ├── config.py            # Configuration
+│   │   └── database.py          # Database setup
+│   │
+│   ├── static/                   # Static assets
+│   │   ├── html/                # HTML templates
+│   │   ├── images/              # Image assets
+│   │   ├── js/                  # JavaScript files
+│   │   ├── scss/                # SCSS sources
+│   │   └── css/                 # Compiled CSS
+│   │
+│   ├── sources/                     # Data sources and processing
+│   │   ├── taipei-attractions.json # Taipei attractions data processing
+│   │   └── data.py                # Raw data handling
+│   │
+│   ├── utils/                    # Utility functions
+│   │   └── render_response.py    # Response helpers
+│   │
+│   └── __init__.py               # Application entry
+│
+├── tests/                        # Test suite
+│   ├── unit/
+│   └── integration/
+│
+├── docs/                         # Documentation
+├── main.py                       # Application entry
+└── README.md                     # Project readme
 ```
 
 # Test Credentials

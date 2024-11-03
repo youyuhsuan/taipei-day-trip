@@ -1,7 +1,6 @@
-# 使用官方 Python 基礎鏡像
 FROM python:3.12.4-slim
 
-WORKDIR /my-app
+WORKDIR /taipei-day-trip
 
 COPY requirements.txt .
 
