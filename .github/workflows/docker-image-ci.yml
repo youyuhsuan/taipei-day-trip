@@ -69,6 +69,26 @@ jobs:
           script: |
             docker compose down
 
+      - name: Debug Environment Variables
+        run: |
+          echo "Checking environment variables..."
+          echo "ACCESS_TOKEN_EXPIRE_DAYS: ${{ vars.ACCESS_TOKEN_EXPIRE_DAYS }}"
+          echo "ALGORITHM: ${{ vars.ALGORITHM }}"
+          echo "MERCHANT_ID: ${{ vars.MERCHANT_ID }}"
+          echo "MYSQL_DATABASE: ${{ vars.MYSQL_DATABASE }}"
+          echo "MYSQL_HOST: ${{ vars.MYSQL_HOST }}"
+          echo "MYSQL_PORT: ${{ vars.MYSQL_PORT }}"
+          echo "MYSQL_USER: ${{ vars.MYSQL_USER }}"
+          echo "VERSION: ${{ env.VERSION }}"
+                
+          # 檢查 secrets 是否存在 (不會顯示實際值)
+          echo "Checking secrets..."
+          echo "MYSQL_PASSWORD exists: ${{ secrets.MYSQL_PASSWORD != '' }}"
+          echo "SECRET_KEY exists: ${{ secrets.SECRET_KEY != '' }}"
+          echo "PARTNER_KEY exists: ${{ secrets.PARTNER_KEY != '' }}"
+          echo "EC2_HOST exists: ${{ secrets.EC2_HOST != '' }}"
+          echo "EC2_SSH_KEY exists: ${{ secrets.EC2_SSH_KEY != '' }}"
+
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
@@ -78,15 +98,20 @@ jobs:
           script: |
             docker run -d --name taipei-day-trip \
               -e MYSQL_HOST=${{ vars.MYSQL_HOST }} \
+
               -e MYSQL_PORT=${{ vars.MYSQL_PORT }} \
               -e MYSQL_DATABASE=${{ vars.MYSQL_DATABASE }} \
               -e MYSQL_USER=${{ vars.MYSQL_USER }} \
               -e MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }} \
-              -e MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_PASSWORD }} \
-              -e SECRET_KEY=${{ secrets.SECRET_KEY }} \
-              -e ALGORITHM=${{ vars.ALGORITHM }} \
-              -e ACCESS_TOKEN_EXPIRE_DAYS=${{ vars.ACCESS_TOKEN_EXPIRE_DAYS }} \
+
+              -e MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }} \
+
               -e TAPPAY_SANDBOX_URL=${{ vars.TAPPAY_SANDBOX_URL }} \
               -e PARTNER_KEY=${{ secrets.PARTNER_KEY }} \
               -e MERCHANT_ID=${{ vars.MERCHANT_ID }} \
+
+              -e SECRET_KEY=${{ secrets.SECRET_KEY }} \
+              -e ALGORITHM=${{ vars.ALGORITHM }} \
+              -e ACCESS_TOKEN_EXPIRE_DAYS=${{ vars.ACCESS_TOKEN_EXPIRE_DAYS }} \
+
               stellayou/taipei-day-trip:${{ env.VERSION }}
