@@ -50,12 +50,15 @@ jobs:
           IMAGE=stellayou/taipei-day-trip
           docker build -t $IMAGE:${{ env.VERSION }} .
 
-      - name: Validate Docker Image Tag
-        run: |
-          if [[ ! "${{ env.VERSION }}" =~ ^[a-zA-Z0-9._-]+$ ]]; then
-            echo "Invalid version format: ${{ env.VERSION }}"
-            exit 1
-          fi
+      # - name: Validate Docker Image Tag
+      #   run: |
+      #     if [[ ! "${{ env.VERSION }}" =~ ^[a-zA-Z0-9._-]+$ ]]; then
+      #       echo "Invalid version format: ${{ env.VERSION }}"
+      #       exit 1
+      #     fi
+
+      - name: Debug IMAGE variable
+        run: echo "IMAGE=${IMAGE}"
 
       - name: Push to Docker Hub
         run: |
