@@ -104,7 +104,7 @@ jobs:
           script: |
             cd /home/ubuntu/taipei-day-trip
             docker compose down
-            docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+            docker compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d
 
       - name: Check Container Status
         uses: appleboy/ssh-action@master
