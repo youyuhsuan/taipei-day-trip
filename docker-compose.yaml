@@ -21,7 +21,7 @@ services:
     environment:
       - MYSQL_DATABASE=taipei_attractions
       - MYSQL_ROOT_PASSWORD=23322907
-      - MYSQL_USER=taipei
+      - MYSQL_USER=stella
       - MYSQL_PASSWORD=23322907
     healthcheck:
       test:
@@ -32,7 +32,7 @@ services:
           "-h",
           "localhost",
           "-u",
-          "taipei",
+          "stella",
           "-p23322907",
         ]
       interval: 10s
