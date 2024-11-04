@@ -60,6 +60,12 @@ jobs:
           script: |
             docker pull stellayou/taipei-day-trip:${{ env.VERSION }}
 
+      - name: Set version
+        run: echo "VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV
+
+      - name: Debug version
+        run: echo "VERSION=${{ env.VERSION }}"
+
       - name: Deploy with Docker Compose
         uses: appleboy/ssh-action@master
         env:
