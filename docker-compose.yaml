@@ -1,7 +1,21 @@
 services:
   app:
-    image: stellayou/taipei-day-trip:${{ env.VERSION }}
+    image: stellayou/taipei-day-trip:${VERSION}
     build:
+      args:
+        VERSION: ${VERSION}
+        MYSQL_DATABASE: ${MYSQL_DATABASE}
+        MYSQL_HOST: ${MYSQL_HOST}
+        MYSQL_PORT: ${MYSQL_PORT}
+        MYSQL_USER: ${MYSQL_USER}
+        MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+        ACCESS_TOKEN_EXPIRE_DAYS: ${ACCESS_TOKEN_EXPIRE_DAYS}
+        ALGORITHM: ${ALGORITHM}
+        MERCHANT_ID: ${MERCHANT_ID}
+        SECRET_KEY: ${SECRET_KEY}
+        PARTNER_KEY: ${PARTNER_KEY}
+        TAPPAY_SANDBOX_URL: ${TAPPAY_SANDBOX_URL}
       context: .
       dockerfile: Dockerfile
     depends_on:
