@@ -80,20 +80,20 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            echo "Debug: Creating .env file with VERSION=${VERSION}"
+            echo "Debug: Creating .env file with VERSION= ${{env.VERSION}}"
             cat > .env << EOL
-            MYSQL_DATABASE=${MYSQL_DATABASE}
-            MYSQL_HOST=${MYSQL_HOST}
-            MYSQL_PORT=${MYSQL_PORT}
-            MYSQL_USER=${MYSQL_USER}
-            MYSQL_PASSWORD=${MYSQL_PASSWORD}
-            MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-            ACCESS_TOKEN_EXPIRE_DAYS=${ACCESS_TOKEN_EXPIRE_DAYS}
-            ALGORITHM=${ALGORITHM}
-            MERCHANT_ID=${MERCHANT_ID}
-            SECRET_KEY=${SECRET_KEY}
-            PARTNER_KEY=${PARTNER_KEY}
-            TAPPAY_SANDBOX_URL=${TAPPAY_SANDBOX_URL}
+            MYSQL_DATABASE=${{ vars.MYSQL_DATABASE }}
+            MYSQL_HOST= ${{ vars.MYSQL_HOST }}
+            MYSQL_PORT= ${{ vars.MYSQL_PORT }}
+            MYSQL_USER= ${{ vars.MYSQL_USER }}
+            MYSQL_PASSWORD= ${{ secrets.MYSQL_PASSWORD }}
+            MYSQL_ROOT_PASSWORD= ${{ secrets.MYSQL_ROOT_PASSWORD }}
+            ACCESS_TOKEN_EXPIRE_DAYS= ${{ vars.ACCESS_TOKEN_EXPIRE_DAYS }}
+            ALGORITHM= ${{ vars.ALGORITHM }}
+            MERCHANT_ID= ${{ vars.MERCHANT_ID }}
+            SECRET_KEY= ${{ secrets.SECRET_KEY }}
+            PARTNER_KEY= ${{ secrets.PARTNER_KEY }}
+            TAPPAY_SANDBOX_URL= ${{ vars.TAPPAY_SANDBOX_URL }}
             EOL
 
             echo "Debug: .env file created. Showing non-sensitive variables:"
