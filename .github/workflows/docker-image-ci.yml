@@ -43,11 +43,7 @@ jobs:
             fi
           fi
           DATE=$(date +%Y%m%d)
-<<<<<<< HEAD
           echo "VERSION=${NEXT_TAG}-${DATE}" >> $GITHUB_ENV
-=======
-          echo "VERSION=${NEXT_TAG}-${DATE} >> $GITHUB_ENV
->>>>>>> b64d359 (fix(ci): correct version setting in CI workflow)
 
       - name: Build and Push Docker Image
         run: |
