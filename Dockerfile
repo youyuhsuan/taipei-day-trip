@@ -23,7 +23,7 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-RUN ls -l
+RUN ls -la
 
 RUN echo "VERSION=${VERSION}\n\
 MYSQL_DATABASE=${MYSQL_DATABASE}\n\
@@ -41,4 +41,5 @@ TAPPAY_SANDBOX_URL=${TAPPAY_SANDBOX_URL}" > .env
 
 EXPOSE 8000
 
-ENTRYPOINT [ "uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000" ]
+ENTRYPOINT ["uvicorn"]
+CMD ["app:app", "--host", "0.0.0.0", "--port", "8000"]

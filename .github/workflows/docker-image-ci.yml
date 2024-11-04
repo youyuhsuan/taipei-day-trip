@@ -69,7 +69,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
-
+          source: "requirements.txt,Dockerfile,docker-compose.yaml,docker-compose.prod.yaml"
           target: "/home/ubuntu"
 
       - name: Deploy New Container
