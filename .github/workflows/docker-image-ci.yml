@@ -60,35 +60,42 @@ jobs:
           script: |
             docker pull stellayou/taipei-day-trip:${{ env.VERSION }}
 
-      - name: Debug Environment Variables
-        run: |
-          echo "Checking environment variables..."
-          echo "ACCESS_TOKEN_EXPIRE_DAYS: ${{ vars.ACCESS_TOKEN_EXPIRE_DAYS }}"
-          echo "ALGORITHM: ${{ vars.ALGORITHM }}"
-          echo "MERCHANT_ID: ${{ vars.MERCHANT_ID }}"
-          echo "MYSQL_DATABASE: ${{ vars.MYSQL_DATABASE }}"
-          echo "MYSQL_HOST: ${{ vars.MYSQL_HOST }}"
-          echo "MYSQL_PORT: ${{ vars.MYSQL_PORT }}"
-          echo "MYSQL_USER: ${{ vars.MYSQL_USER }}"
-          echo "VERSION: ${{ env.VERSION }}"
-                
-          # 檢查 secrets 是否存在 (不會顯示實際值)
-          echo "Checking secrets..."
-          echo "MYSQL_PASSWORD exists: ${{ secrets.MYSQL_PASSWORD != '' }}"
-          echo "SECRET_KEY exists: ${{ secrets.SECRET_KEY != '' }}"
-          echo "PARTNER_KEY exists: ${{ secrets.PARTNER_KEY != '' }}"
-          echo "EC2_HOST exists: ${{ secrets.EC2_HOST != '' }}"
-          echo "EC2_SSH_KEY exists: ${{ secrets.EC2_SSH_KEY != '' }}"
-
-      - name: Stop and Remove Existing Container
+      - name: Deploy with Docker Compose
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
+          envs: |
+            MYSQL_DATABASE: ${{ vars.MYSQL_DATABASE }}
+            MYSQL_HOST: ${{ vars.MYSQL_HOST }}
+            MYSQL_PORT: ${{ vars.MYSQL_PORT }}
+            MYSQL_USER: ${{ vars.MYSQL_USER }}
+            MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+            MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+            ACCESS_TOKEN_EXPIRE_DAYS: ${{ vars.ACCESS_TOKEN_EXPIRE_DAYS }}
+            ALGORITHM: ${{ vars.ALGORITHM }}
+            MERCHANT_ID: ${{ vars.MERCHANT_ID }}
+            SECRET_KEY: ${{ secrets.SECRET_KEY }}
+            PARTNER_KEY: ${{ secrets.PARTNER_KEY }}
+            TAPPAY_SANDBOX_URL: ${{ vars.TAPPAY_SANDBOX_URL }}
+            VERSION: ${{ env.VERSION }}
           script: |
-            docker stop taipei-day-trip || true
-            docker rm taipei-day-trip || true
+            export MYSQL_DATABASE="${MYSQL_DATABASE}"
+            export MYSQL_HOST="${MYSQL_HOST}"
+            export MYSQL_PORT="${MYSQL_PORT}"
+            export MYSQL_USER="${MYSQL_USER}"
+            export MYSQL_PASSWORD="${MYSQL_PASSWORD}"
+            export MYSQL_ROOT_PASSWORD="${MYSQL_ROOT_PASSWORD}"
+            export ACCESS_TOKEN_EXPIRE_DAYS="${ACCESS_TOKEN_EXPIRE_DAYS}"
+            export ALGORITHM="${ALGORITHM}"
+            export MERCHANT_ID="${MERCHANT_ID}"
+            export TAPPAY_SANDBOX_URL="${TAPPAY_SANDBOX_URL}"
+            export SECRET_KEY="${SECRET_KEY}"
+            export PARTNER_KEY="${PARTNER_KEY}"
+            export VERSION="${VERSION}"
+
+            echo "Starting deployment with version: ${VERSION}"
 
       - name: Deploy New Container
         uses: appleboy/ssh-action@master
@@ -97,21 +104,8 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker run -d \
-              --name taipei-day-trip \
-              -p 8000:8000 \
-              -e ACCESS_TOKEN_EXPIRE_DAYS="${{ vars.ACCESS_TOKEN_EXPIRE_DAYS }}" \
-              -e ALGORITHM="${{ vars.ALGORITHM }}" \
-              -e MERCHANT_ID="${{ vars.MERCHANT_ID }}" \
-              -e MYSQL_DATABASE="${{ vars.MYSQL_DATABASE }}" \
-              -e MYSQL_HOST="${{ vars.MYSQL_HOST }}" \
-              -e MYSQL_PORT="${{ vars.MYSQL_PORT }}" \
-              -e MYSQL_USER="${{ vars.MYSQL_USER }}" \
-              -e MYSQL_PASSWORD="${{ secrets.MYSQL_PASSWORD }}" \
-              -e SECRET_KEY="${{ secrets.SECRET_KEY }}" \
-              -e TAPPAY_SANDBOX_URL="${{ vars.TAPPAY_SANDBOX_URL }}" \
-              -e PARTNER_KEY="${{ secrets.PARTNER_KEY }}" \
-              stellayou/taipei-day-trip:${{ env.VERSION }}
+            docker compose down
+            docker compose up -d
 
       - name: Check Container Logs
         uses: appleboy/ssh-action@master
