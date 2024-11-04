@@ -103,4 +103,9 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker inspect taipei-day-trip --format='{{.State.Status}}'
+            echo "=== Container Status ==="
+            docker inspect ubuntu-app-1 --format='{{.State.Status}}'
+            docker inspect ubuntu-mydb-1 --format='{{.State.Status}}'
+            echo "=== Container Logs ==="
+            docker logs ubuntu-app-1
+            docker logs ubuntu-mydb-1
