@@ -32,7 +32,7 @@ services:
           "-h",
           "localhost",
           "-u",
-          "taipei",
+          "stella",
           "-p23322907",
         ]
       interval: 10s
