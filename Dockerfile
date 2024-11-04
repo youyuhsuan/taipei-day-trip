@@ -2,7 +2,6 @@ FROM python:3.12.4-slim
 
 WORKDIR /taipei-day-trip
 
-# 宣告建構參數
 ARG VERSION
 ARG MYSQL_DATABASE
 ARG MYSQL_HOST
