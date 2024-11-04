@@ -43,7 +43,7 @@ jobs:
             fi
           fi
           DATE=$(date +%Y%m%d)
-          echo "=== VERSION=${NEXT_TAG}-${DATE} ===" >> $GITHUB_ENV
+          echo "VERSION=${NEXT_TAG}-${DATE} >> $GITHUB_ENV
 
       - name: Build and Push Docker Image
         run: |
