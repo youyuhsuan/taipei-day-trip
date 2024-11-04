@@ -18,8 +18,9 @@ ARG TAPPAY_SANDBOX_URL
 
 COPY requirements.txt .
 
-RUN python -m pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN python -m pip install --upgrade pip \
+    && pip install -r requirements.txt \
+    && rm -rf /root/.cache/pip
 
 COPY . .
 RUN ls -la
