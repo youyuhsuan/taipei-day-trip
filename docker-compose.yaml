@@ -44,13 +44,14 @@ services:
     expose:
       - "3306"
     volumes:
-      - my-db:/var/lib/mysql
+      - mysql_data:/var/lib/mysql
+      - ./taipei_attractions.sql:/docker-entrypoint-initdb.d/taipei_attractions.sql
     restart: always
     networks:
       - app-network
 
 volumes:
-  my-db:
+  mysql_data:
 
 networks:
   app-network:
