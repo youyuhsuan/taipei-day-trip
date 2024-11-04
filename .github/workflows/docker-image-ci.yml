@@ -63,7 +63,6 @@ jobs:
       - name: Deploy with Docker Compose
         uses: appleboy/ssh-action@master
         env:
-          VERSION: ${{ env.VERSION }}
           MYSQL_DATABASE: ${{ vars.MYSQL_DATABASE }}
           MYSQL_HOST: ${{ vars.MYSQL_HOST }}
           MYSQL_PORT: ${{ vars.MYSQL_PORT }}
@@ -82,8 +81,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             echo "Debug: Creating .env file with VERSION=${VERSION}"
-            cat > .env << 'EOL'
-            VERSION=${VERSION}
+            cat > .env << EOL
             MYSQL_DATABASE=${MYSQL_DATABASE}
             MYSQL_HOST=${MYSQL_HOST}
             MYSQL_PORT=${MYSQL_PORT}
