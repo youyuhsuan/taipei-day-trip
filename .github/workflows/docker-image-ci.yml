@@ -62,10 +62,6 @@ jobs:
 
       - name: Deploy with Docker Compose
         uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}
         env:
           VERSION: ${{ env.VERSION }}
           MYSQL_DATABASE: ${{ vars.MYSQL_DATABASE }}
@@ -80,23 +76,30 @@ jobs:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           PARTNER_KEY: ${{ secrets.PARTNER_KEY }}
           TAPPAY_SANDBOX_URL: ${{ vars.TAPPAY_SANDBOX_URL }}
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            echo "Deploying version: $VERSION"
-            cat > .env << EOF
-            VERSION=$VERSION
-            MYSQL_DATABASE=$MYSQL_DATABASE
-            MYSQL_HOST=$MYSQL_HOST
-            MYSQL_PORT=$MYSQL_PORT
-            MYSQL_USER=$MYSQL_USER
-            MYSQL_PASSWORD=$MYSQL_PASSWORD
-            MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
-            ACCESS_TOKEN_EXPIRE_DAYS=$ACCESS_TOKEN_EXPIRE_DAYS
-            ALGORITHM=$ALGORITHM
-            MERCHANT_ID=$MERCHANT_ID
-            SECRET_KEY=$SECRET_KEY
-            PARTNER_KEY=$PARTNER_KEY
-            TAPPAY_SANDBOX_URL=$TAPPAY_SANDBOX_URL
-            EOF
+            echo "Debug: Creating .env file with VERSION=${VERSION}"
+            cat > .env << 'EOL'
+            VERSION=${VERSION}
+            MYSQL_DATABASE=${MYSQL_DATABASE}
+            MYSQL_HOST=${MYSQL_HOST}
+            MYSQL_PORT=${MYSQL_PORT}
+            MYSQL_USER=${MYSQL_USER}
+            MYSQL_PASSWORD=${MYSQL_PASSWORD}
+            MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+            ACCESS_TOKEN_EXPIRE_DAYS=${ACCESS_TOKEN_EXPIRE_DAYS}
+            ALGORITHM=${ALGORITHM}
+            MERCHANT_ID=${MERCHANT_ID}
+            SECRET_KEY=${SECRET_KEY}
+            PARTNER_KEY=${PARTNER_KEY}
+            TAPPAY_SANDBOX_URL=${TAPPAY_SANDBOX_URL}
+            EOL
+
+            echo "Debug: .env file created. Showing non-sensitive variables:"
+            grep -v "PASSWORD\|KEY" .env
 
       - name: Deploy New Container
         uses: appleboy/ssh-action@master
