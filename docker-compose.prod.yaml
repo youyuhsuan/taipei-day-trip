@@ -63,9 +63,9 @@ services:
       - my-db:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 30s
+      interval: 1m
       timeout: 10s
-      retries: 5
+      retries: 10
     networks:
       - app-network
   nginx:
