@@ -105,6 +105,15 @@ jobs:
             echo "Debug: .env file created. Showing non-sensitive variables:"
             grep -v "PASSWORD\|KEY" .env
 
+      - name: Push code to EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "requirements.txt,Dockerfile,docker-compose.yaml"
+          target: "/home/ubuntu"
+
       - name: Deploy New Container
         uses: appleboy/ssh-action@master
         with:
