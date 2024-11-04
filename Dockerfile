@@ -22,7 +22,6 @@ RUN python -m pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 COPY . .
-
 RUN ls -la
 
 RUN echo "VERSION=${VERSION}\n\

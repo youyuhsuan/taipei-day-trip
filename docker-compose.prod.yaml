@@ -68,6 +68,21 @@ services:
       retries: 5
     networks:
       - app-network
+  nginx:
+    image: nginx:alpine
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/taipei-day-trip
+      - ./.well-known:/usr/share/nginx/html/.well-known
+      - ./app/static:/taipei-day-trip/app/static
+      - /etc/letsencrypt/ssl:/etc/nginx/ssl
+    depends_on:
+      - app
 volumes:
   my-db:
 networks:
