@@ -63,51 +63,6 @@ jobs:
       - name: Debug version
         run: echo "VERSION=${{ env.VERSION }}"
 
-      - name: Deploy with Docker Compose
-        uses: appleboy/ssh-action@master
-        env:
-          VERSION: ${{ env.VERSION }}
-          MYSQL_DATABASE: ${{ vars.MYSQL_DATABASE }}
-          MYSQL_HOST: ${{ vars.MYSQL_HOST }}
-          MYSQL_PORT: ${{ vars.MYSQL_PORT }}
-          MYSQL_USER: ${{ vars.MYSQL_USER }}
-          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-          ACCESS_TOKEN_EXPIRE_DAYS: ${{ vars.ACCESS_TOKEN_EXPIRE_DAYS }}
-          ALGORITHM: ${{ vars.ALGORITHM }}
-          MERCHANT_ID: ${{ vars.MERCHANT_ID }}
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          PARTNER_KEY: ${{ secrets.PARTNER_KEY }}
-          TAPPAY_SANDBOX_URL: ${{ vars.TAPPAY_SANDBOX_URL }}
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            echo "Debug: Creating .env file with VERSION=${{env.VERSION}}"
-            cat > .env << EOL
-            VERSION=${{env.VERSION}}
-            MYSQL_DATABASE=${{vars.MYSQL_DATABASE}}
-            MYSQL_HOST=${{vars.MYSQL_HOST}}
-            MYSQL_PORT=${{vars.MYSQL_PORT}}
-            MYSQL_USER=${{vars.MYSQL_USER}}
-            MYSQL_PASSWORD=${{secrets.MYSQL_PASSWORD}}
-            MYSQL_ROOT_PASSWORD=${{secrets.MYSQL_ROOT_PASSWORD}}
-            ACCESS_TOKEN_EXPIRE_DAYS=${{vars.ACCESS_TOKEN_EXPIRE_DAYS}}
-            ALGORITHM=${{vars.ALGORITHM}}
-            MERCHANT_ID=${{vars.MERCHANT_ID}}
-            SECRET_KEY=${{secrets.SECRET_KEY}}
-            PARTNER_KEY=${{secrets.PARTNER_KEY}}
-            TAPPAY_SANDBOX_URL=${{vars.TAPPAY_SANDBOX_URL}}
-            EOL
-
-            echo "Debug: .env file created. Showing non-sensitive variables:"
-            grep -v "PASSWORD\|KEY" .env
-
-      - name: Load env variables
-        run: |
-          source .env
-
       - name: Push code to EC2
         uses: appleboy/scp-action@master
         with:
@@ -139,19 +94,13 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             docker compose down
-            echo "Debug: Starting Docker Compose with environment variables"
             docker compose up -d
 
-      - name: Check Container Logs
+      - name: Check Container Status
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            echo "=== Container Logs ==="
-            docker logs taipei-day-trip
-            echo "=== Container Status ==="
             docker inspect taipei-day-trip --format='{{.State.Status}}'
-            echo "=== Container Exit Code ==="
-            docker inspect taipei-day-trip --format='{{.State.ExitCode}}'
