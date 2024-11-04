@@ -60,15 +60,13 @@ jobs:
           script: |
             docker pull stellayou/taipei-day-trip:${{ env.VERSION }}
 
-      - name: Set version
-        run: echo "VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV
-
       - name: Debug version
         run: echo "VERSION=${{ env.VERSION }}"
 
       - name: Deploy with Docker Compose
         uses: appleboy/ssh-action@master
         env:
+          VERSION: ${{ env.VERSION }}
           MYSQL_DATABASE: ${{ vars.MYSQL_DATABASE }}
           MYSQL_HOST: ${{ vars.MYSQL_HOST }}
           MYSQL_PORT: ${{ vars.MYSQL_PORT }}
@@ -88,6 +86,7 @@ jobs:
           script: |
             echo "Debug: Creating .env file with VERSION= ${{env.VERSION}}"
             cat > .env << EOL
+            VERSION= ${{env.VERSION}}
             MYSQL_DATABASE=${{ vars.MYSQL_DATABASE }}
             MYSQL_HOST= ${{ vars.MYSQL_HOST }}
             MYSQL_PORT= ${{ vars.MYSQL_PORT }}
