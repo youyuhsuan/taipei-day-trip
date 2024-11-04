@@ -19,8 +19,8 @@ services:
       context: .
       dockerfile: Dockerfile
     depends_on:
-      - mydb
-        condition:service_healthy
+      mydb:
+        condition: service_healthy
     environment:
       - VERSION=${VERSION}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
@@ -62,7 +62,7 @@ services:
     volumes:
       - my-db:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "mydb"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 30s
       timeout: 10s
       retries: 5
