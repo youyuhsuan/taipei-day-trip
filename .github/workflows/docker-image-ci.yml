@@ -36,14 +36,14 @@ jobs:
             
             if echo "$COMMIT_MSG" | grep -q "BREAKING CHANGE\|feat.*!:\|fix.*!:\|refactor.*!:"; then
               NEXT_TAG="v$((MAJOR + 1)).0.0"
-            elif echo "$COMMIT_MSG" | grep -q "feat[[:space:]]*(.*):"; then  # 修正了這裡的正則表達式
+            elif echo "$COMMIT_MSG" | grep -q "feat[[:space:]]*(.*):"; then
               NEXT_TAG="v${MAJOR}.$((MINOR + 1)).0"
             else
               NEXT_TAG="v${MAJOR}.${MINOR}.$((PATCH + 1))"
             fi
           fi
           DATE=$(date +%Y%m%d)
-          echo "VERSION=${NEXT_TAG}-${DATE} >> $GITHUB_ENV
+          echo "VERSION=${NEXT_TAG}-${DATE}" >> $GITHUB_ENV
 
       - name: Build and Push Docker Image
         run: |
@@ -80,6 +80,47 @@ jobs:
             mkdir -p .well-known/acme-challenge
             chmod -R 755 .well-known
             echo "=== SSL directory setup completed ==="
+
+      - name: Create .env file
+        uses: appleboy/ssh-action@master
+        env:
+          VERSION: ${{ env.VERSION }}
+          MYSQL_DATABASE: ${{ vars.MYSQL_DATABASE }}
+          MYSQL_HOST: ${{ vars.MYSQL_HOST }}
+          MYSQL_PORT: ${{ vars.MYSQL_PORT }}
+          MYSQL_USER: ${{ vars.MYSQL_USER }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          ACCESS_TOKEN_EXPIRE_DAYS: ${{ vars.ACCESS_TOKEN_EXPIRE_DAYS }}
+          ALGORITHM: ${{ vars.ALGORITHM }}
+          MERCHANT_ID: ${{ vars.MERCHANT_ID }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          PARTNER_KEY: ${{ secrets.PARTNER_KEY }}
+          TAPPAY_SANDBOX_URL: ${{ vars.TAPPAY_SANDBOX_URL }}
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /home/ubuntu/taipei-day-trip
+            echo "=== Debug: Creating .env file with VERSION=${{env.VERSION}} ==="
+            cat > .env << EOL
+            VERSION=${{env.VERSION}}
+            MYSQL_DATABASE=${{vars.MYSQL_DATABASE}}
+            MYSQL_HOST=${{vars.MYSQL_HOST}}
+            MYSQL_PORT=${{vars.MYSQL_PORT}}
+            MYSQL_USER=${{vars.MYSQL_USER}}
+            MYSQL_PASSWORD=${{secrets.MYSQL_PASSWORD}}
+            MYSQL_ROOT_PASSWORD=${{secrets.MYSQL_ROOT_PASSWORD}}
+            ACCESS_TOKEN_EXPIRE_DAYS=${{vars.ACCESS_TOKEN_EXPIRE_DAYS}}
+            ALGORITHM=${{vars.ALGORITHM}}
+            MERCHANT_ID=${{vars.MERCHANT_ID}}
+            SECRET_KEY=${{secrets.SECRET_KEY}}
+            PARTNER_KEY=${{secrets.PARTNER_KEY}}
+            TAPPAY_SANDBOX_URL=${{vars.TAPPAY_SANDBOX_URL}}
+            EOL
+            echo "=== Debug: .env file created. Showing non-sensitive variables: ==="
+            grep -v "PASSWORD\|KEY" .env
 
       - name: Deploy New Container
         uses: appleboy/ssh-action@master
