@@ -1,7 +1,7 @@
 version: "1"
 services:
   app:
-    # image: stellayou/taipei-day-trip:${VERSION}
+    image: stellayou/taipei-day-trip:${VERSION:-latest}
     build:
       context: .
       dockerfile: Dockerfile
