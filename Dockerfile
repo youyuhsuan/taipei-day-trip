@@ -26,7 +26,6 @@ COPY . .
 
 RUN ls -l
 
-# 創建 .env 檔案
 RUN echo "VERSION=${VERSION}\n\
 MYSQL_DATABASE=${MYSQL_DATABASE}\n\
 MYSQL_HOST=${MYSQL_HOST}\n\
