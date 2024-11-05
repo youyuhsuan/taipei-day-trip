@@ -72,9 +72,11 @@ services:
       - ./:/taipei-day-trip
       - ./.well-known:/usr/share/nginx/html/.well-known
       - ./app/static:/taipei-day-trip/app/static
-      - /etc/letsencrypt/ssl:/etc/nginx/ssl
+      - ./ssl:/etc/nginx/ssl:ro
     depends_on:
       - app
+    networks:
+      - app-network
 volumes:
   my-db:
 networks:
