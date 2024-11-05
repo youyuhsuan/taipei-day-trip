@@ -77,8 +77,12 @@ services:
       - app
     networks:
       - app-network
+    restart: always
+    command: [nginx-debug, "-g", "daemon off;"]
 volumes:
   my-db:
+    name: taipei-day-trip-db
 networks:
   app-network:
+    name: taipei-day-trip_app-network
     driver: bridge
