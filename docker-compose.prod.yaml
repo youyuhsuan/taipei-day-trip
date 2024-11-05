@@ -35,11 +35,6 @@ services:
       - SECRET_KEY=${SECRET_KEY}
       - PARTNER_KEY=${PARTNER_KEY}
       - TAPPAY_SANDBOX_URL=${TAPPAY_SANDBOX_URL}
-      # - MYSQL_HOST=mydb
-      # - MYSQL_PORT=3306
-      # - MYSQL_DATABASE=taipei_attractions
-      # - MYSQL_USER=root
-      # - MYSQL_PASSWORD=23322907
     ports:
       - "8001:8000"
     networks:
@@ -53,12 +48,9 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
-      # <Port exposed> : <MySQL Port running inside container>
       - "3307:3306"
     expose:
-      # Opens port 3306 on the container
       - "3306"
-      # Where our data will be persisted
     volumes:
       - my-db:/var/lib/mysql
     healthcheck:
@@ -80,9 +72,11 @@ services:
       - ./:/taipei-day-trip
       - ./.well-known:/usr/share/nginx/html/.well-known
       - ./app/static:/taipei-day-trip/app/static
-      - /etc/letsencrypt/ssl:/etc/nginx/ssl
+      - ./ssl:/etc/nginx/ssl:ro
     depends_on:
       - app
+    networks:
+      - app-network
 volumes:
   my-db:
 networks:
