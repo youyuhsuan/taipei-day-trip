@@ -122,6 +122,17 @@ jobs:
             echo "=== Debug: .env file created. Showing non-sensitive variables: ==="
             grep -v "PASSWORD\|KEY" .env
 
+      - name: Clean Docker resources
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            docker system prune -af --volumes
+            docker rm -f $(docker ps -aq)
+            docker rmi -f $(docker images -q)
+
       - name: Deploy New Container
         uses: appleboy/ssh-action@master
         env:
