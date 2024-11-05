@@ -174,6 +174,69 @@ jobs:
             echo "=== Debug: .env file created. Showing non-sensitive variables: ==="
             grep -v "PASSWORD\|KEY" .env
 
+      - name: Clean Docker resources
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            docker system prune -af --volumes
+            docker rm -f $(docker ps -aq)
+            docker rmi -f $(docker images -q)
+
+      - name: Create .env file
+        uses: appleboy/ssh-action@master
+        env:
+          VERSION: ${{ env.VERSION }}
+          MYSQL_DATABASE: ${{ vars.MYSQL_DATABASE }}
+          MYSQL_HOST: ${{ vars.MYSQL_HOST }}
+          MYSQL_PORT: ${{ vars.MYSQL_PORT }}
+          MYSQL_USER: ${{ vars.MYSQL_USER }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          ACCESS_TOKEN_EXPIRE_DAYS: ${{ vars.ACCESS_TOKEN_EXPIRE_DAYS }}
+          ALGORITHM: ${{ vars.ALGORITHM }}
+          MERCHANT_ID: ${{ vars.MERCHANT_ID }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          PARTNER_KEY: ${{ secrets.PARTNER_KEY }}
+          TAPPAY_SANDBOX_URL: ${{ vars.TAPPAY_SANDBOX_URL }}
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /home/ubuntu/taipei-day-trip
+            echo "=== Debug: Creating .env file with VERSION=${{env.VERSION}} ==="
+            cat > .env << EOL
+            VERSION=${{env.VERSION}}
+            MYSQL_DATABASE=${{vars.MYSQL_DATABASE}}
+            MYSQL_HOST=${{vars.MYSQL_HOST}}
+            MYSQL_PORT=${{vars.MYSQL_PORT}}
+            MYSQL_USER=${{vars.MYSQL_USER}}
+            MYSQL_PASSWORD=${{secrets.MYSQL_PASSWORD}}
+            MYSQL_ROOT_PASSWORD=${{secrets.MYSQL_ROOT_PASSWORD}}
+            ACCESS_TOKEN_EXPIRE_DAYS=${{vars.ACCESS_TOKEN_EXPIRE_DAYS}}
+            ALGORITHM=${{vars.ALGORITHM}}
+            MERCHANT_ID=${{vars.MERCHANT_ID}}
+            SECRET_KEY=${{secrets.SECRET_KEY}}
+            PARTNER_KEY=${{secrets.PARTNER_KEY}}
+            TAPPAY_SANDBOX_URL=${{vars.TAPPAY_SANDBOX_URL}}
+            EOL
+            echo "=== Debug: .env file created. Showing non-sensitive variables: ==="
+            grep -v "PASSWORD\|KEY" .env
+
+      - name: Clean Docker resources
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            docker system prune -af --volumes
+            docker rm -f $(docker ps -aq)
+            docker rmi -f $(docker images -q)
+
       - name: Deploy New Container
         uses: appleboy/ssh-action@master
         env:
