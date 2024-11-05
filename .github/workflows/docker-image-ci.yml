@@ -130,8 +130,16 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             docker system prune -af --volumes
-            docker rm -f $(docker ps -aq)
-            docker rmi -f $(docker images -q)
+            if [ "$(docker ps -aq)" ]; then
+              docker rm -f $(docker ps -aq)
+            fi
+            if [ "$(docker images -q)" ]; then
+              docker rmi -f $(docker images -q)
+            fi
+            echo "=== After Cleanup ==="
+            docker ps -a
+            docker images
+            df -h
 
       - name: Deploy New Container
         uses: appleboy/ssh-action@master
