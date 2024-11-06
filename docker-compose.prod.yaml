@@ -69,7 +69,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:80"
-      # - "443:443"
+      - "443:443"
     volumes:
       - ./:/taipei-day-trip
       - ./.well-known:/usr/share/nginx/html/.well-known
