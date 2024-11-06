@@ -85,7 +85,7 @@ services:
         target: /usr/share/nginx/html/.well-known
       - type: bind
         source: ./ssl
-        target: /taipei-day-trip/ssl:ro
+        target: /etc/nginx/ssl:ro
     depends_on:
       - app
     networks:
