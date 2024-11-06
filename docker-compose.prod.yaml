@@ -76,6 +76,7 @@ services:
       - ./nginx/conf.d:/etc/nginx/conf.d
       - ./.well-known:/usr/share/nginx/html/.well-known
       - ./ssl:/etc/nginx/ssl:ro
+      - ./app/static:/taipei-day-trip/app/static
     depends_on:
       - app
     networks:
