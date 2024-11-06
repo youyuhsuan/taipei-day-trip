@@ -39,6 +39,8 @@ services:
       - "8001:8000"
     networks:
       - app-network
+    expose:
+      - "8000"
   mydb:
     image: mysql:8.4
     restart: always
@@ -67,7 +69,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "80:80"
-      - "443:443"
+      # - "443:443"
     volumes:
       - ./:/taipei-day-trip
       - ./.well-known:/usr/share/nginx/html/.well-known
@@ -84,5 +86,5 @@ volumes:
     name: taipei-day-trip-db
 networks:
   app-network:
-    name: taipei-day-trip_app-network
+    name: taipei-day-trip-app-network
     driver: bridge
