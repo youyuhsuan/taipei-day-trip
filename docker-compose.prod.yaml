@@ -71,9 +71,7 @@ services:
       - "8080:80"
       - "443:443"
     volumes:
-      - type: bind
-        source: ./app/static
-        target: /taipei-day-trip/app/static
+      - static_volume:/taipei-day-trip/app/static
       - type: bind
         source: ./nginx/nginx.conf
         target: /etc/nginx/nginx.conf
@@ -85,7 +83,7 @@ services:
         target: /usr/share/nginx/html/.well-known
       - type: bind
         source: ./ssl
-        target: /etc/nginx/ssl:ro
+        target: /taipei-day-trip/ssl
     depends_on:
       - app
     networks:
@@ -95,6 +93,7 @@ services:
 volumes:
   my-db:
     name: taipei-day-trip-db
+  static_volume:
 networks:
   app-network:
     name: taipei-day-trip-app-network
