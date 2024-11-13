@@ -1,7 +1,6 @@
 import { loginBtn, logoutBtn, token } from "../variables.js";
 import { switchLogoutAndRedirect } from "../utils/switchLogout.js";
 import { switchAuthButton } from "../utils/switchAuthButton.js";
-
 let glbalToken = null;
 
 document.addEventListener("DOMContentLoaded", async function () {
@@ -15,6 +14,9 @@ document.addEventListener("DOMContentLoaded", async function () {
           "Content-Type": "application/json",
         },
       });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
       if (response) {
         const responseData = await response.json();
@@ -29,14 +31,14 @@ document.addEventListener("DOMContentLoaded", async function () {
         switchLogoutAndRedirect();
       }
     } catch (error) {
-      console.error("Error fetching user data:", error);
+      console.error("Failed to fetching user get token error: ", error);
       switchLogoutAndRedirect();
+      throw error;
     }
   } else {
     if (typeof window.tokenDataCallBack === "function") {
       window.tokenDataCallBack(null);
     }
-    console.log("TOKEN NONE");
     localStorage.removeItem("authToken");
     switchAuthButton(loginBtn, logoutBtn, true);
   }

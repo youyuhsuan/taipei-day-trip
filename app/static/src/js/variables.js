@@ -9,5 +9,7 @@ export const logoutBtn = document.querySelector(".logout-btn");
 export const attractionsContainer = document.querySelector(
   ".attractions-container"
 );
+export const listItem = document.querySelectorAll(".list-item");
+
 export let token = localStorage.getItem("authToken");
 export const booking = document.querySelector(".booking");

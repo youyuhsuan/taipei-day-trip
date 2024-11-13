@@ -9,6 +9,12 @@
   height: 4.375rem; // 70px
   margin-top: 2.5rem; // 40px
   padding-bottom: 1.25rem; // 20px
+
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  &.loaded {
+    opacity: 1;
+  }
 }
 
 .list-left-container,

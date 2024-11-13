@@ -1,7 +1,9 @@
 @use "../abstracts/variables" as *;
 @use "../abstracts/mixins" as *;
+@use "../base//typography" as *;
 
 #booking-container {
+  font-family: $font-family;
   color: $secondary-70;
   margin-bottom: 2.5rem; // 40px
   @include breakpoint(xl) {
@@ -73,7 +75,13 @@
 }
 
 .form-group {
+  display: flex;
+  flex-direction: row;
   margin-bottom: 0.938rem; // 15px
+  @include breakpoint(md) {
+    flex-direction: column;
+    gap: 0.5rem; // 8px
+  }
 }
 
 .contact-title,
@@ -84,9 +92,11 @@
 .contact-form,
 .payment-form {
   margin-bottom: 2.5rem; //40px
+  font-family: $font-family;
 
   input,
   .tpfield {
+    font-family: $font-family;
     color: $black;
     border: 1px solid $secondary-20;
     width: 12.5rem; // 200px
@@ -138,4 +148,9 @@
   flex-direction: row;
   align-items: center;
   margin-bottom: 0.938rem;
+  @include breakpoint(md) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem; // 8px
+  }
 }

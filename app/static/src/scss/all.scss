@@ -5,13 +5,15 @@
 @use "base/typography";
 @use "base/base";
 
-// // Components
+// Components
 @use "components/button";
 @use "components/search-bar";
 @use "components/list-bar";
 @use "components/attractions-card";
 @use "components/separator";
 @use "components/carousel";
+@use "components/loading";
+@use "components/skeleton";
 
 // Layout
 @use "layout/navigation";

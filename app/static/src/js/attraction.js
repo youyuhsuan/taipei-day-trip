@@ -17,3 +17,20 @@ import "./components/bookingForm.js";
 
 // utils
 import "./components/createAttraction.js";
+
+// events
+import { initAttractionFooterMonitor } from "./events/initFooterMonitor.js";
+
+function initApp() {
+  // 初始化內容監控
+  initAttractionFooterMonitor();
+}
+
+// 判斷文檔是否已加載
+if (document.readyState === "loading") {
+  // 如果還在加載中，監聽 DOMContentLoaded 事件
+  document.addEventListener("DOMContentLoaded", initApp);
+} else {
+  // 如果已經加載完成，直接執行
+  initApp();
+}

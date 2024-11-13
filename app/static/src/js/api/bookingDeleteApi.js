@@ -10,6 +10,9 @@ async function bookingDeleteApi(shouldReload = false) {
         Authorization: `Bearer ${token}`,
       },
     });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     if (response) {
       booking.remove();
       if (shouldReload) {
@@ -17,7 +20,8 @@ async function bookingDeleteApi(shouldReload = false) {
       }
     }
   } catch (error) {
-    console.error("bookingDeleteApi error:", error);
+    console.error("Failed to fetch booking delete Api error: ", error);
+    throw error;
   }
 }
 

@@ -5,12 +5,10 @@ hr {
   line-height: 0;
   width: 100%;
   border: 1px solid $secondary-20;
-  &:first-of-type {
-    margin-top: 3.375rem;
-  }
 }
 
 #attraction-container {
+  margin-top: 4.5rem;
   &:nth-of-type(2) {
     max-width: 1200px;
     width: 100%;
@@ -18,6 +16,7 @@ hr {
 }
 
 #booking-container {
+  margin-top: 4.5rem;
   hr {
     margin-top: 0rem;
     margin-bottom: 2.5rem; // 40px

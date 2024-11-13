@@ -1,4 +1,5 @@
 @use "../abstracts/variables" as *;
+@use "../base/typography" as *;
 
 .signin-dialog,
 .signup-dialog {
@@ -8,6 +9,8 @@
   input {
     padding: 0.938rem; // 15px
     color: $secondary-50;
+    font-family: $font-family;
+
     &:focus,
     &:active {
       color: $black;

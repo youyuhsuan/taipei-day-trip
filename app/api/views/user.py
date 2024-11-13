@@ -5,7 +5,7 @@ from ..utils.render_response import render_response
 
 
 # POST
-def format_signup_response(status: str) -> JSONResponse:
+def format_signup_response(status: Optional[str] = None) -> JSONResponse:
     if status == "match_email":
         return render_response(400, {"error": True, "message": "電子郵件已存在"})
     elif status == "server_error":

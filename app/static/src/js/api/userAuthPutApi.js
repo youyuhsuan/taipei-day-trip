@@ -27,8 +27,9 @@ async function signinData(signinEmail, signinPassword) {
       localStorage.setItem("authToken", responseData.token);
       location.reload();
     }
-  } catch (e) {
-    console.error("signinData Error:", e);
+  } catch (error) {
+    console.error("Failed to signin error: ", error);
+    throw error;
   }
 }
 
@@ -45,6 +46,7 @@ async function signupData(signupName, signupEmail, signupPassword) {
         password: signupPassword,
       }),
     });
+    console.log(response);
     const responseData = await response.json();
     const message = responseData["message"];
     if (response.ok) {
@@ -59,8 +61,8 @@ async function signupData(signupName, signupEmail, signupPassword) {
       renderAuthMessage(message, signupForm, signinLink);
       return;
     }
-  } catch (e) {
-    console.error("signupData Error:", e);
+  } catch (error) {
+    console.error("Failed to signup error: ", error);
   }
 }
 

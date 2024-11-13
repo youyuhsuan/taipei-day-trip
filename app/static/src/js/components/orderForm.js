@@ -1,4 +1,4 @@
-import { onSubmit, getPrime } from "../components/tappay.js";
+import { onSubmit } from "../components/tappay.js";
 import { orderPostApi } from "../api/ordersPostApi.js";
 
 const submitButton = document.querySelector(".confirm-btn");
@@ -21,7 +21,6 @@ submitButton.addEventListener("click", async (event) => {
     orderPostApi(bookingName, bookingEmail, bookingPhone);
   } catch (error) {
     console.error("submitButton Prime", error);
-    // alert(error.message);
   }
 });
 

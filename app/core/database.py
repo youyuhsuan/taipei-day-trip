@@ -12,9 +12,7 @@ def create_db_pool(settings: Settings) -> MySQLConnectionPool:
             "user": settings.MYSQL_USER,
             "password": settings.MYSQL_PASSWORD,
         }
-        print(
-            f"Connecting to MySQL at {db_config['host']}:{db_config['port']} with user {db_config['user']}"
-        )
+        print(f"Database config: {db_config}")
 
         pool = mysql.connector.pooling.MySQLConnectionPool(
             pool_name="mypool", pool_size=5, **db_config

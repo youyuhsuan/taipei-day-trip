@@ -4,11 +4,13 @@ from dotenv import load_dotenv
 
 class Settings(BaseSettings):
     # Database Setting
-    MYSQL_HOST: str = "mydb"
+    # MYSQL_HOST: str = "mydb"
+    MYSQL_HOST: str = "localhost"
     MYSQL_PORT: int = 3306
     MYSQL_DATABASE: str
     MYSQL_USER: str
     MYSQL_PASSWORD: str
+    MYSQL_ROOT_PASSWORD: str
 
     # JWT Setting
     SECRET_KEY: str

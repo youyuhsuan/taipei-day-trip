@@ -42,15 +42,6 @@ function setInFormValidation(form, fields, values) {
 
 // 表單提交和額外驗證
 async function contactFormFormValidation(form, values, onValidSubmit) {
-  // 這裡可以添加額外的驗證邏輯，比如異步驗證
-  // 例如：檢查電子郵件是否已被使用
-  // const isEmailAvailable = await checkEmailAvailability(values.email);
-  // if (!isEmailAvailable) {
-  //   renderErrorMessage(form, "此電子郵件已被使用", "email");
-  //   return;
-  // }
-
-  // 如果所有驗證都通過，調用成功回調
   await onValidSubmit(values);
 }
 

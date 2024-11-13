@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "sass": "sass app/static/src/scss/all.scss:app/static/src/css/all.css",
+    "sass:watch": "sass app/static/src/scss/all.scss:app/static/src/css/all.css --watch",
+    "sass:build": "sass app/static/src/scss/all.scss:app/static/src/css/all.css --style compressed"
+  },
+  "devDependencies": {
+    "sass": "^1.80.6"
+  }
+}

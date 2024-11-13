@@ -15,59 +15,109 @@ function createAttraction(
   mrtInfo,
   imagesInfo
 ) {
-  let slideTrack = document.createElement("ul");
-  slideTrack.className = "slide-track";
+  carousel.className = "carousel skeleton";
 
-  carousel.insertBefore(slideTrack, carousel.firstChild);
-
-  imagesInfo.forEach((imageInfo, index) => {
-    let slide = document.createElement("li");
-    slide.className = "slide";
-
+  const createSlide = (imageInfo, index) => {
+    const slide = document.createElement("li");
     if (index === 0) {
       slide.classList.add("current-slide");
     }
+    slide.className = "slide skeleton-box";
 
-    let slideImg = document.createElement("img");
+    // Image
+    const slideImg = document.createElement("img");
+    slideImg.className = "slide loading";
     slideImg.dataset.src = imageInfo;
     slideImg.alt = nameInfo;
     slideImg.setAttribute("loading", "lazy");
 
-    let dot = document.createElement("li");
-    dot.className = "dot";
+    const loadImage = () => {
+      const fullImage = new Image();
 
+      fullImage.onload = () => {
+        requestAnimationFrame(() => {
+          slideImg.src = imageInfo;
+
+          slideImg.classList.remove("loading");
+          slideImg.classList.add("loaded");
+
+          carousel.classList.remove("skeleton");
+          slide.classList.remove("skeleton-box");
+        });
+      };
+
+      fullImage.onerror = () => {
+        console.error("Image load failed:", imageInfo);
+        carousel.classList.remove("skeleton");
+        slide.classList.remove("skeleton-box");
+      };
+
+      fullImage.src = imageInfo;
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            loadImage();
+            observer.unobserve(slide);
+          }
+        });
+      },
+      {
+        threshold: 0.1,
+      }
+    );
+
+    observer.observe(slide);
+    slide.appendChild(slideImg);
+    return slide;
+  };
+
+  const createDot = (index) => {
+    const dot = document.createElement("li");
+    dot.className = "dot";
     if (index === 0) {
       dot.classList.add("current-dot");
     }
-    dots.appendChild(dot);
+    return dot;
+  };
+
+  const slideTrack = document.createElement("ul");
+  slideTrack.className = "slide-track skeleton-box";
+  carousel.insertBefore(slideTrack, carousel.firstChild);
+
+  imagesInfo.forEach((imageInfo, index) => {
+    const slide = createSlide(imageInfo, index);
+    const dot = createDot(index);
     slideTrack.appendChild(slide);
-    slide.appendChild(slideImg);
+    dots.appendChild(dot);
   });
 
-  let attractionName = document.createElement("h3");
+  const attractionName = document.createElement("h3");
   attractionName.className = "attraction-name bold";
   attractionName.textContent = nameInfo;
 
-  let attractionDescription = document.createElement("p");
+  const attractionDescription = document.createElement("p");
   attractionDescription.className = "attraction-description font-body regular";
-  attractionDescription.textContent = categoryInfo + " at " + mrtInfo;
+  attractionDescription.textContent = `${categoryInfo} at ${mrtInfo}`;
 
-  let description = document.createElement("div");
+  const description = document.createElement("div");
   description.className = "description font-content";
   description.textContent = descriptionInfo;
 
-  let addressContent = document.createElement("div");
+  const addressContent = document.createElement("div");
   addressContent.className = "address-content font-content";
   addressContent.textContent = addressInfo;
 
-  let transportContent = document.createElement("div");
+  const transportContent = document.createElement("div");
   transportContent.className = "transport-content font-content";
   transportContent.textContent = transportInfo;
 
   attractionContent.insertBefore(attractionName, attractionContent.firstChild);
   attractionName.after(attractionDescription);
-  address.appendChild(addressContent);
   address.before(description);
+  address.appendChild(addressContent);
   transport.appendChild(transportContent);
 }
 

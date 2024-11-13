@@ -1,6 +1,8 @@
 @use "../abstracts/variables" as *;
 
 footer {
+  margin-top: auto;
+  opacity: 0;
   width: 100%;
   height: 6.5rem;
   background-color: $secondary-50;
@@ -8,6 +10,11 @@ footer {
   align-items: center;
   justify-content: center;
   color: $white;
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+  flex-shrink: 0;
+  transition: opacity 0.3s ease;
 }
 
 .booking-footer {

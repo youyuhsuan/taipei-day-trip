@@ -1,0 +1,82 @@
+@use "../abstracts/variables" as *;
+
+$loader-animation-duration: 2s;
+$loader-alt-duration: 1s;
+$loader-perspective: 150px;
+$loader-translate: -10px;
+$loader-border-radius: 100px;
+
+.loading-container {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 1.5rem;
+  width: 100%;
+  .loader {
+    margin: auto;
+  }
+}
+
+.loader {
+  width: 1rem;
+  aspect-ratio: 1;
+  display: flex;
+  animation: loaderRotate $loader-animation-duration infinite steps(1);
+
+  &::before,
+  &::after {
+    content: "";
+    flex: 1;
+    animation: loaderTransform $loader-alt-duration infinite linear alternate,
+      loaderBackground $loader-animation-duration infinite steps(1) -0.5s;
+  }
+
+  &::after {
+    --s: -1, -1;
+  }
+}
+
+@keyframes loaderRotate {
+  0% {
+    transform: scaleX(1) rotate(0deg);
+  }
+  50% {
+    transform: scaleX(-1) rotate(-90deg);
+  }
+}
+
+@keyframes loaderTransform {
+  0%,
+  5% {
+    transform: scale(var(--s, 1)) translate(0) perspective($loader-perspective)
+      rotateY(0deg);
+  }
+
+  33% {
+    transform: scale(var(--s, 1)) translate($loader-translate)
+      perspective($loader-perspective) rotateX(0deg);
+  }
+
+  66% {
+    transform: scale(var(--s, 1)) translate($loader-translate)
+      perspective($loader-perspective) rotateX(-180deg);
+  }
+
+  95%,
+  100% {
+    transform: scale(var(--s, 1)) translate(0) perspective($loader-perspective)
+      rotateX(-180deg);
+  }
+}
+
+@keyframes loaderBackground {
+  0% {
+    background: $primary-50;
+    border-radius: 0;
+  }
+  50% {
+    background: $primary-70;
+    border-radius: $loader-border-radius 0 0 $loader-border-radius;
+  }
+}

@@ -2,50 +2,45 @@ import { createAttraction } from "../components/createAttraction.js";
 import { setPrice } from "../components/switchPriceForm.js";
 import { animationCarousel } from "../components/animationCarousel.js";
 
-const currentUrl = window.location.href;
+const url = new URL(window.location.href);
+const pathSegments = url.pathname.split("/");
+const attractionId = pathSegments.includes("attraction")
+  ? pathSegments[pathSegments.indexOf("attraction") + 1]
+  : null;
 
-const regex = /\/attraction\/(\d+)/;
-const match = currentUrl.match(regex);
-let loding = false;
+let loading = false;
 
-if (match) {
-  const attractionId = match[1];
+if (attractionId) {
   attractionApi(attractionId);
-} else {
-  console.log("No ID found in URL");
 }
 
 async function attractionApi(attractionId) {
-  if (loding) return;
-  loding = true;
+  if (loading) return;
+  loading = true;
   try {
     const response = await fetch(`/api/attraction/${attractionId}`);
-    const responseData = await response.json();
-    let data = responseData.data;
-    if (data) {
-      let nameInfo = data.name;
-      let categoryInfo = data.category;
-      let descriptionInfo = data.description;
-      let addressInfo = data.address;
-      let transportInfo = data.transport;
-      let mrtInfo = data.mrt;
-      let imagesInfo = data.images;
-      createAttraction(
-        nameInfo,
-        categoryInfo,
-        descriptionInfo,
-        addressInfo,
-        transportInfo,
-        mrtInfo,
-        imagesInfo
-      );
-      animationCarousel();
-      setPrice();
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
+    const responseData = await response.json();
+    const { name, category, description, address, transport, mrt, images } =
+      responseData.data;
+    await createAttraction(
+      name,
+      category,
+      description,
+      address,
+      transport,
+      mrt,
+      images
+    );
+    await animationCarousel();
+    await setPrice();
   } catch (error) {
-    console.error(error);
+    console.error("Failed to fetch attraction get API error: ", error);
+    throw error;
   } finally {
-    loding = false;
+    loading = false;
   }
 }
 

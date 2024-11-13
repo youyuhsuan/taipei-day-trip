@@ -20,12 +20,14 @@ async function bookingPostApi(attractionId, date, time, price) {
         price: price,
       }),
     });
-    if (response.ok) {
-      window.location.href = "/booking";
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-  } catch (e) {
+    window.location.href = "/booking";
+  } catch (error) {
     signinDialog.showModal();
-    console.error("bookingPostApi error:", e);
+    console.error("Failed to fetch booking post API error: ", error);
+    throw error;
   }
 }
 

@@ -28,6 +28,9 @@ button {
   position: absolute;
   top: 0.531rem; // 8.5px
   opacity: 0.5;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+
   &:hover {
     opacity: 1;
   }
