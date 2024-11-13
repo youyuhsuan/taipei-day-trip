@@ -25,9 +25,9 @@ RUN python -m pip install --upgrade pip \
 COPY . .
 RUN echo "=== Root directory contents ===" && \
     ls -la && \
-    echo "=== Static directory contents ===" && \
-    ls -la static/
-    
+    echo "=== App/Static directory contents ===" && \
+    ls -la app/static/
+
 RUN echo "VERSION=${VERSION}\n\
 MYSQL_DATABASE=${MYSQL_DATABASE}\n\
 MYSQL_HOST=${MYSQL_HOST}\n\
