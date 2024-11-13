@@ -5,6 +5,6 @@
     "sass:build": "sass app/static/src/scss/all.scss:app/static/src/css/all.css --style compressed"
   },
   "devDependencies": {
-    "sass": "^1.80.6"
+    "sass": "^1.80.7"
   }
 }

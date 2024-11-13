@@ -48,7 +48,7 @@ jobs:
       - name: Build and Push Docker Image
         run: |
           IMAGE=stellayou/taipei-day-trip
-          docker build -t $IMAGE:${{ env.VERSION }} .
+          docker build --no-cache -t $IMAGE:${{ env.VERSION }} .
           docker push $IMAGE:${{ env.VERSION }}
 
       - name: Pull Docker Image

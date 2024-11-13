@@ -1,10 +1,37 @@
-# [Taipei Day Trip](https://youyuhsuan.com/)
+# Taipei Day Trip
 
-_A travel e-commerce website that allows users to browse and book Taipei city tours._
+> A travel e-commerce website that allows users to browse and book Taipei city tours.
 
-<div style="display:inline-flex; align-items: center;">
-  <img src="app/static/src/image/icon/wehelp.svg" alt="Wehelp" width="150" style="margin-right: 0.5rem; object-fit: contain;">
-  <img src="docs/taipei-day-trip.png" alt="Logo" style="height: auto; width: 100%; object-fit: contain;">
+<div align="center">
+  <a href="https://youyuhsuan.com/">
+    <img src="app/static/src/image/icon/wehelp.svg" alt="Wehelp" width="100" style="margin-right: 20px">
+    <img src="docs/taipei-day-trip.png" alt="Logo" width="Taipei day trip" height="80">
+  </a>
+</div>
+
+## Quick Links
+
+- [Live Demo](https://youyuhsuan.com/)
+- [API Documentation](https://youyuhsuan.com/docs)
+- [Database Schema](https://dbdiagram.io/d/67271d9ab1b39dd85849dd13)
+- [Docker Image](https://hub.docker.com/r/stellayou/taipei-day-trip)
+
+## Demo
+
+### Index Page
+
+Experience our intuitive homepage design where users can effortlessly browse through various tour options.
+
+<div align="center">
+  <img src="docs/index.gif" alt="Index Page Demo" width="100%">
+</div>
+
+### Attraction Details
+
+Explore detailed information about each attraction, including descriptions, images, and booking options.
+
+<div align="center">
+  <img src="docs/attraction.gif" alt="Attraction Page Demo" width="100%">
 </div>
 
 ## Table of Contents
@@ -14,9 +41,6 @@ _A travel e-commerce website that allows users to browse and book Taipei city to
 - [Installation](#installation)
   - [Prerequisites](#prerequisites)
   - [Setup Instructions](#setup-instructions)
-- [Environment Variables](#environment-variables)
-- [Project Structure](#project-structure)
-- [API Documentation](#api-documentation)
 - [Database Schema Documentation](#database-schema-documentation)
 - [System Architecture](#system-architecture)
 - [Docker Setup](#docker-setup)
@@ -25,14 +49,40 @@ _A travel e-commerce website that allows users to browse and book Taipei city to
 
 ## Tech Stack
 
-- **Backend**: FastAPI, Python 3.12
-- **Database**: MySQL
-- **Payment**: TapPay (for payment gateway integration)
-- **Authentication**: JWT (JSON Web Token)
-- **Deployment**: Docker, Docker Compose
-- **CI/CD**: GitHub Actions for continuous integration and deployment
+### Frontend
 
----
+<div>
+  <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5"/>
+  <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3"/>
+  <img src="https://img.shields.io/badge/Sass-CC6699?style=for-the-badge&logo=sass&logoColor=white" alt="SCSS"/>
+  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript"/>
+</div>
+
+### Backend & Database
+
+<div>
+  <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI"/>
+  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python"/>
+  <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL"/>
+  <img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=json-web-tokens&logoColor=white" alt="JWT"/>
+</div>
+
+### DevOps & Tools
+
+<div>
+  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker"/>
+  <img src="https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white" alt="GitHub Actions"/>
+  <img src="https://img.shields.io/badge/Poetry-60A5FA?style=for-the-badge&logo=poetry&logoColor=white" alt="Poetry"/>
+  <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white" alt="Git"/>
+</div>
+
+### Cloud & Infrastructure
+
+<div>
+  <img src="https://img.shields.io/badge/AWS_EC2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white" alt="AWS EC2"/>
+  <img src="https://img.shields.io/badge/Route_53-8C4FFF?style=for-the-badge&logo=amazonroute53&logoColor=white" alt="Route 53"/>
+  <img src="https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white" alt="Nginx"/>
+</div>
 
 ## Features
 
@@ -42,11 +92,7 @@ _A travel e-commerce website that allows users to browse and book Taipei city to
 - **Payment Integration**: Pay for bookings via TapPay.
 - **Booking Management**: View and manage your bookings.
 
----
-
 ## Installation
-
-To get the project up and running on your local machine, follow these steps:
 
 ### Prerequisites
 
@@ -56,7 +102,7 @@ To get the project up and running on your local machine, follow these steps:
 
 ### Setup Instructions
 
-1. **Clone the repository**:
+1. **Clone the repository**
 
    ```bash
    git clone [repository_url]
@@ -66,50 +112,26 @@ To get the project up and running on your local machine, follow these steps:
 2. **Set up the virtual environment with Poetry**
 
    ```bash
-   env use python3.12
    poetry install
    poetry shell
    ```
 
-3. **Set up environment variables: Create a .env file in the project root directory with the following variables.**
-
----
-
-## Environment Variables
-
-This project requires the following environment variables to be set in a `.env` file.
-
-| Variable                 | Description              | Example                             |
-| ------------------------ | ------------------------ | ----------------------------------- |
-| MYSQL_USER               | Database username        | `postgres`                          |
-| MYSQL_DATABASE           | Database name            | `database_name`                     |
-| MYSQL_PASSWORD           | Database password        | `your_password`                     |
-| TAPPAY_SANDBOX_URL       | TapPay sandbox API URL   | `https://sandbox.tappaysdk.com/api` |
-| PARTNER_KEY              | TapPay partner key       | `your_partner_key`                  |
-| MERCHANT_ID              | TapPay merchant ID       | `your_merchant_id`                  |
-| SECRET_KEY               | JWT secret key           | `your_secret_key`                   |
-| ALGORITHM                | JWT encryption algorithm | `HS256`                             |
-| ACCESS_TOKEN_EXPIRE_DAYS | Token expiration in days | `7`                                 |
-
----
+3. **Configure environment variables**
+   - Create a `.env` file in the project root directory
+   - See `.env.example` for required variables
 
 ## Docker Setup
 
-This project includes Docker and Docker Compose configuration for containerizing the application.
-To build and run the application using Docker:
+1. **Pull from Docker Hub**
 
-1. **Run the application with Docker Compose**
+   ```bash
+   docker pull stellayou/taipei-day-trip
+   ```
 
+2. **Run with Docker Compose**
    ```bash
    docker compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d
    ```
-
-2. **To stop the containers**
-   ```bash
-   docker-compose down
-   ```
-
-## [API Documentation](https://youyuhsuan.com/docs)
 
 ## [Database Schema Documentation](https://dbdiagram.io/d/67271d9ab1b39dd85849dd13)
 
@@ -135,5 +157,3 @@ For development and testing, please use the following test card:
 | Card Number | 4242 4242 4242 4242 |
 | CVV         | 01/23               |
 | Expiry Date | 123                 |
-
-Note: Ensure the expiry date is always set to a future date for testing.
