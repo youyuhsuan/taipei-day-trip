@@ -114,6 +114,7 @@ Explore detailed information about each attraction, including descriptions, imag
    ```bash
    poetry install
    poetry shell
+   poetry run uvicorn app:app --reload
    ```
 
 3. **Configure environment variables**

@@ -23,8 +23,11 @@ RUN python -m pip install --upgrade pip \
     && rm -rf /root/.cache/pip
 
 COPY . .
-RUN ls -la
-
+RUN echo "=== Root directory contents ===" && \
+    ls -la && \
+    echo "=== Static directory contents ===" && \
+    ls -la static/
+    
 RUN echo "VERSION=${VERSION}\n\
 MYSQL_DATABASE=${MYSQL_DATABASE}\n\
 MYSQL_HOST=${MYSQL_HOST}\n\

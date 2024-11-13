@@ -1,2 +1,6 @@
-__pycache__/
-.vscode/
+.git
+.env
+__pycache__
+*.pyc
+.pytest_cache
+!static/
