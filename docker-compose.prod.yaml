@@ -37,12 +37,13 @@ services:
       - TAPPAY_SANDBOX_URL=${TAPPAY_SANDBOX_URL}
     ports:
       - "8001:8000"
-    volumes:
-      - static_volume:/taipei-day-trip/app/static
+    # volumes:
+    #   - static_volume:/taipei-day-trip/app/static
     networks:
       - app-network
     expose:
       - "8000"
+    restart: always
   mydb:
     image: mysql:8.4
     restart: always
@@ -73,10 +74,10 @@ services:
       - "8080:80"
       - "443:443"
     volumes:
-      - static_volume:/taipei-day-trip/app/static
+      # - static_volume:/taipei-day-trip/app/static
       - type: bind
         source: ./nginx/nginx.conf
-        target: /etc/nginx/nginx.confＺ
+        target: /etc/nginx/nginx.conf
       - type: bind
         source: ./nginx/conf.d
         target: /etc/nginx/conf.d

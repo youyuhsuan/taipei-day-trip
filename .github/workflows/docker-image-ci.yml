@@ -51,6 +51,15 @@ jobs:
           docker build --no-cache -t $IMAGE:${{ env.VERSION }} .
           docker push $IMAGE:${{ env.VERSION }}
 
+      - name: Delete Older Version Docker
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{secrets.EC2_HOST}}
+          username: ubuntu
+          key: ${{secrets.EC2_SSH_KEY}}
+          script: |
+            docker image rm taipei-day-trip-app:latest || true
+
       - name: Pull Docker Image
         uses: appleboy/ssh-action@master
         with:

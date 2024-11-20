@@ -23,6 +23,7 @@ RUN python -m pip install --upgrade pip \
     && rm -rf /root/.cache/pip
 
 COPY . .
+
 RUN echo "=== Root directory contents ===" && \
     ls -la && \
     echo "=== App/Static directory contents ===" && \
